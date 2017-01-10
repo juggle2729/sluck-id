@@ -1,0 +1,62 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">权限详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#console/perm/">权限管理</a>
+            </li>
+            <li class="crumb-trail">权限编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='permSave'><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <form id="perm-form" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-md-1 control-label">ID：</label>
+                <div class="col-md-2">
+                    <p class="form-control-static text-muted">
+                        <%= id %>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">url：</label>
+                <div class="col-md-3">
+                    <p class="form-control-static text-muted">
+                        <%= url %>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">描述：</label>
+                <div class="col-md-3">
+                    <p class="form-control-static text-muted">
+                        <%= desc %>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">权限:</label>
+                <div class="col-md-2">
+                    <p class="form-control-static text-muted">
+                        <%= permission == 1 ? '读' : '写' %>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">最低角色：</label>
+                <div class="col-md-4">
+                    <select id="inputMinRole" class="form-control">
+                        <option value="0" <%= min_role == 0 ? 'selected' : '' %>>未激活/黑名单</option>
+                        <option value="1" <%= min_role == 1 ? 'selected' : '' %>>一般用户</option>
+                        <option value="2" <%= min_role == 2 ? 'selected' : '' %>>运营人员</option>
+                        <option value="3" <%= min_role == 3 ? 'selected' : '' %>>高级运营</option>
+                        <option value="4" <%= min_role == 4 ? 'selected' : '' %>>运营主管</option>
+                        <option value="5" <%= min_role == 5 ? 'selected' : '' %>>开发人员</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</section>

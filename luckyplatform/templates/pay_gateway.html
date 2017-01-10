@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>支付网关</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/0.4.3/weui.min.css">
+</head>
+<body>
+<br>
+<div class="weui_cells_title">
+    请选择充值卡类型
+</div>
+<div class="weui_cells weui_cells_form weui_cells_radio">
+    <label class="weui_cell weui_check_label" for="x12">
+        <div class="weui_cell_bd weui_cell_primary">
+            全国移动充值卡
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x12" value="china_mobile">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+    <label class="weui_cell weui_check_label" for="x13">
+        <div class="weui_cell_bd weui_cell_primary">
+            中国电信充值付费卡
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x13" value="china_telecom">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+    <label class="weui_cell weui_check_label" for="x14">
+        <div class="weui_cell_bd weui_cell_primary">
+            全国联通一卡充
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x14" value="china_unicom">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+</div>
+<br>
+<div class="weui_cells_title">请输入充值卡面额, 卡号, 密码。</div>
+<div class="weui_cells_title" style="color: red;">请仔细确认充值卡面额, 额度不一致可能会导致资金丢失!</div>
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">面额</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="amount" class="weui_input" type="tel" placeholder="请输入面额">
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">卡号</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="card_num" class="weui_input" type="tel" placeholder="请输入卡号">
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">密码</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="card_secret" class="weui_input" type="tel" placeholder="请输入密码">
+        </div>
+    </div>
+</div>
+<br>
+<a id='submit' href="javascript:;" class="weui_btn weui_btn_primary">确认</a>
+
+<script>
+    var card_type = "{{ card_type }}";
+    var amount = "{{ amount }}";
+    var card_num = "{{ card_num }}";
+    var card_secret = "{{ card_secret }}";
+
+    $('input[value="' + card_type + '"]').prop('checked', true);
+    $("#amount").val(amount);
+    $("#card_num").val(card_num);
+    $("#card_secret").val(card_secret);
+
+    $("#submit").click(function () {
+        card_type = $("input:checked").val();
+        amount = $("#amount").val();
+        card_num = $("#card_num").val();
+        card_secret = $("#card_secret").val();
+        if (card_type === "" || card_type == undefined) {
+            alert("请选择充值卡类型");
+        } else if (amount === "" || card_num === "" || card_secret === "") {
+            alert("输入不能为空");
+        } else {
+            $.post(window.location.href,
+                    {
+                        'card_type': card_type,
+                        'amount': amount,
+                        'card_num': card_num,
+                        'card_secret': card_secret
+                    },
+                    function (data) {
+                        $("body").html(data);
+                    });
+        }
+    });
+</script>
+</body>
+</html>

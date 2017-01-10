@@ -1,0 +1,164 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-28 11:05+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: luckyapi/logic/scrolling.py:24
+msgid "seconds"
+msgstr "%s秒"
+
+#: luckyapi/logic/scrolling.py:26
+msgid "minutes"
+msgstr "%s分鐘"
+
+#: luckyapi/logic/scrolling.py:28
+msgid "hours"
+msgstr "%s小時"
+
+#: luckyapi/views/credit.py:66
+msgid "share to sign title"
+msgstr "簽到分享"
+
+#: luckyapi/views/credit.py:67
+msgid "daily sign slogan"
+msgstr "每日簽到分享，每天+15，100封頂"
+
+#: luckyapi/views/credit.py:68
+msgid "to sign"
+msgstr "去簽到"
+
+#: luckyapi/views/credit.py:74
+msgid "start consume title"
+msgstr "參與奪寶"
+
+#: luckyapi/views/credit.py:75
+msgid "consume credit slogan"
+msgstr "每消費1元，獲得10個元寶"
+
+#: luckyapi/views/credit.py:76 luckyapi/views/credit.py:84
+msgid "earn credit"
+msgstr "賺元寶"
+
+#: luckyapi/views/credit.py:82
+msgid "invite partner title"
+msgstr "招募徒弟"
+
+#: luckyapi/views/credit.py:83
+msgid "invite credit slogan"
+msgstr "您和您的好友，都有大禮"
+
+#: luckyapi/views/credit.py:89
+msgid "daily credit title"
+msgstr "日常元寶"
+
+#: luckyapi/views/credit.py:95
+msgid "growth credit title"
+msgstr "成長元寶"
+
+#: luckyapi/views/credit.py:98
+msgid "fresh mission title"
+msgstr "新手任務"
+
+#: luckyapi/views/credit.py:99
+msgid "fresh mission credit slogan"
+msgstr "快速上手，玩轉1元購"
+
+#: luckyapi/views/credit.py:100
+msgid "fetch coupon tips"
+msgstr "領紅包"
+
+#: luckycommon/campaign/miss_return.py:66
+msgid "10 Lucky Coins"
+msgstr "10個樂幣"
+
+#: luckycommon/campaign/miss_return.py:69
+#, python-format
+msgid "%s Sure to Win Coupon"
+msgstr "%s個不中包賠樂幣"
+
+#: luckycommon/credit/db/credit.py:147
+msgid "sign in"
+msgstr "簽到"
+
+#: luckycommon/credit/db/credit.py:149
+msgid "share"
+msgstr "分享"
+
+#: luckycommon/credit/db/credit.py:226
+msgid "treasure"
+msgstr "奪寶"
+
+#: luckycommon/credit/db/credit.py:242
+msgid "redeem points to credits"
+msgstr "將%s元寶兌換成%s元寶"
+
+#: luckycommon/credit/db/credit.py:251
+msgid "redeem"
+msgstr "元寶兌換"
+
+#: luckycommon/db/campaign.py:351 luckycommon/model/campaign.py:91
+msgid "wealth god campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:28
+msgid "recharge campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:35
+msgid "recharge campaign stage 2"
+msgstr ""
+
+#: luckycommon/model/campaign.py:42
+msgid "recharge campaign stage 3"
+msgstr ""
+
+#: luckycommon/model/campaign.py:49
+msgid "recharge campaign stage 4"
+msgstr ""
+
+#: luckycommon/model/campaign.py:56
+msgid "recharge campaign stage 5"
+msgstr ""
+
+#: luckycommon/model/campaign.py:70
+msgid "daily buy campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:77
+msgid "daily buy campaign stage 2"
+msgstr ""
+
+#: luckycommon/model/campaign.py:84
+msgid "moist campaign"
+msgstr ""
+
+#: luckycommon/order/db/order.py:628
+msgid "pay order"
+msgstr "支付訂單"
+
+#: luckycommon/order/db/order.py:725
+msgid "refund order"
+msgstr "訂單退款"
+
+#: luckycommon/partner/callback.py:26 luckycommon/partner/callback.py:33
+msgid "partner reward"
+msgstr "好友儲值回饋"
+
+#: luckycommon/timer/handler.py:716
+msgid "congratulations"
+msgstr "恭喜<font color='#2189ff'>%s</font>{{ time }}前獲得%s"

@@ -1,0 +1,86 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">模板活动列表</li>
+            <li><%= info.id %></li>
+        </ol>
+    </div>
+</header>
+
+<section id="content">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
+            </span>
+            <span class="panel-title">基本信息</span>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="col-md-4">
+                    <p class="form-control-static">商品名称：<%= info.name %></p>
+                </div>
+                <div class="col-md-4">
+                    <p class="form-control-static">当前期数：<%= info.current_term %></p>
+                </div>
+                <div class="col-md-4">
+                    <p class="form-control-static">晒单数量：<%= info.show_count %></p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="panel" >
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
+            </span>
+            <span class="panel-title">活动列表</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped fs13" id="main-list">
+                <thead>
+                    <tr class="bg-light">
+                        <th>中奖用户</th>
+                        <th class="sortable" data-field="term_number">期数</th>
+                        <th class="sortable" data-field="updated_at">中奖时间</th>
+                        <th>晒单图片</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody class="admin-form">
+                    <% _.each(templates, function(obj){
+                    %>
+                        <tr data-id="<%= obj.id %>" >
+                            <td><%= obj.is_virtual ? "*" : "" %><a href="#stats/account/?id=<%= obj.winner %>"><%= obj.winner %></a></td>
+                            <td><%= obj.term_number %></td>
+                            <td><%= obj.announced_at %></td>
+                            <% if(!obj.show || obj.show.status == 1){ %>
+                                <td>未晒单</td>
+                            <% }else if(!obj.show.images){ %>
+                            <td>晒单无图</td>
+                            <% }else{ %>
+                            <td>
+                                <% var imageList = obj.show.images.split(',');
+                                _.each(imageList, function(img){ %>
+                                    <img src="<%= img %>" alt="X" width="20" max-height="20">
+                                <% })%>
+                            </td>
+                            <% } %>
+                            <td class="text-left">
+                                <% if(obj.is_virtual){
+                                    if(obj.show){ %>
+                                    <a href="#show/<%= obj.show.id %>/">编辑</a>
+                                <% }else{ %>
+                                    <a href="#show/add/?activity_id=<%= obj.id %>&template_id=<%= info.id %>&template_name=<%= info.name %>&term_number=<%= obj.term_number %>&user_id=<%= obj.winner %>">创建</a>
+                                <% }
+                                }else if(obj.show && obj.show.status > 1){ %>
+                                    <a href="#show/<%= obj.show.id %>/">审核</a>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <%
+                    }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>

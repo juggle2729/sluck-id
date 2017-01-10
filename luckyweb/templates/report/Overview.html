@@ -1,0 +1,138 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">整体数据概览</a>
+            </li>
+        </ol>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="glyphicons glyphicons-table text-primary"></i>
+            </span>
+            <span class="panel-title">用户整体数据</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped fs13">
+                <thead>
+                    <tr class="bg-light">
+                        <th></th>
+                        <th>新增设备</th>
+                        <th>活跃设备</th>
+                        <th>注册用户</th>
+                        <th>活跃用户</th>
+                        <th>充值人数</th>
+                        <th>充值金额</th>
+                    </tr>
+                </thead>
+                <tbody class="admin-form">
+                    <% _.each({'today': '今天', 'yesterday': '昨天', 'this_month': '本月', 'all': '累计'}, function(v, k){ %>
+                        <tr>
+                            <td><%= v %></td>
+                            <td><%= user[k]['new_device'] || 0 %></td>
+                            <td><%= user[k]['active_device'] || 0 %></td>
+                            <td><%= user[k]['new_user'] || 0 %></td>
+                            <td><%= user[k]['active_user'] || 0 %></td>
+                            <td><%= user[k]['recharge_user'] || 0 %></td>
+                            <td><%= (user[k]['recharge_price'] || 0).toFixed(2) %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="glyphicons glyphicons-table text-primary"></i>
+            </span>
+            <span class="panel-title">活动整体数据</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped fs13">
+                <thead>
+                    <tr class="bg-light">
+                        <th></th>
+                        <th>商品开奖数</th>
+                        <th>渠道用户中奖数</th>
+                        <th>比例</th>
+                        <th>开奖金额</th>
+                        <th>中奖金额</th>
+                        <th>比例</th>
+                        <th>平均开奖时常</th>
+                    </tr>
+                </thead>
+                <tbody class="admin-form">
+                    <% _.each({'today': '今天', 'yesterday': '昨天', 'this_month': '本月', 'all': '累计'}, function(v, k){
+                        var real_win_rate = 0,
+                            real_price_rate = 0,
+                            average_buy_time = 0;
+                        if (activity[k]['announced_activity'] > 0){
+                            real_win_rate = activity[k]['real_win_count'] / activity[k]['announced_activity'];
+                            average_buy_time = activity[k]['total_buy_time'] / activity[k]['announced_activity'];
+                        }
+                        if (activity[k]['announced_price'] > 0){
+                            real_price_rate = activity[k]['real_win_price'] / activity[k]['announced_price'];
+                        }
+                        var d = moment.duration(average_buy_time, 'seconds'),
+                                hours = d.hours();
+                            if(d.days() >0){
+                                hours += d.days() * 24;
+                            }
+                            average_buy_time = [hours, d.minutes(), d.seconds()].join(':');
+                        %>
+                        <tr>
+                            <td><%= v %></td>
+                            <td><%= activity[k]['announced_activity'] || 0 %></td>
+                            <td><%= activity[k]['real_win_count'] || 0 %></td>
+                            <td><%= (real_win_rate * 100 || 0).toFixed(2) %>%</td>
+                            <td><%= activity[k]['announced_price'] || 0 %></td>
+                            <td><%= activity[k]['real_win_price'] || 0%></td>
+                            <td><%= (real_price_rate * 100 || 0).toFixed(2) %>%</td>
+                            <td><%= average_buy_time %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="glyphicons glyphicons-table text-primary"></i>
+            </span>
+            <span class="panel-title">成本总体数据</span>
+        </div>
+        <div class="panel-body">
+            <table class="table table-striped fs13">
+                <thead>
+                    <tr class="bg-light">
+                        <th></th>
+                        <th>总充值金额</th>
+                        <th>实际充值金额</th>
+                        <th>总中奖金额</th>
+                        <th>实际中奖金额</th>
+                        <th>总体利润</th>
+                        <th>总体利润率</th>
+                        <th>实际利润</th>
+                        <th>实际利润率</th>
+                    </tr>
+                </thead>
+                <tbody class="admin-form">
+                    <% _.each({'today': '今天', 'yesterday': '昨天', 'this_month': '本月'}, function(v, k){ %>
+                        <tr>
+                            <td><%= v %></td>
+                            <td><%= (cost[k]['total_recharge'] || 0).toFixed(2) %></td>
+                            <td><%= (cost[k]['recharge_price'] || 0).toFixed(2) %></td>
+                            <td><%= cost[k]['announced_price'] || 0 %></td>
+                            <td><%= cost[k]['real_win_price'] || 0 %></td>
+                            <td><%= (cost[k]['total_profit'] || 0).toFixed(2) %></td>
+                            <td><%= cost[k]['total_recharge'] ? (cost[k]['total_profit'] * 100 / cost[k]['total_recharge']).toFixed(2) : 0 %>%</td>
+                            <td><%= (cost[k]['real_profit'] || 0).toFixed(2) %></td>
+                            <td><%= cost[k]['recharge_price'] ? (cost[k]['real_profit'] * 100 / cost[k]['recharge_price']).toFixed(2) : 0 %>%</td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+</section>

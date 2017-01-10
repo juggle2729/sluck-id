@@ -1,0 +1,117 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#redenvelope/">卡密类订单管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right" id="container">
+        <button class="btn btn-default btn-sm" id="importExcel" title="订单编号">导入人工处理订单</button>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>卡密(加密后)</th>
+                    <th>用户ID</th>
+                    <th>兑换状态</th>
+                    <th>订单ID</th>
+                    <th>订单状态</th>
+                    <th>领取者平台ID</th>
+                    <th>第三方平台ID</th>
+                    <th>价格</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){
+                %>
+                    <tr data-id="<%= item.id %>" >
+                        <td><%= item.id %></td>
+                        <td><%= item.user_id %></td>
+                        <td><%= RED_ENVELOPE_STATUS[item.status] %></td>
+                        <td><a href="#order/<%= item.order_id %>/"><%= item.order_id %></a></td>
+                        <td><%= ORDER_STATUS[item.order_status] %></td>
+                        <td><%= item.open_id %></td>
+                        <td><%= item.third_id %></td>
+                        <td><%= item.price %></td>
+                        <td><%= item.updated_at %></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchOrderId" class="field prepend-icon">
+                <input title="订单编号" type="text" id="searchOrderId" class="gui-input" placeholder="订单编号" data-field="order_id" value="<%= searched.order_id %>" data-useless="">
+                <label for="searchOrderId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchId" class="field prepend-icon">
+                <input title="兑换码" type="text" id="searchId" class="gui-input" placeholder="兑换码" data-field="id" value="<%= searched.id %>" data-useless="">
+                <label for="searchId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchUserId" class="field prepend-icon">
+                <input title="用户ID" type="text" id="searchUserId" class="gui-input" placeholder="用户ID" data-field="user_id" value="<%= searched.user_id %>" data-useless="">
+                <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">兑换状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" class="form-control" data-field="status" data-useless="-1">
+                    <option value="-1" <%= searched.status == -1 ? "selected" : "" %>>所有</option>
+                    <% _.each(RED_ENVELOPE_STATUS, function(v, k){%>
+                    <option value="<%= k %>" <%= searched.status == k ? "selected" : "" %>><%= v %></option>
+                    <% }) %>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <h6 class="fw400">订单状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchOrderStatus" class="form-control" data-field="order_status" data-useless="-1">
+                    <option value="-1" <%= searched.order_status == -1 ? "selected" : "" %>>所有</option>
+                    <% _.each(RED_ORDER_STATUS, function(v, k){%>
+                    <option value="<%= k %>" <%= searched.order_status == k ? "selected" : "" %>><%= v %></option>
+                    <% }) %>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <hr class="short">
+
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+        <button class="btn btn-default btn-block" type="button" id="export">导出</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

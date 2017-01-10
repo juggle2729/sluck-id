@@ -1,0 +1,52 @@
+<div class="dd-handle dd-nodrag dd-primary">Discovery配置
+    <span class="pull-right">
+        <a class="fa fa-plus pt5 pull-right add-select" id="addDiscovery" href="#"></a>
+    </span>
+</div>
+<ol class="dd-list" data-field="discovery" data-type="flat">
+    <li class="dd-item">
+        <div class="dd-content">
+            <div class="row sortable">
+                <% _.each(discoverys, function(discovery){ %>
+                    <div class="col-lg-2 col-md-3 col-xs-4" data-field="-" data-value="<%= discovery.id %>" data-type="int">
+                        <div class="row">
+                            <a href="#" class="close delete-discovery" data-id=<%= discovery.id %>>x</a>
+                            <a href="<%= discovery.icon %>" class="thumbnail image-popup" data-id="<%= discovery.id %>">
+                                <img src="<%= discovery.icon %>" class="fix-icon" alt="<%= discovery.id.toString().indexOf('group')>-1 ? '分组分隔符' : '图像丢失' %>">
+                            </a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </li>
+</ol>
+
+    <!-- Panel popup -->
+<div id="addDiscoveryPanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">添加Discovery</span>
+        </div>
+        <div class="panel-body">
+            <form id="coupon-form" class="form-horizontal" role="form">
+                <div class="form-group" id="coupon-group">
+                    <label for="inputDiscovery" class="col-md-2 control-label">请勾选：</label>
+                    <div class="col-md-6">
+                        <% var selected = _.pluck(discoverys, 'id'); %>
+                        <select id="inputDiscovery" class="form-control" multiple>
+                            <% _.each(allDiscoverys, function(discovery){
+                            if(selected.indexOf(discovery.id) >= 0 )return; %>
+                                <option value="<%= discovery.id %>"><%= discovery.title %><%= discovery.remark ? "(" + discovery.remark + ")" : "" %> </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="submitAddDiscovery">确定</button>
+        </div>
+    </div>
+</div>

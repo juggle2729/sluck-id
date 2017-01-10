@@ -1,0 +1,38 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">用户信息</a>
+            </li>
+        </ol>
+    <div class="topbar-right">
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+    </div>
+</header>
+<section id="content">
+</section>
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchId" class="field prepend-icon">
+                <input title="用户ID" type="text" id="searchId" class="gui-input" placeholder="用户ID" value="<%= searched.id  %>">
+                <label for="id" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>

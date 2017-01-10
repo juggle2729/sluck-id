@@ -1,0 +1,125 @@
+<section id="content" class="">
+    <div class="admin-form theme-info mw700" style="margin-top: 3%;">
+        <div class="row mb15 table-layout">
+            <div class="col-xs-6 va-m pln index-links">
+                <a href="/" title="返回主页">一元购控制台</a>
+            </div>
+            <div class="col-xs-6 text-right va-b pr5">
+                <div class="login-links">
+                    <a href="user.html#signin/" class="" title="登录">登录</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-warning heading-border br-n">
+            <div class="panel-heading">
+                <span class="panel-title"><i class="fa fa-sign-in"></i>注册</span>
+            </div>
+
+            <form method="post" action="/admin/user/" id="form-signup">
+                <div class="panel-body p25 bg-light">
+                    <div class="section">
+                        <label for="nickname" class="field-label">选择一个昵称：</label>
+                        <label for="nickname" class="field prepend-icon">
+                            <input type="text" name="nickname" id="nickname" class="gui-input" placeholder="中英文均可">
+                            <label for="nickname" class="field-icon"><i class="fa fa-envelope"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="section">
+                        <label for="email" class="field-label">邮箱地址</label>
+                        <label for="email" class="field prepend-icon">
+                            <input type="email" name="email" id="email" class="gui-input" placeholder="请使用公司邮箱">
+                            <label for="email" class="field-icon"><i class="fa fa-envelope"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="section">
+                        <label for="password" class="field-label">创建密码</label>
+                        <label for="password" class="field prepend-icon">
+                            <input type="password" name="password" id="password" class="gui-input" placeholder="6~20个字符">
+                            <label for="password" class="field-icon"><i class="fa fa-unlock-alt"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="section">
+                        <label for="confirmPassword" class="field-label">确认密码</label>
+                        <label for="confirmPassword" class="field prepend-icon">
+                            <input type="password" name="confirmPassword" id="confirmPassword" class="gui-input" placeholder="重新键入上面的密码">
+                            <label for="confirmPassword" class="field-icon"><i class="fa fa-lock"></i>
+                            </label>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-footer clearfix">
+                    <button type="submit" class="button btn-primary pull-right">创建</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    jQuery(document).ready(function() {
+        $.validator.methods.smartCaptcha = function(value, element, param) {
+            return value == param;
+        };
+        $("#form-signup").validate({
+            errorClass: "state-error",
+            validClass: "state-success",
+            errorElement: "em",
+
+            rules: {
+                nickname:{
+                    required: true
+                },
+                email:{
+                    required: true,
+                    email: true
+                },
+                password:{
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                },
+                confirmPassword:{
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20,
+                    equalTo: '#password'
+                }
+            },
+            messages:{
+                nickname: {
+                    required: '请选择一个昵称！',
+                },
+                email: {
+                    required: '请输入邮箱！',
+                    email: '请使用一个有效邮箱！'
+                },
+                password:{
+                    required: '请输入密码！'
+                },
+                confirmPassword:{
+                    required: '请再次输入密码！',
+                    equalTo: '两次密码不一致！'
+                }
+            },
+
+            highlight: function(element, errorClass, validClass) {
+                $(element).closest('.field').addClass(errorClass).removeClass(validClass);
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).closest('.field').removeClass(errorClass).addClass(validClass);
+            },
+            errorPlacement: function(error, element) {
+               if (element.is(":radio") || element.is(":checkbox")) {
+                    element.closest('.option-group').after(error);
+               } else {
+                    error.insertAfter(element.parent());
+               }
+            }
+        });
+    });
+</script>

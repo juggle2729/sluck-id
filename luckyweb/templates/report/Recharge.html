@@ -1,0 +1,89 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">每日付费分析</a>
+            </li>
+        </ol>
+    </div>
+</header>
+<section id="content">
+<div class="panel">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="text" id="dateFilter" name="dateFilter" class="form-control text-center" value="<%= options.dateRange[0] %> ~ <%= options.dateRange[1] %>">
+            </div>
+            <div class="col-md-1">
+                <select id="userType" class="form-control">
+                    <option value="-1">所有用户</option>
+                    <option value="1" <%= options.userType == 1 ? "selected" : "" %>>新用户</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <input type="button" id="search" class="btn btn-primary btn-block form-control" value="提交">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="panel">
+    <table class="table table-striped fs13">
+        <thead>
+            <tr class="bg-light">
+                <th>充值区间</th>
+                <th>充值人数</th>
+                <th>充值金额</th>
+                <th>次日回流率</th>
+                <th>中奖人数</th>
+                <th>中奖者次日回流人数</th>
+                <th>中奖者次日付费人数</th>
+                <th>盈利人数</th>
+                <th>盈利者次日回流人数</th>
+                <th>盈利者次日付费人数</th>
+                <th>亏损人数</th>
+                <th>亏损者次日回流人数</th>
+                <th>亏损者次日付费人数</th>
+            </tr>
+        </thead>
+        <tbody class="admin-form">
+            <% _.each(["1-2","3-10","11-50","51-100", "101-500", "501-1000", "1001-2000",
+                       "2001-4000", "4001-8000", "8001-15000", "15000-None"], function(key){
+                       var back_key = key + '_back';
+                       if(item[back_key] == null)item[back_key]={};
+             %>
+                <tr>
+                    <td><%= key %></td>
+                    <td><%= item[key]['recharge_count'] %></td>
+                    <td><%= (item[key]['recharge_price']).toFixed(2) %></td>
+                    <td><%= item[key]['recharge_count'] ? ((item[back_key]['2_back_count'] || 0) * 100 /item[key]['recharge_count']).toFixed(2) : 0 %>%</td>
+                    <td><%= item[key]['win_count'] %></td>
+                    <td><%= item[back_key]['2_win_back_count'] || '-' %></td>
+                    <td><%= item[back_key]['2_win_recharge_count'] || '-' %></td>
+                    <td><%= item[key]['gain_count'] %></td>
+                    <td><%= item[back_key]['2_gain_back_count'] || '-' %></td>
+                    <td><%= item[back_key]['2_gain_recharge_count'] || '-' %></td>
+                    <td><%= item[key]['lose_count'] %></td>
+                    <td><%= item[back_key]['2_lose_back_count'] || '-' %></td>
+                    <td><%= item[back_key]['2_lose_recharge_count'] || '-' %></td>
+                </tr>
+            <% }) %>
+                <tr>
+                    <td>总计</td>
+                    <td><%= item['recharge_count'] %></td>
+                    <td><%= (item['recharge_price']).toFixed(2) %></td>
+                    <td><%= item['recharge_count'] ? ((item['2_back_count'] || 0) * 100 / item['recharge_count']).toFixed(2) : 0 %>%</td>
+                    <td><%= item['win_count'] %></td>
+                    <td><%= item['2_win_back_count'] || '-' %></td>
+                    <td><%= item['2_win_recharge_count'] || '-' %></td>
+                    <td><%= item['gain_count'] %></td>
+                    <td><%= item['2_gain_back_count'] || '-'%></td>
+                    <td><%= item['2_gain_recharge_count'] || '-' %></td>
+                    <td><%= item['lose_count'] %></td>
+                    <td><%= item['2_lose_back_count'] || '-' %></td>
+                    <td><%= item['2_lose_recharge_count'] || '-' %></td>
+                </tr>
+        </tbody>
+    </table>
+</div>
+</section>

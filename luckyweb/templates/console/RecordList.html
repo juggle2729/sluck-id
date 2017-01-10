@@ -1,0 +1,115 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#console/record/">操作纪录</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="created_at">操作时间</th>
+                    <th>操作者</th>
+                    <th>资源</th>
+                    <th>资源ID</th>
+                    <th>动作</th>
+                    <th>内容</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){ %>
+                        <td><%= item.created_at %></td>
+                        <td><%= item.email %></td>
+                        <td><%= RESOURCE_DICT[item.resource] %></td>
+                        <td><%= item.resource_id %></td>
+                        <td><%= ACTION_DICT[item.action] %></td>
+                        <% var content = ADQ.utils.humanizeContent(item.resource, item.content); %>
+                        <td><%= content.length > 30 ? content.substr(0, 30) + '...' : content %></td>
+                        <td><a href="#" class="glyphicons glyphicons-eye_open show-info" data-content="<%= content %>"></a></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchId" class="field prepend-icon">
+                <input title="操作者邮箱" type="text" class="gui-input" placeholder="操作者邮箱" data-field="email" data-useless="" value="<%= searched.email %>">
+                <label class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">操作时间</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                <input type="text" title="下限，包含当天" class="gui-input date-input" data-useless="" data-field="created_at.$gte" value="<%= searched.created_at ? searched.created_at.$gte : ''%>">
+            </div>
+            <div class="col-md-6">
+                <input type="text" title="上限，不包括当天" class="gui-input date-input" data-useless="" data-field="created_at.$lt" value="<%= searched.created_at ? searched.created_at.$lt : ''%>">
+            </div>
+        </div>
+
+        <h6 class="fw400">资源</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select class="form-control" data-field="resource" data-useless="">
+                    <option value="" >所有</option>
+                    <% _.each(RESOURCE_DICT, function(v, k){ %>
+                        <option value="<%= k %>" <%= searched.resource == k ? "selected" : "" %>><%= v %></option>
+                    <% })%>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <div class="section mb15">
+            <label for="searchResourceID" class="field prepend-icon">
+                <input title="资源ID" type="text" class="gui-input" placeholder="资源ID" data-field="resource_id" data-useless="" value="<%= searched.resource_id %>">
+                <label class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">动作</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select class="form-control" data-field="action" data-type="int" data-useless="-1">
+                    <option value="-1">所有</option>
+                    <% _.each(ACTION_DICT, function(v, k){ %>
+                        <option value="<%= k %>" <%= searched.action == k ? "selected" : "" %>><%= v %></option>
+                    <% })%>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

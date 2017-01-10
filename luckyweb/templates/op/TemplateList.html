@@ -1,0 +1,163 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#template/">活动模板管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#template/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新建活动模板</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="template-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th class="sortable" data-field="name">名称</th>
+                    <th>封面</th>
+                    <th class="">分类</th>
+                    <th class="">类型</th>
+                    <th class="sortable" data-field="target_amount">目标数量</th>
+                    <th class="">当前期数</th>
+                    <th class="">状态</th>
+                    <th class="sortable" data-field="weight">权重</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th class="">开始时间</th>
+                    <th class="">操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes,
+                        type = "1元购",
+                        ca = [];
+                    _.each(attrs.category_ids, function(i){
+                        ca.push(categoryDct[i]);
+                    })
+                    ca = ca.join(',');
+                    if(attrs.price == 0){
+                        type = "0元购"
+                    }else {
+                        type =  attrs.unit + "元购"
+                    }
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#template/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td class=""><%= attrs.name %></td>
+                        <td class="">
+                            <% cover_url = attrs.cover || attrs.images.split(',')[0] %>
+                            <img src="<%= cover_url %>" height="30" max-width="30" />
+                        </td>
+                        <td><%= ca %></td>
+                        <td class=""><%= type %></td>
+                        <td class=""><%= attrs.target_amount %></td>
+                        <td class=""><%= attrs.current_term %></td>
+                        <td class=""><%= status[attrs.status] %></td>
+                        <td class=""><%= attrs.weight %></td>
+                        <td class=""><%= attrs.updated_at %></td>
+                        <td><%= attrs.start_at ? attrs.start_at : "-" %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#template/<%= attrs.id %>/"></a>
+                            <!-- <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a> -->
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchIdOrName" class="field prepend-icon">
+                <input title="活动ID或名称" type="text" data-field="idOrName" id="searchIdOrName" class="gui-input" placeholder="活动ID或名称" value="<%= searched.idOrName  %>">
+                <label for="template-id" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">价格区间</h6>
+        <div class="section mb15">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="searchIdOrName" class="field prepend-icon">
+                        <input title="下限(含)" type="text" data-field="price_lower" id="searchPriceLower" class="gui-input" placeholder="下限(含)" value="<%= searched.price_lower  %>">
+                        <label for="template-id" class="field-icon"><i class="fa fa-tag"></i>
+                        </label>
+                    </label>
+                </div>
+                <div class="col-md-6">
+                    <label for="searchIdOrName" class="field prepend-icon">
+                        <input title="上限(含)" type="text" data-field="price_upper" id="searchPriceUpper" class="gui-input" placeholder="上限(含)" value="<%= searched.price_upper  %>">
+                        <label for="template-id" class="field-icon"><i class="fa fa-tag"></i>
+                        </label>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <h6 class="fw400">活动状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" name="searchStatus" data-field="status">
+                    <option value="-1" <%= searched.status == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="0" <%= searched.status == 0 ? 'selected' : '' %>>待开始</option>
+                    <option value="1" <%= searched.status == 1 ? 'selected' : '' %>>进行中</option>
+                    <option value="2" <%= searched.status == 2 ? 'selected' : '' %>>已暂停</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <h6 class="fw400">活动类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchType" name="searchType" data-field="type">
+                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>0元购</option>
+                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>1元购</option>
+                    <option value="10" <%= searched.type == 10 ? 'selected' : '' %>>10元购</option>
+                    <option value="100" <%= searched.type == 100 ? 'selected' : '' %>>100元购</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <h6 class="fw400">活动分类</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchCategory" name="searchCategory" data-field="category">
+                    <option value="-1" <%= searched.category == -1 ? 'selected' : '' %>>所有</option>
+                    <% _.each(categorys, function(category){
+                        var attr = category.attributes; %>
+                    <option value="<%= attr.id %>" <%= searched.category == attr.id ? 'selected' : '' %>><%= attr.name %></option>
+                    <%})%>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

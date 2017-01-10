@@ -1,0 +1,77 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#preset/homepage/">Homepage数据管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#preset/homepage/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增homepage数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>图像</th>
+                    <th>命令</th>
+                    <th>灰度策略</th>       
+                    <th class="sortable" data-field="updated_at">最后修改时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(homepages, function(homepage){ %>
+                    <tr data-id="<%= homepage.id %>" <%= homepage.id.toString().indexOf('group')>-1 ? 'hidden' : '' %>>
+                        <td><a href="#preset/homepage/<%= homepage.id %>/" ><%= homepage.id %></a></td>
+                        <td><%= homepage.name %></td>
+                        <td>
+                            <img src="<%= homepage.icon %>" height="30" max-width="30" />
+                        </td>
+                        <td><%= homepage.cmd %></td>
+                        <td><%= homepage.abtest || '-'%></td>
+                        <td><%= homepage.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#preset/homepage/<%= homepage.id %>/"></a>
+                            <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchTitle" class="field prepend-icon">
+                <input title="名称" type="text" data-field="title" id="searchTitle" class="gui-input" placeholder="名称" value="<%= searched.title  %>">
+                <label for="searchTitle" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

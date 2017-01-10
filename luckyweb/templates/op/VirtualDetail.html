@@ -1,0 +1,53 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">自有账户详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#virtual/">自有账户管理</a>
+            </li>
+            <li class="crumb-trail">账户编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id="virtualSave"><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
+            </span>
+            <span class="panel-title">参数设置</span>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-1" id="container">
+                    <img id="avatar" width="100%" src="<%= info.avatar_id %>" alt="avatar" >
+                    <button id="uploadAvatar" class="form-control" data-img="avatar">上传头像</button>
+                </div>
+                <div class="col-md-11">
+                    <form id="virtual-form" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="inputNickname" class="col-md-1 control-label">昵称:</label>
+                            <div class="col-md-5">
+                                <input type="text" id="inputNickname" class="form-control" value="<%= info.nick_name %>" placeholder="昵称..." required>
+                            </div>
+                            <label for="inputIp" class="col-md-1 control-label">IP地址:</label>
+                            <div class="col-md-5">
+                                <input type="text" id="inputIp" data-type="ip" class="form-control" value="<%= info.ip %>" placeholder="IP..." required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-1 control-label" for="inputPhone">手机号:</label>
+                            <div class="col-md-11">
+                                <input type="text" id="inputPhone" class="form-control" value="<%= info.phone %>" placeholder="可不填，如果填请以10/11/12开头，以避免和真实手机号冲突">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

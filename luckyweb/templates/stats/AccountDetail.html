@@ -1,0 +1,142 @@
+<%if(id){%>
+    <div class="pv30 ph40 bg-light dark br-b br-grey posr">
+        <div class="table-layout">
+            <div class="w200 text-center pr30 hidden-xs">
+                <img src="<%= avatar_id %>" alt="头像">
+            </div>
+            <div class="va-t m30">
+                <div class="row">
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+                            <dt>ID</dt>
+                            <dd><%= id %></dd>
+                            <dt>TOKEN</dt>
+                            <dd><%= token %></dd>
+                            <dt>手机</dt>
+                            <dd><%= phone %></dd>
+                            <dt>登录IP</dt>
+                            <dd><%= ip || "未知" %></dd>
+                            <dt>登录地址</dt>
+                            <dd><%= addr || "未知" %></dd>
+                        </dl>
+                    <% if(status == 1){
+                        %>
+                            <span class="label label-danger">刷号用户</span>
+                        <% }
+                        %>
+                    </div>
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+                            <dt>昵称</dt>
+                            <dd><%= nick_name %></dd>
+                            <dt>余额</dt>
+                            <dd><%= balance %></dd>
+                            <dt>元宝</dt>
+                            <dd><%= credit %></dd>
+                            <dt>注册时间</dt>
+                            <dd><%= created_at %></dd>
+                            <dt>最后活跃时间</dt>
+                            <dd><%= user_stats.updated_at %></dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-4">
+                        <dl class="dl-horizontal">
+                            <dt>注册渠道</dt>
+                            <dd><%= user_stats.chn || "none" %></dd>
+                            <dt>安卓ID</dt>
+                            <dd><%= user_stats.aid || "none" %></dd>
+                            <dt>累计活跃天数</dt>
+                            <dd><%= active_days || 0 %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p25 pt35">
+        <div class="col-md-6">
+            <div class="panel">
+                <div class="panel-heading">
+                    <span class="panel-icon"><i class="fa fa-star text-primary"></i>
+                    </span>
+                    <span class="panel-title">累计数据</span>
+                </div>
+                <% var  ur = user_stats.recharge || {},
+                        up = user_stats.pay || {},
+                        uw = user_stats.win || {};
+                %>
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>充值总额</dt>
+                            <dd><%= ur.total || 0 %></dd>
+                            <dt>充值次数</dt>
+                            <dd><%= ur.count || 0 %></dd>
+                            <% for(var k in ur){ %>
+                                <% if(k!='total' && k!='count' && k!='last_at'){ %>
+                                    <dt><%= k %></dt>
+                                    <dd><%= ur[k] %></dd>
+                                <% } %>
+                            <% } %>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>参加活动次数</dt>
+                            <dd><%= up.count || 0 %></dd>
+                            <dt>参加活动人次</dt>
+                            <dd><%= up.total || 0 %></dd>
+                            <dt>中奖次数</dt>
+                            <dd><%= uw.count || 0 %></dd>
+                            <dt>中奖金额</dt>
+                            <dd><%= uw.total || 0 %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel">
+                <div class="panel-heading">
+                    <span class="panel-icon"><i class="fa fa-star text-primary"></i>
+                    </span>
+                    <span class="panel-title">今日数据</span>
+                </div>
+                <% var dr = daily_stats.recharge || {},
+                       dp = daily_stats.pay || {},
+                       dw = daily_stats.win || {};
+                %>
+                <div class="panel-body">
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>充值总额</dt>
+                            <dd><%= dr.total || 0 %></dd>
+                            <dt>充值次数</dt>
+                            <dd><%= dr.count || 0 %></dd>
+                            <% for(var k in dr){ %>
+                                <% if(k!='total' && k!='count' && k!='last_at'){ %>
+                                    <dt><%= k %></dt>
+                                    <dd><%= dr[k] %></dd>
+                                <% } %>
+                            <% } %>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            <dt>参加活动次数</dt>
+                            <dd><%= dp.count || 0 %></dd>
+                            <dt>参加活动人次</dt>
+                            <dd><%= dp.total || 0 %></dd>
+                            <dt>中奖次数</dt>
+                            <dd><%= dw.count || 0 %></dd>
+                            <dt>中奖金额</dt>
+                            <dd><%= dw.total || 0 %></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<%}else{%>
+    <h3 class="text-danger">用户不存在！</h3>
+<%}%>

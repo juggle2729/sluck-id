@@ -1,0 +1,127 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#goods/">商品管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#goods/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增商品</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th class="sortable" data-field="name">名称</th>
+                    <th class="sortable" data-field="price">价格</th>
+                    <th>单位</th>
+                    <th class="sortable" data-field="sold">已售出</th>
+                    <th class="sortable" data-field="total">总库存</th>
+                    <th>发货方式</th>
+                    <th>货源类型</th>
+                    <th>商品分类</th>
+                    <th>供货商</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){
+                %>
+                    <tr data-id="<%= item.id %>" >
+                        <td><a href="#goods/<%= item.id %>/" ><%= item.id %></a></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.price %></td>
+                        <td><%= PRICE_UNITS[item.unit] %></td>
+                        <td><%= item.sold %></td>
+                        <td><%= item.total %></td>
+                        <td><%= SHIPPING_TYPE[item.shipping_type] %></td>
+                        <td><%= sourceCollection.length > 0 ? sourceCollection.get(item.source_type).get('name') : '-' %></td>
+                        <td><%= item.category_name.join('/') || '-' %></td>
+                        <td><%= item.brand_name || '-' %></td>
+                        <td><%= item.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#goods/<%= item.id %>/"></a>
+                            <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+        <h4 class="mt5 text-muted fw500">第三方库存：</h4>
+        <hr class="short">
+        <div class="section mb15">
+            <table class="table">
+                <thead>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>库存</th>
+                </thead>
+                <tbody>
+                <% _.each(stock, function(x){ %>
+                    <tr>
+                        <td><%= x.product_id %></td>
+                        <td><%= x.title %></td>
+                        <td><%= x.count %></td>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+        <hr class="short">
+        <div class="section mb15">
+            <label for="searchIdOrName" class="field prepend-icon">
+                <input type="text" title="商品ID或名称" name="show-id" id="searchIdOrName" class="gui-input" placeholder="商品ID或名称" data-field="idOrName" value=<%= searched.idOrName %>>
+                <label for="show-id" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">商品类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchShippingType" class="form-control" data-field="shipping_type">
+                    <option value="-1" <%= searched.shipping_type == -1 ? "selected" : "" %>>所有</option>
+                    <%_.each(SHIPPING_TYPE, function(v, k){ %>
+                    <option value="<%= k %>" <%= searched.shipping_type == k ? "selected" : "" %>><%= v %></option>
+                    <% })%>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <h6 class="fw400">货源类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchSourceType" class="form-control search-select" data-field="source_type">
+                    <option value="-1" <%= searched.source_type == -1 ? "selected" : "" %>>所有</option>
+                    <% var sources = sourceCollection.toJSON();
+                        _.each(sources, function(source){ %>
+                    <option value="<%= source.id %>" <%= searched.source_type == source.id ? "selected" : "" %>><%= source.name %></option>
+                    <% })%>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <hr class="short">
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

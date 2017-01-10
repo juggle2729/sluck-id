@@ -1,0 +1,62 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">用户详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#console/user/">用户管理</a>
+            </li>
+            <li class="crumb-trail">用户编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='userSave'><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <form id="user-form" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-md-1 control-label">用户ID：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <%= id %>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">用户邮箱：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <%= email %>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">用户昵称:</label>
+                <div class="col-md-4">
+                    <input type="text" maxlength="12" value="<%= nickname %>" id="inputNickname" class="form-control">
+                </div>
+                <label class="col-md-1 control-label">用户角色：</label>
+                <div class="col-md-4">
+                    <select id="inputRole" class="form-control">
+                        <option value="0" <%= role == 0 ? 'selected' : '' %>>未激活/黑名单</option>
+                        <option value="1" <%= role == 1 ? 'selected' : '' %>>一般用户</option>
+                        <% if(ori_role >= 2){ %>{
+                        <option value="2" <%= role == 2 ? 'selected' : '' %>>运营人员</option>
+                        <%}%>
+                        <% if(ori_role >= 3){ %>{
+                        <option value="3" <%= role == 3 ? 'selected' : '' %>>高级运营</option>
+                        <%}%>                        
+                        <% if(ori_role >= 4){ %>
+                        <option value="4" <%= role == 4 ? 'selected' : '' %>>运营主管</option>
+                        <%}%>
+                        <% if(ori_role >= 5){ %>
+                        <option value="5" <%= role == 5 ? 'selected' : '' %>>开发人员</option>
+                        <%}%>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</section>

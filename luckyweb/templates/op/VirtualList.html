@@ -1,0 +1,151 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#virtual/">自有账户管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right" id="container">
+        <button class="btn btn-default btn-sm" id="uploadAvatar">批量上传头像</button>
+        <button class="btn btn-default btn-sm" title="先上传头像，再导入资料" id="importExcel">批量导入</button>
+        <a href="#virtual/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新建自有账户</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="virtual-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th>用户ID</th>
+                    <th class="sortable" data-field="nick_name">昵称</th>
+                    <th>头像</th>
+                    <th class="">IP</th>
+                    <th class="">手机</th>
+                    <th>已使用</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th class="">操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#virtual/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td><a href="#stats/account/?id=<%= attrs.user_id %>"> <%= attrs.user_id %></a></td>
+                        <td class=""><%= attrs.nick_name %></td>
+                        <td class="">
+                            <img src="<%= attrs.avatar_id || 'assets/img/avatars/placeholder.png' %>" height="30" max-width="30" />
+                        </td>
+                        <td><%= attrs.ip || "-"%></td>
+                        <td class=""><%= attrs.phone || "-" %></td>
+                        <td class=""><%= attrs.deleted ? "是" : "否"%></td>
+                        <td class=""><%= attrs.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#virtual/<%= attrs.id %>/"></a>
+                            <% if(attrs.deleted == 0){ %>
+                                <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                            <% } %>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Panel popup -->
+<div id="uploadImagePanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">上传图片</span>
+        </div>
+        <div class="panel-body">
+            <h3 class="mt5">单个图片最好不要超过4M</h3>
+            <div class="row">
+                <div class="col-md-3">
+                    <div id="container">
+                        <a class="btn btn-default btn-lg" id="pickfiles" href="#">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-9 mt15">
+                    <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" id="uploadprocess"></div>
+                </div>
+            </div>
+            <p class="mt10 text-muted" id='countTip'></p>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="addCachedImgs">确定</button>
+        </div>
+    </div>
+</div>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+        <h4 class="mt5 text-muted fw500">提示：</h4>
+            <hr class="short">
+            <h5 class="title-divider text-muted mb20"> 剩余未使用头像 <span class="pull-right"> <%= unused_avatar_count %> </span> </h5>
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+        <div class="section mb15">
+            <label for="searchNickName" class="field prepend-icon">
+                <input title="昵称" type="text" data-field="nick_name" id="searchNickName" class="gui-input" placeholder="昵称" value="<%= searched.nick_name  %>">
+                <label for="searchNickName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchUserId" class="field prepend-icon">
+                <input title="用户ID" type="text" data-field="user_id" id="searchUserId" class="gui-input" placeholder="用户ID" value="<%= searched.user_id  %>">
+                <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">头像状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" name="searchStatus" data-field="status">
+                    <option value="-1" <%= searched.status == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="0" <%= searched.status == 0 ? 'selected' : '' %>>无头像</option>
+                    <option value="1" <%= searched.status == 1 ? 'selected' : '' %>>有头像</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <h6 class="fw400">使用状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchType" name="searchType" data-field="type">
+                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>全部</option>
+                    <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>未使用</option>
+                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>已使用</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

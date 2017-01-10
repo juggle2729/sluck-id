@@ -1,0 +1,120 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#stats/order/">订单信息</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#" class="btn btn-default btn-sm light fw600 ml10" id="exportData"><span class="glyphicon glyphicon-cloud-download pr5"></span>导出数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <%if(models.length>0){%>
+    <div class="panel overflow">
+        <table class="table table-striped fs13" id="order-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">订单ID</th>
+                    <th class="sortable" data-field="created_at">创建时间</th>
+                    <th>用户ID</th>
+                    <th>活动ID</th>
+                    <th class="" width="250px">活动简称(期数)</th>
+                    <th class="">活动状态</th>
+                    <th class="">活动类型</th>
+                    <th class="sortable" data-field="total_price">参与人次</th>
+                    <th>省份</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""> <a href="#order/<%= attrs.id %>/"><%= attrs.id %></a></td>
+                        <td class=""><%= attrs.created_at %></td>
+                        <td class=""><a href="#stats/account/?id=<%= attrs.buyer %>"><%= attrs.is_virtual ? '*' : '' %><%= attrs.buyer %><a></td>
+                        <td class=""><%= attrs.activity_id%></td>
+                        <td class=""><%= attrs.activity_name %>(第<%= attrs.term_number %>期)</td>
+                        <td class=""><%= ACTIVITY_STATUS[attrs.activity_status] %></td>
+                        <td class=""><%= attrs.activity_type %>元购</td>
+                        <td><%= attrs.total_price %></td>
+                        <td><%= attrs.addr || '-' %></td>
+                        <td><%= attrs.ip || '-' %></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+    <% }else{ %>
+    <h4 class="text-muted">无数据</h4>
+    <% } %>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+        <h4 class="mt5 text-muted fw500">总体数据：</h4>
+        <hr class="short">
+        <h5 class="title-divider text-muted mb20"> 渠道用户参与人数(人次) <span class="pull-right"> <%= overview.pay_user %>(<%= overview.pay_price %>) </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 渠道用户夺宝币余额 <span class="pull-right"> <%= overview.balance.toFixed(2) %> </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 今日已开奖金额 <span class="pull-right"><%= overview.announced_price.toFixed(2) %></span> </h5>
+        <h5 class="title-divider text-muted mb20"> 今日已开奖抽水 <span class="pull-right"><%= overview.real_profit.toFixed(2) %> </span> </h5>
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+        <hr class="short">
+        <div class="section mb15">
+            <label for="searchActivityId" class="field prepend-icon">
+                <input title="活动ID或名称" type="text" data-field="activity_id" id="searchActivityId" class="gui-input" placeholder="活动ID或名称" value="<%= searched.activity_id  %>">
+                <label for="searchActivityId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchBuyer" class="field prepend-icon">
+                <input title="用户ID" type="text" data-field="buyer" id="searchBuyer" class="gui-input" placeholder="用户ID" value="<%= searched.buyer  %>">
+                <label for="searchBuyer" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">下单时间</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                    <input type="text" title="下限，包含当天" name="searchCreatedAtLower" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
+                    </label>
+                </label>
+            </div>
+            <div class="col-md-6">
+                    <input type="text" title="上限，不包括当天" name="searchCreatedAtUpper" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
+                    </label>
+                </label>
+            </div>
+        </div>
+        <h6 class="fw400">活动类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchType" name="searchType" data-field="type">
+                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>0元购</option>
+                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>1元购</option>
+                    <option value="10" <%= searched.type == 10 ? 'selected' : '' %>>10元购</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

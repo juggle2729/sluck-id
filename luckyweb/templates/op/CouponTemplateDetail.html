@@ -1,0 +1,101 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">红包模板详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#coupon/template/">红包模板管理</a>
+            </li>
+            <li class="crumb-trail">红包模板编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='couponTemplateSave'><span class="fa fa-save"></span> 保存 </a>
+    </div>
+</header>
+
+<section id="content">
+    <div class="panel-body">
+        <h3>说明: </h3>
+        <p><b>1. 不填写限定活动分类和限定活动id就是全场可用.</b></p>
+        <p><b>2. 同时填写限定活动分类和限定活动id,取并集.</b></p>
+        <p><b>3. 如果选择了仅限实物,指定的活动分类和活动Id将会过滤非实物商品.</b></p>
+    </div>
+    <div class="panel">
+        <form id="coupon-template-form" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="inputTitle" class="col-md-1 control-label">红包标题：</label>
+                <div class="col-md-5">
+                    <input type="text" id="inputTitle" class="form-control" value="<%= title %>" placeholder="请输入红包标题..." required>
+                </div>
+                <label for="inputDesc" class="col-md-1 control-label">红包描述：</label>
+                <div class="col-md-5">
+                    <input type="text" id="inputDesc" class="form-control" value="<%= desc %>" placeholder="请输入红包描述..." required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label" for="inputPrice">金额:</label>
+                <div class="col-md-5">
+                    <input type="number" id="inputPrice" class="form-control" value="<%= price %>" required>
+                </div>
+                <label class="col-md-1 control-label" for="inputConditionPrice">条件金额:</label>
+                <div class="col-md-5">
+                    <input type="number" id="inputConditionPrice" class="form-control" value="<%= condition_price %>" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label" for="inputConditionPrice">红包类型:</label>
+                <div class="col-md-5">
+                    <select id="inputCouponType" class="form-control">
+                        <option value="1" <%= coupon_type == 1 ? 'selected' : '' %>>直减</option>
+                        <option value="2" <%= coupon_type == 2 ? 'selected' : '' %>>满减</option>
+                    </select>
+                </div>
+                <label for="inputValidTs" class="col-md-1 control-label">有效期:</label>
+                <div class="col-md-5">
+                    <select id="inputValidTs" class="form-control">
+                        <% var d = valid_ts/60/60/24;%>
+                        <option value="0" <%= d == 0 ? "selected" : "" %>>当天</option>
+                        <option value="3" <%= d == 3 ? "selected" : "" %>>3天</option>
+                        <option value="7" <%= d == 7 ? "selected" : "" %>>7天</option>
+                    </select>
+                </div>
+            </div>
+            <br> <br>
+            <div class="form-group">
+                <label for="inputActivityCategories" class="col-md-1 control-label">限定活动分类:</label>
+                <div class="col-md-5">
+                    <select data-field="activity_categories" id="inputActivityCategories" class="form-control multiselect" multiple="multiple">
+                        <% _.each(allCategories, function(o){ %>
+                            <option value="<%= o.id %>" <%= (activity_categories || '').split(",").includes(o.id.toString()) ? "selected" : "" %> ><%= o.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <label for='inputActivities' class="col-md-1 control-label">限定活动id:</label>
+                <div class="col-md-5">
+                    <input type="text" value="<%= activity_tids %>" id="inputActivities" class="form-control" placeholder="可以填写多个商品id,用逗号分隔">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputCmd" class="col-md-1 control-label">cmd</label>
+                <div class="col-md-5">
+                    <input placeholder="新建时会自动生成,可以自定义" type="text" id="inputCmd" class="form-control" value="<%= cmd %>">
+                </div>
+                <label for="inputRemark" class="col-md-1 control-label">Remark</label>
+                <div class="col-md-5">
+                    <input placeholder="仅限实物类商品使用/全场通用,必填" required type="text" id="inputRemark" class="form-control" value="<%= remark %>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputScopeAll" class="col-md-1 control-label">全场使用/仅限实物</label>
+                <div class="col-md-5">
+                    <select id="inputScopeAll" class="form-control">
+                        <option value="1" <%= scope_all == 1 ? "selected" : "" %>>全场通用</option>
+                        <option value="0" <%= scope_all == 0 ? "selected" : "" %>>仅限实物</option>
+                    </select0
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

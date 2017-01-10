@@ -1,0 +1,178 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#order/?status=5">订单管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right" id="container">
+        <button class="btn btn-default btn-sm" id="importExcel" title="订单编号 快递单号 快递名 供货商明细 购买价格 发货时间 备注(可选)">导入发货单</button>
+        <button class="btn btn-danger btn-sm" id="autoShip" title="请确认本页订单无问题后再使用">一键发货</button>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="order-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th>商品名</th>
+                    <th>期数</th>
+                    <th>商品价格</th>
+                    <th>用户ID</th>
+                    <th>订单状态</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){ %>
+                    <tr data-id="<%= item.id %>" >
+                        <td><a href="#order/<%= item.id %>/"><%= item.id %></a></td>
+                        <td><%= item.goods_name %></td>
+                        <td><%= item.term_number %></td>
+                        <td><%= item.target_amount %></td>
+                        <td><a href="#stats/account/?id=<%= item.buyer %>"><%= item.is_virtual ? '*' : '' %><%= item.buyer %></a></td>
+                        <% if(item.status == 5 && item.ship_status){ %>
+                        <td><font color="red"><%= SHIP_STATUS[item.ship_status] %></font></td>
+                        <% } else { %>
+                        <td><%= ORDER_STATUS[item.status] %></td>
+                        <% } %>
+                        <td><%= item.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#order/<%= item.id %>/"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+        <div class="section mb15">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="shortcut" data-aria="id">订单ID</a></li>
+                        <li><a href="#" class="shortcut" data-aria="buyer">用户ID</a></li>
+                        <li><a href="#" class="shortcut" data-aria="express_num">快递编号</a></li>
+                    </ul>
+                </div>
+                <% var field = searched.id_field || 'id',
+                        tips = '订单ID';
+                    if(field == 'id') tips = '订单ID';
+                    else if(field == 'buyer') tips = '用户ID';
+                    else if(field == 'express_num') tips= '快递编号';%>
+                <input type="text" class="gui-input" id="searchId" data-field="<%= field %>" value="<%= searched[field] %>" placeholder="<%= tips %>" data-useless="">
+            </div>
+        </div>
+        <div class="section mb15">
+            <label class="field prepend-icon">
+                <input title="商品名" type="text" class="gui-input" placeholder="商品名" data-field="goods_name" value="<%= searched.goods_name %>" data-useless="">
+                <label class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15 award-only">
+            <label class="field prepend-icon">
+                <input title="供货商明细" type="text" id="inputBuyFrom" class="gui-input" placeholder="供货商明细" data-field="buy_from" value="<%= searched.buy_from %>" data-useless="">
+                <label for="buy_from" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <% var tf = searched.time_field || 'award_time',
+               title = '领奖时间(点击切换)';
+               if(tf == 'send_time')title = '发货时间(点击切换)';  %>
+        <h6 class="fw400" id="switchSearchTime"><%= title %></h6>
+        <div class="section row" id="searchAwardTime" <%= tf == 'award_time' ? '' : 'hidden' %>>
+            <div class="col-md-6">
+                <input type="text" class="gui-input datetime-input" data-field="award_time.$gte" data-useless="" placeholder=">=" value="<%= searched.award_time ? searched.award_time.$gte : '' %>">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="gui-input datetime-input" data-field="award_time.$lte" data-useless="" placeholder="<=" value="<%= searched.award_time ? searched.award_time.$lte : '' %>">
+            </div>
+        </div>
+        <div class="section row" id="searchSendTime" <%= tf == 'send_time' ? '' : 'hidden' %>>
+            <div class="col-md-6">
+                <input type="text" class="gui-input date-input" data-field="send_time.$gte" data-useless="" placeholder=">=" value="<%= searched.send_time ? searched.send_time.$gte : '' %>">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="gui-input date-input" data-field="send_time.$lte" data-useless="" placeholder="<=" value="<%= searched.send_time ? searched.send_time.$lte : '' %>">
+            </div>
+        </div>
+        <h6 class="fw400">订单状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" class="form-control" data-field="status" data-useless="-1" data-type="int">
+                    <option value="-1" <%= searched.status == -1 ? "selected" : "" %>>所有</option>
+                    <% _.each(ORDER_STATUS, function(v, k){%>
+                    <option value="<%= k %>" <%= searched.status == k ? "selected" : "" %>><%= v %></option>
+                    <% }) %>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <div class="award-only">
+            <h6 class="fw400">发货状态</h6>
+            <div class="section mb15">
+                <label class="field select">
+                    <select class="form-control" data-field="ship_status" data-useless="-1" data-type="int">
+                        <option value="-1" <%= searched.ship_status == -1 ? "selected" : "" %>>所有</option>
+                        <% _.each(SHIP_STATUS, function(v, k){%>
+                        <option value="<%= k %>" <%= searched.ship_status == k ? "selected" : "" %>><%= v %></option>
+                        <% }) %>
+                    </select>
+                    <i class="arrow double"></i>
+                </label>
+            </div>
+            <h6 class="fw400">发货方式</h6>
+            <div class="section mb15">
+                <label class="field select">
+                    <select class="form-control" data-field="shipping_type" data-useless="-1" data-type="int">
+                        <option value="-1" <%= searched.shipping_type == -1 ? "selected" : "" %>>所有</option>
+                        <% _.each(SHIPPING_TYPE, function(v, k){%>
+                        <option value="<%= k %>" <%= searched.shipping_type == k ? "selected" : "" %>><%= v %></option>
+                        <% }) %>
+                    </select>
+                    <i class="arrow double"></i>
+                </label>
+            </div>
+            <h6 class="fw400">商品货源</h6>
+            <div class="section mb15">
+                <label class="field select">
+                    <select class="form-control" data-field="source_type" data-useless="-1" data-type="int">
+                        <option value="-1" <%= searched.source_type == -1 ? "selected" : "" %>>所有</option>
+                        <% _.each(sources, function(source){%>
+                        <option value="<%= source.id %>" <%= searched.source_type == source.id ? "selected" : "" %>><%= source.name %></option>
+                        <% }) %>
+                    </select>
+                    <i class="arrow double"></i>
+                </label>
+            </div>
+        </div>
+        <hr class="short">
+
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+        <button class="btn btn-default btn-block" type="button" id="export">导出名单</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

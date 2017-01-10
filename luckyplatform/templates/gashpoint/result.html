@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Recharge Result</title>
+  <script src="http://g.tbcdn.cn/mtb/lib-flexible/0.3.4/??flexible_css.js,flexible.js"></script>  
+  <style type="text/css">
+  body, h1, h2, h3, h4, h5, h6, hr, div, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td, img {
+    border: none;
+    margin: 0;
+    padding: 0; }
+
+  html, body {
+    width: 100%;
+    -webkit-overflow-scrolling: touch; }
+
+  body {
+    font-family: San francisco,roboto,"Classic Grotesque W01","Hiragino Sans GB","STHeiti","Microsoft YaHei","WenQuanYi Micro Hei",Arial,SimSun,sans-serif;
+    font-size: 12;
+    line-height: 1.333;
+    color: #000; }
+
+  ul, ol, li {
+    list-style: none; }
+
+  a {
+    text-decoration: none;
+    color: #000; }
+
+  .dis_none {
+    display: none; }
+
+  .wrap {
+    width: 100%;
+    height: 100%;
+    background: #fff; }
+
+  .zf_ico {
+    font-size: 19px;
+    color: #333;
+    margin: 140px auto;
+    text-align: center; }
+    [data-dpr="2"] .zf_ico {
+      font-size: 38px; }
+    [data-dpr="3"] .zf_ico {
+      font-size: 57px; }
+    .zf_ico img {
+      width: 2.4rem;
+      height: 2.4rem;
+      display: block;
+      margin: 0 auto 0.66667rem; }
+    .zf_ico p {
+      padding-top: 0.32rem;
+      font-size: 14px;
+      color: #999; }
+      [data-dpr="2"] .zf_ico p {
+        font-size: 28px; }
+      [data-dpr="3"] .zf_ico p {
+        font-size: 42px; }
+  </style>  
+</head>
+<body>    
+   <div class="wrap">
+      {% if status == 'W' or status == '0' %}
+      <div class="zf_ico">
+          <img src="data:image/png;base64,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" alt="">訂單確認中<p>可能需要10分鐘時間，請稍後查看</p>
+      </div>
+      {% elif status == 'S' %}
+	    <div class="zf_ico"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAAAz1BMVEUAAABFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkNFvkP///9GvkT2/PZnymX5/flhyF/9/v2E1IPg9N+u461WxFTh9eHX8te05bOV2pRKwEjs+ezP7s6C04FszGvH68eW2pVJwEf899onAAAALXRSTlMAA13I+fPQfyId6Qa5qqWWUA7bZgr6Qu3WtLCg34c+4b2ccFY4KBcteEiISy4EkNEMAAAFG0lEQVR42tTZ6W7aQBSG4TPeF3YathDCThZ9NKVtGmVpVbX3f02tqkQUcRBjc8aePL/58coajmfGJEnFIyesV8dBq9v1Ab/bbQXjaj10RrEiCy1vr6qBh4O8oHZ1vSR7LNrnLWhpnbcXVL5moz5EJsN6o0klajp9Dzl4faek7rQx8JCbN2ikVLToJsGJkpuIitSpQETlmgqinABiAkeRecppQVTLfPasB3G9GZk0d2GEOydT4hqMqcVkgpr6MMifKhK3cmGYuyJZKvRgnBcqEhS5KIQbkRjHR0F8h2SkExRokpKA2EWhXIHh10lQsGREJ3I8FM5z6CQhShFSfmqCkkwU5ZRWUZpqSrl86KNE/Q+5misoVSVHdVpBySopZaQGKN1AUTbnsMA5ZXIBK1xQBm1Yok3aOh4s4XVIU5TAGkmkOaADWCTQG9cTWGVCGhxYxqGjIh+W8SM6Qrmwjqvs3PWfdCZYWTOh/3e2em+L4+gCmcJSUzootm5yvPFjOqQGa9XogDm0PfzYrDO7+4z85sRzoevnl3UemxOqXWLNoOuFeczGq2fEUD3oemZ6jFf31Gkbpcd1GdUO7VEtaNusy6huqZN2pEyL6Wr+UQfQty6nOtg7y4JxLPqjhvWrbwLVHdpVAeNodJbfClRXaEcEhmw0BKojjRsl2ej81fyNU5qAIRwtUJ2ktNUAQzpaorpBWwMwpKMlqgfb5qYHhnS0RLXX1HgbSkaLVDv0pg+GeLRIdV9jdUhGi1R7TX52mIpmq7+CoTM/6mDIR7PV35FR/TX6EgyT0XjaHnaR0SX9swDDbDSeckdjwX8VMhO96yl3dJu9opGP5vHRmtc2Q+ywPXpIfy3BkIveSEdjSUTXYMhFP4pH3xLRFRhy0c/i0SH7PxSNfrmXjq6ydwei0Xi4F47uEakzMASj8fvX451k9JmiGAzJaN6n/NGIaYR9lkeP2FOL5dEOhdhneXTIbqYtj65TFfssj67SGPssjx6z7xbLowP2rGV59CV1sc/y6IR87LM8uktgWB7tv8do/Gnv2nIahoGg3VYN4tmSugokqEg8KgFGfCRRKySEuP+h+EKAWFMLFjOTdE4wH/Z6vY8ZNdJNu6FfXrcNGunn+wg0SsdD6yK2MaRbpYuoFfLqGNK1UsgTHxdw0gvxGQc/HmOthKlJeBHP1VLTZr0p5K0brdSU8xNA+d2i/NhSlhAoizVSWQybtLNSARKcdBEo9UKnpgdyUR07Nc3k9gV27nEbaBRBZ3nXYksOm3QlNz+xj8dhoM0MnZrmgYY+dGp6FRidQH5cFuKQCjjpI3EcCJz0RBy8wiY9mkojbuCkT8RhQnDSA3FsE5v0aCoNyIKTPhVHkcFJT8Shb2zSu3vSeD046RtxkQGc9I64MoJNej/Jck4YPyI9T7UGpThMOJYWztBJDxRW+1KTPrbplyhlPPloDBTWVXXw6GNR2PSLwTIeVj4WF3or2Mn2KYfpl91lyi8rH43LLskKcAo4UEplcIqSmKXzgHDL7gntQB6Qoe2ieBSnTBeIkuI7yu5Kz1GK/HHKKXIKV3JKhIKEkLIPsreUAsOcUs6cotmc8uTG2H+LIeXnO0gh6XxmfoXc+eRwOaGNxLyfhh3GzNJao8z6a0JDavdjjM0SRBGXWT4LqztjzNYsjNSWjdQAj9RqkNTUUds+s/iWcs+NSlktYUnNd0ltjlkNpVmtuz+apBfOB+HQTNK/2tFXb3b01Z/Y0b8C6Hl8V6K53PQAAAAASUVORK5CYII=" alt="">充值成功</div>
+      {% else %}
+      <div class="zf_ico"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAAArlBMVEUAAAD/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/MC3/////TEn/5+b/5+f/7e3/w8L/ioj/gH7/eHb/a2n/UE3/Q0H/k5H/NzT/NjT00R4OAAAAKnRSTlMAXfoFAwKyJUDy3p9/H6rPpVAN7ei5h2YJxhnY08i9SSzhl5ZwVjj0eMrK95JzAAAEmElEQVR42tTZ127bQBCF4WHvpAolRd09zqEd9/b+LxYFRkA7sDCaJZdcf/cCfhCj4WJJbfKy0EpP800Rj8cREI3H8WqTn6ZWmHlkoMX2Ml/Z2MsuBpfbBZkjmCVLHGSZzALq32h4EkMkPhmOqEcjy7ehwPatnrqdYf4Tyn76Q4e6FkxLNFROA+pSOEErJluPuuFYBVqzshzSz7NitCq2XNLLO1+idctzjzS6mEOL+QXpshhAm0FGOnhnETSKzjTMyNEamq2PqF1OakM7O3WoRcEcnZgH1BorQkcii9rhJOhQ4lALsl/o1K+MGgtLdKwMqSHLRudsi5rwUvQi9UiZm6AniUuKnBy9yR1S8sNHj/wfSs0T9GqjUO1M0LOJQ0Kuj975Lol4CQyQeCQxhRGmJDCDIWZ0sNCGIeyQDpSVMEaZHbigCxikOGxdG7E4agkdwIJhLGIFEQwTBcRw5zDO3GWiUxgoZe6RjNnQH9lH3204/lq7tN8ZDHVGey2M2xz/RAvaZwBjDWiPCxjsgr7krWGwtUdfOYfRzukL7hJGW7rf4aAE/uDkxDBc7Hy/B/3Voy4g8/p4d/8EZU/3d4+vkCnoPyFkHm6qndtnKHm+rXZuHiAT0mcTiLxU766voODqunr3ApEJfRJA5KGq2Gq+eecBIkGDG6W3m4qv5pt3bt4gMaUPnBISj1XFVDPNtUdIlA7VhhC5q5hqrrl2B5Eh1XyI3FdMNddcu4eIXzePbIg8VUw111x7gog9Un8b3u6pFjffQsiSTkft+feeamHz9TOEfPF01K6YaqaZ/RE/H0OIyKvlzfz+OAFDUK27GSf07hgMQbXuZhwz5w55tbxZ7oj9KiSt1t+MmfCKRl6t3sxc28RgiKp1NyOmnQVY8mq+Wd2CiLYQ4as1N2NLRJeQ4av1NiNV+R/y1VqbkRPRClJ8tc5mrIhcG2J8tcZm2C5lUMekMc3KMgqhgq/W14yQLCjhq7U1w6IUavhqXc1I6RSquGpdzTilHM3sr9bVjJw2aIKp1tKMDRVohqnW0IyCjtFcXd1FM45pjDbU1fqbUVKENtTV+psREVpSV+ts1hJdV/PN6v60d0erCcRQEIaPbbaVglcBtcXeCaF5/wesoIiXyuqaL+s8gYjrJufMzP/60FP9PMwHkfzLI18u5GucPDCRR1PyEkBet8iLLTlCIIc15FiMHECao15yqE6uL8hFEbmSM5ef5JqZXOiT1gnTpELagUjjFWlxM82EpG2TNMiaVmTS9E3a680gAxkZMcM5ZAzKDJyR0b72v+pFL3FVMhjceAT7b+gn7G7WCjRc4FB++qrKiNTos/ibeqt/MYt2mmyt+X7vsTyqwYPTotdCNLN6Lla5NqP82XOdollcaVaEmmWsZO2tWTBsVjmbpdlmPblZBB8xrOtTtB5ijDbPgBtsYqSWuU6svJwnsCNiOy0aZTtfCA2K+zHBSibC6qBhX+oDVfYpHqGVh2VDAXgoavCg5EEdUXwmCipVkbBH+O7H24i3363w3RljjlWgtIruvhqSvmsMkn5WOuHod185l1rLBY4+xR31D1rsUWVq+rFXAAAAAElFTkSuQmCC" alt="">充值失敗</div>
+      {% endif %}
+   </div>
+</body>
+</html>

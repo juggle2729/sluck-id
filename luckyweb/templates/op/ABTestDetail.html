@@ -1,0 +1,60 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">灰度策略详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#abtest/">灰度策略</a>
+            </li>
+            <li class="crumb-trail"><%= info.id || "新增" %></li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='save'><span class="fa fa-save"></span> 保存 </a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <form id="goods-form" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="inputName" class="col-md-1 control-label">策略名称：</label>
+                <div class="col-md-9">
+                    <input type="text" id="inputName" class="form-control" value="<%= info.name %>" placeholder="请输入策略名称..." required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">ID末两位范围：</label>
+                <div class="col-md-1">
+                    <input type="text" id="inputUserIdLower" class="form-control" value="<%= info.user_id ? info.user_id[0] : '00' %>">
+                </div>
+                <div class="col-md-1">
+                    <input type="text" id="inputUserIdUpper" class="form-control" value="<%= info.user_id ? info.user_id[1] : '99' %>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">渠道选择：</label>
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <%  if(!info.chn) info.chn = {exclude: []};
+                                var key = info.chn.exclude ? "exclude" : "include",
+                                    values = info.chn[key],
+                                    keyStr = (key == "exclude" ? "排除渠道" : "包含渠道"); %>
+                            <button type="button" class="btn btn-default switch-key" id="inputKey" data-key="<%= key %>"><%= keyStr %></button>
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="shortcut" data-aria="allAndroid">全部Android</a></li>
+                                <li><a href="#" class="shortcut" data-aria="allIOS">全部IOS</a></li>
+                                <li><a href="#" class="shortcut" data-aria="allQG">一元抢购</a></li>
+                            </ul>
+                        </div>
+                        <input type="text" class="form-control" id="inputChannel" value="<%= values.join(',') %>" placeholder="以英文逗号分割">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</section>

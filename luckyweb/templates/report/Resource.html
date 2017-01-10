@@ -1,0 +1,81 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">每日资源分析</a>
+            </li>
+        </ol>
+    </div>
+</header>
+<section id="content">
+<div class="panel">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="text" id="dateFilter" name="dateFilter" class="form-control text-center" value="<%= options.dateRange[0] %> ~ <%= options.dateRange[1] %>">
+            </div>
+            <div class="col-md-1">
+                <select id="resourceType" class="form-control">
+                    <option value="coin">夺宝币</option>
+                    <option value="coupon" <%= options.resourceType == "coupon" ? "selected" : "" %>>红包</option>
+                    <option value="credit" <%= options.resourceType == "credit" ? "selected" : "" %>>元宝</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <input type="button" id="search" class="btn btn-primary btn-block form-control" value="提交">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="panel">
+    <div class="panel-heading">
+        <div class="panel-title hidden-xs">
+            <span class="glyphicon glyphicon-tasks"></span>走势曲线</div>
+        <ul class="nav panel-tabs"">
+            <li class="active">
+                <a href="#create_cost" class="chart-tab" data-toggle="tab">产生与消耗</a>
+            </li>
+            <li>
+                <a href="#balance" class="chart-tab" data-toggle="tab">留存</a>
+            </li>
+            <li>
+                <a href="#cost_user" class="chart-tab" data-toggle="tab">消费用户</a>
+            </li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div class="tab-content">
+            <div id="create_cost" class="tab-pane active">
+            </div>
+            <div id="balance" class="tab-pane">
+            </div>
+            <div id="cost_user" class="tab-pane">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-heading">
+        <div class="panel-title hidden-xs">
+            <span class="glyphicon glyphicon-tasks"></span>渠道占比</div>
+        <ul class="nav panel-tabs"">
+            <li class="active">
+                <a href="#create_channel" class="chart-tab" data-toggle="tab">产生渠道</a>
+            </li>
+            <li class="">
+                <a href="#cost_channel" class="chart-tab" data-toggle="tab">消耗渠道</a>
+            </li>
+        </ul>
+    </div>
+    <div class="panel-body">
+        <div id="dist-chart" class="tab-content">
+            <div id="create_channel" class="tab-pane active">
+            </div>
+            <div id="cost_channel" class="tab-pane">
+            </div>
+        </div>
+    </div>
+</div>
+</section>

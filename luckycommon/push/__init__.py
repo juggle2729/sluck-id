@@ -1,0 +1,31 @@
+from luckycommon.utils.types import Enum
+
+
+PUSH_COMMANDS = Enum({
+    "TO_MAIN": (0L, "open main"),
+    "TO_NOTIFICATION": (1L, "open notification"),
+    "TO_ACTIVITY": (2L, "open activity detail"),
+    "TO_ORDER": (3L, "open activity order"),
+    "TO_MY": (4L, "open my profile"),
+    "TO_REGISTER": (5L, "open register"),
+    "TO_LOGIN": (6L, "open login"),
+    "TO_LATEST": (7L, "open latest activity"),
+    "TO_UPDATE": (8L, "check update version"),
+    "TO_AWARD_ALERT": (9L, "alert to award"),
+    "TO_EDIT_SHOW": (10L, "edit show"),
+    "TO_OPEN_URL": (11L, "open web url"),
+    "TO_OPEN_FAQ": (12L, "open FAQ"),
+    "TO_OPEN_SHOW_TIMELINE": (13L, "open show timeline"),
+    "TO_OPEN_SHOW_GUID": (14L, "open show guid"),
+    "TO_OPEN_USER_GUID": (15L, "open user guid"),
+    "TO_CHECK_SIGN": (16L, "check daily sign"),
+    "TO_CHECK_SHARE": (17L, "check daily share"),
+    "TO_OPEN_CREDIT": (18L, "open credit"),
+    "TO_OPEN_PARTNER_REWARD": (19L, "open partner reward"),
+    "TO_CAMPAIGN_APPLY_ALERT": (20L, "alert to campaign award"),
+    "TO_CAMPAIGN_AWARD_ALERT": (21L, "alert to coupon award"),
+    "TO_COMMAND_QUESTION": (22L, "to open question"),
+    "TO_COMMAND_SHOW_INTEGRATION_WITH_STATUS": (23L, "command show integration with status"),
+    "TO_OPEN_COUPON": (24L, "to open coupon"),
+    "TO_SHOW_LEVEL_UP": (27L, "to open level up dialog"),
+})

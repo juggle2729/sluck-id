@@ -1,0 +1,90 @@
+{
+	"id": "8486db00-3e75-1086-cec3-2e555f687b6f",
+	"name": "yyg-mobile-7236",
+	"description": "",
+	"order": [],
+	"folders": [
+		{
+			"id": "0f8a71a2-23e2-565f-20b1-89d166cc1992",
+			"name": "account",
+			"description": "",
+			"order": [
+				"7a458034-6ffb-e31f-3020-ac3c7705b188"
+			],
+			"owner": "449206"
+		},
+		{
+			"id": "f6f94473-1f5c-b45d-f696-2a12439346bd",
+			"name": "level",
+			"description": "",
+			"order": [
+				"43a692d9-81da-9012-f775-79e815c413c2",
+				"af861592-6106-5a83-d0fb-86c09ffe5836"
+			],
+			"owner": "449206"
+		}
+	],
+	"timestamp": 1461054546171,
+	"owner": "449206",
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "43a692d9-81da-9012-f775-79e815c413c2",
+			"headers": "X-AUTH-USER: 7236\nX-AUTH-TOKEN: 492c3e51-ed81-4d82-aa32-dea0832b1725\n",
+			"url": "http://121.41.6.238/api/v1/my/level",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461056972140,
+			"name": "get my level",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "7a458034-6ffb-e31f-3020-ac3c7705b188",
+			"headers": "X-AUTH-USER: 7236\nX-AUTH-TOKEN: 492c3e51-ed81-4d82-aa32-dea0832b1725\n",
+			"url": "http://121.41.6.238/api/v1/user",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461054819062,
+			"name": "get user info",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "af861592-6106-5a83-d0fb-86c09ffe5836",
+			"headers": "X-AUTH-USER: 7236\nX-AUTH-TOKEN: 492c3e51-ed81-4d82-aa32-dea0832b1725\n",
+			"url": "http://121.41.6.238/api/v1/level/activate_coupon",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461057017902,
+			"name": "activate level coupon",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		}
+	]
+}

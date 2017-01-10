@@ -1,0 +1,164 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-09-14 16:17+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: luckyapi/logic/scrolling.py:24
+msgid "seconds"
+msgstr ""
+
+#: luckyapi/logic/scrolling.py:26
+msgid "minutes"
+msgstr ""
+
+#: luckyapi/logic/scrolling.py:28
+msgid "hours"
+msgstr ""
+
+#: luckyapi/views/credit.py:66
+msgid "share to sign title"
+msgstr "Kí chia sẻ danh hiệu"
+
+#: luckyapi/views/credit.py:67
+msgid "daily sign slogan"
+msgstr "Mỗi ngày kí chia sẻ, mỗi hôm +15, hạn mức 100"
+
+#: luckyapi/views/credit.py:68
+msgid "to sign"
+msgstr "Ký"
+
+#: luckyapi/views/credit.py:74
+msgid "start consume title"
+msgstr "Bắt đầu dùng danh hiệu"
+
+#: luckyapi/views/credit.py:75
+msgid "consume credit slogan"
+msgstr "Mỗi ngày tiêu 1 , nhận được 10"
+
+#: luckyapi/views/credit.py:76 luckyapi/views/credit.py:84
+msgid "earn credit"
+msgstr "Kiềm tiền"
+
+#: luckyapi/views/credit.py:82
+msgid "invite partner title"
+msgstr "mời bạn cùng chơi"
+
+#: luckyapi/views/credit.py:83
+msgid "invite credit slogan"
+msgstr "Bạn và bạn của bạn đều có giải thưởng"
+
+#: luckyapi/views/credit.py:89
+msgid "daily credit title"
+msgstr "Tín dụng hàng ngày"
+
+#: luckyapi/views/credit.py:95
+msgid "growth credit title"
+msgstr "Tín dụng tăng"
+
+#: luckyapi/views/credit.py:98
+msgid "fresh mission title"
+msgstr "Nhiệm vụ người mới chơi"
+
+#: luckyapi/views/credit.py:99
+msgid "fresh mission credit slogan"
+msgstr "Nhanh tay, chuyển 1 tệ"
+
+#: luckyapi/views/credit.py:100
+msgid "fetch coupon tips"
+msgstr "nhận lì xì"
+
+#: luckycommon/campaign/miss_return.py:66
+msgid "10 Lucky Coins"
+msgstr "10 đồng xu"
+
+#: luckycommon/campaign/miss_return.py:69
+#, python-format
+msgid "%s Sure to Win Coupon"
+msgstr ""
+
+#: luckycommon/credit/db/credit.py:147
+msgid "sign in"
+msgstr "Ký"
+
+#: luckycommon/credit/db/credit.py:149
+msgid "share"
+msgstr "chia sẻ"
+
+#: luckycommon/credit/db/credit.py:226
+msgid "treasure"
+msgstr "Kho báu"
+
+#: luckycommon/credit/db/credit.py:242
+msgid "redeem points to credits"
+msgstr "Đổi %s thành %s tiền xu"
+
+#: luckycommon/credit/db/credit.py:251
+msgid "redeem"
+msgstr "Đổi tiền xu"
+
+#: luckycommon/db/campaign.py:351 luckycommon/model/campaign.py:91
+msgid "wealth god campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:28
+msgid "recharge campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:35
+msgid "recharge campaign stage 2"
+msgstr ""
+
+#: luckycommon/model/campaign.py:42
+msgid "recharge campaign stage 3"
+msgstr ""
+
+#: luckycommon/model/campaign.py:49
+msgid "recharge campaign stage 4"
+msgstr ""
+
+#: luckycommon/model/campaign.py:56
+msgid "recharge campaign stage 5"
+msgstr ""
+
+#: luckycommon/model/campaign.py:70
+msgid "daily buy campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:77
+msgid "daily buy campaign stage 2"
+msgstr ""
+
+#: luckycommon/model/campaign.py:84
+msgid "moist campaign"
+msgstr ""
+
+#: luckycommon/order/db/order.py:627
+msgid "pay order"
+msgstr "Đơn thanh toán"
+
+#: luckycommon/order/db/order.py:724
+msgid "refund order"
+msgstr "Đơn trả lại tiền"
+
+#: luckycommon/partner/callback.py:26 luckycommon/partner/callback.py:33
+msgid "partner reward"
+msgstr "Đối tác nhận thưởng"
+
+#: luckycommon/timer/handler.py:683
+msgid "congratulations"
+msgstr "Xin chúc mừng<font color='#2189ff'>%s</font>{{ time }} đã nhận được %s"

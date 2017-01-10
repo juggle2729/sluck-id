@@ -1,0 +1,64 @@
+{
+  "default": {
+    "user": "xshu",
+    "mm": "ubuntu"
+  },
+  "dependency": {
+    "luckyservice": [
+      {
+        "apt-get install -y": [
+          "supervisor",
+          "libmysqlclient-dev",
+          "python-dev",
+          "python-pip",
+          "git",
+          "openssl-dev",
+          "libffi-dev",
+          "build-essential",
+          "libtiff4-dev",
+          "libjpeg8-dev",
+          "zlib1g-dev",
+          "libfreetype6-dev",
+          "liblcms1-dev",
+          "libwebp-dev",
+          "tcl8.5-dev",
+          "tk8.5-dev"
+        ]
+      },
+      "pip install virtualenv uwsgi",
+      "mkdir -p /home/ubuntu/af-env/data/",
+      "wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz -O /tmp/GeoLite2-City.mmdb.gz",
+      "gunzip -c /tmp/GeoLite2-City.mmdb.gz > /home/ubuntu/af-env/data/GeoLite2-City.mmdb",
+      "chown -R ubuntu /home/ubuntu/af-env/data/"
+    ],
+    "luckyweb": []
+  },
+  "env": {
+    "luckyservice": {
+      "120.27.162.212": {
+        "bash": [
+          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
+          "rm -rf luckyweb"
+        ]
+      },
+      "121.41.86.172": {
+        "bash": [
+          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
+          "rm -rf luckyweb"
+        ]
+      },
+      "121.40.49.87": {
+        "bash": [
+          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
+          "rm -rf luckyweb"
+        ]
+      },
+      "121.199.0.80": {
+        "bash": [
+          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
+          "rm -rf luckyweb"
+        ]
+      }
+    }
+  }
+}

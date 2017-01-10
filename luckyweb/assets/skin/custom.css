@@ -1,0 +1,61 @@
+
+.state-error {
+  background: #FEE9EA;
+  border-color: #DE888A;
+}
+
+.state-success {
+  background: #F0FEE9;
+  border-color: #A5D491;
+}
+
+.thumb {
+    margin-bottom: 30px;
+    border: none;
+}
+
+.thumb img {
+    height: 180px;
+    width: auto;
+}
+
+.icon {
+  height: 75%;
+  width: 75%;
+}
+
+.fix-icon {
+  height: 100px;
+  width: auto;
+}
+
+.upload-placeholder {
+  border-style: dashed;
+  border-width: 1px;
+  height: 180px;
+}
+
+div.with-border{
+  margin-bottom: 9.5px;
+  border-bottom: 1px dashed #cccccc;
+}
+
+.fa.deactive{
+    opacity:0.5;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.overflow {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+table th {
+    white-space: nowrap;
+}
+table td {
+    white-space: nowrap;
+}

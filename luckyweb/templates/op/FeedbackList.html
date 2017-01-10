@@ -1,0 +1,78 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#feedback/">反馈意见管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>用户ID</th>
+                    <!--<th>用户昵称</th>-->
+                    <th>qq</th>
+                    <th>渠道</th>
+                    <th>版本</th>
+                    <th class="sortable" data-field="created_at">提交时间</th>
+                    <th>反馈内容</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td><%= attrs.id %></td>
+                        <td><a href="#stats/account/?id=<%= attrs.user_id %>"><%= attrs.user_id %></a></td>
+                        <!--<td><%= attrs.nick_name %></td>-->
+                        <td><%= attrs.qq || '-' %></td>
+                        <td><%= attrs.chn %></td>
+                        <td><%= attrs.cvc %></td>
+                        <td><%= attrs.created_at %></td>
+                        <td><%= attrs.content %></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <h6 class="fw400">创建时间</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                <input type="text" title="下限，包括" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
+            </div>
+            <div class="col-md-6">
+                <input type="text" title="上限，不包括" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
+            </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+        <button class="btn btn-default btn-block" type="button" id="export">导出数据</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

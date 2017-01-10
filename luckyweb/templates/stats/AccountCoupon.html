@@ -1,0 +1,76 @@
+<div class="col-md-12">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-star text-primary"></i></span>
+            <span class="panel-title">红包数据</span>
+            <span class="panel-controls">
+                <a href="#" id="addCoupon" class="fa fa-plus"></a>
+            </span>
+        </div>
+        <div class="panel-body overflow">
+        <% if(models.length > 0){ %>
+            <table class="table table-striped fs13" id="account-coupon-list">
+                <thead>
+                    <tr class="bg-light">
+                        <th class="sortable" data-field="id">ID</th>
+                        <th class="sortable" data-field="title">名称</th>
+                        <th class="">种类</th>
+                        <th class="">描述</th>
+                        <th class="sortable" data-field="start_ts">生效时间</th>
+                        <th class="sortable" data-field="expire_ts">过期时间</th>
+                    </tr>
+                </thead>
+                <tbody class="admin-form">
+                    <% _.each(models, function(model){
+                        var attrs = model.attributes;
+                    %>
+                        <tr data-id="<%= attrs.id %>" >
+                            <td class=""><%= attrs.id %></td>
+                            <td class=""><%= attrs.title %></td>
+                            <td class=""><%= type[attrs.coupon_type] %></td>
+                            <td class=""><%= attrs.desc %></td>
+                            <td class=""><%= attrs.start_ts %></td>
+                            <td class=""><%= attrs.expire_ts %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+        <%}else{%>
+            <h4 class="text-muted">无红包数据...</h4>
+        <%}%>
+    </div>
+</div>
+
+    <!-- Panel popup -->
+<div id="addCouponPanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">手动添加红包</span>
+        </div>
+        <div class="panel-body">
+            <form id="coupon-form" class="form-horizontal" role="form">
+            <div class="form-group" id="coupon-group">
+                <label for="inputCoupon" class="col-md-2 control-label">选择红包：</label>
+                <div class="col-md-6">
+                    <select id="inputCoupon" class="form-control">
+                        <% _.each(coupons, function(coupon){
+                            var attrs = coupon.attributes; %>
+                            <option value="<%= attrs.id %>"><%= attrs.desc %>(<%= attrs.title %>)</option>
+                        <%})%>
+                    </select>
+                </div>
+                <label for="inputCount" class="col-md-2 control-label">红包数量：</label>
+                <div class="col-md-2">
+                    <input type="number" id="inputCount" class="form-control" value="1" required>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="submitAdd">确定</button>
+        </div>
+    </div>
+</div>

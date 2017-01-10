@@ -1,0 +1,97 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">分类管理</a>
+            </li>
+            <li class="crumb-trail">编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='categorySave'><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel overflow">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
+            </span>
+            <span class="panel-title">分类列表</span>
+            <span class="panel-controls">
+                <button class="btn btn-alert btn-upload" id="uploadIcon">上传icon</button>
+            </span>
+        </div>
+        <div class="panel-body">
+            <div id="content" class="sortable">
+                <% _.each(models, function(model, index){
+                    var info = model.attributes; %>
+                <div class="row with-border" data-id="<%= info.id ? info.id : -1 %>">
+                    <div class="col-md-1">
+                        <img id="img<%= index %>" src="<%= info.icon %>" alt="" class="icon">
+                        <button class="form-control replace-img icon" data-img="img<%= index %>" id="button<%= index %>">更换</button>
+                    </div>
+                    <div class="col-md-10 mt20">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-1">名称:</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" title="名称" value="<%= info.name %>" data-field="name">
+                                </div>
+                                <label class="control-label col-md-1">TAG:</label>
+                                <div class="col-md-5">
+                                    <input class="form-control" type="text" data-field="tag" value="<%= info.tag %>">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                    </div>
+                </div>
+                <%})%>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Panel popup -->
+<div id="uploadImagePanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">上传icon</span>
+        </div>
+        <div class="panel-body">
+            <h3 class="mt5">单个图片最好不要超过4M，可多选</h3>
+            <div class="col-md-10">
+                <div id="container">
+                    <a class="btn btn-default btn-lg" id="pickfiles" href="#">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>选择文件</span>
+                    </a>
+                </div>
+            </div>
+            <div style="margin-top:40px;display:none" id="success" class="col-md-10">
+                <div class="alert-success">
+                    队列全部文件处理完毕
+                </div>
+            </div>
+            <div class="col-md-10">
+                <table class="table table-striped table-hover text-left" id="processTable" style="margin-top:40px;display:none">
+                    <thead>
+                        <tr>
+                            <th class="col-md-3">thumb</th>
+                            <th class="col-md-2">size</th>
+                            <th class="col-md-3">link</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fsUploadProgress">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="addCachedImgs">确定</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#console/user/">用户数据管理</a>
+            </li>
+        </ol>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="user-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>昵称</th>
+                    <th>Email</th>
+                    <th>角色</th>
+                    <th>最后修改时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#console/user/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td class=""><%= attrs.nickname %></td>
+                        <td class=""><%= attrs.email %></td>
+                        <td class=""><%= roleDict[attrs.role] %></td>
+                        <td class=""><%= attrs.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#console/user/<%= attrs.id %>/"></a>
+                            <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchEmail" class="field prepend-icon">
+                <input type="text" title="注册邮箱" name="email" id="searchEmail" class="gui-input" placeholder="注册邮箱" data-field="email" value=<%= searched.email %>>
+                <label for="email" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">用户类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchRole" name="searchRole" data-field="role">
+                    <option value="-1" <%= searched.role == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="0" <%= searched.role == 0 ? 'selected' : '' %>>未激活/黑名单</option>
+                    <option value="1" <%= searched.role == 1 ? 'selected' : '' %>>一般用户</option>
+                    <option value="2" <%= searched.role == 2 ? 'selected' : '' %>>运营人员</option>
+                    <% if(info.role >= 3){ %>
+                    <option value="3" <%= searched.role == 3 ? 'selected' : '' %>>高级运营</option>
+                    <% } %>
+                    <% if(info.role >= 4){ %>
+                    <option value="4" <%= searched.role == 4 ? 'selected' : '' %>>运营主管</option>
+                    <% } %>                    
+                    <% if(info.role >= 5){ %>
+                    <option value="5" <%= searched.role == 5 ? 'selected' : '' %>>开发人员</option>
+                    <% } %>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <hr class="short">
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

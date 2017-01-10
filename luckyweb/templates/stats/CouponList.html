@@ -1,0 +1,125 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#stats/coupon/">红包信息</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#" class="btn btn-default btn-sm light fw600 ml10" id="exportData"><span class="glyphicon glyphicon-cloud-download pr5"></span>导出数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <%if(models.length > 0){%>
+    <div class="panel overflow">
+        <table class="table table-striped fs13" id="coupon-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="user_id">用户ID</th>
+                    <th>红包类型</th>
+                    <th>名称</th>
+                    <th>描述</th>
+                    <th class="price">金额</th>
+                    <th class="">红包状态</th>
+                    <th class="sortable" data-field="start_ts">生效时间</th>
+                    <th class="sortable" data-field="expire_ts">过期时间</th>
+                    <th>来源</th>
+                    <th>用途</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#stats/account/?id=<%= attrs.user_id %>"><%= attrs.user_id %></a></td>
+                        <td><%= type[attrs.coupon_type] %></td>
+                        <td><%= attrs.title %></td>
+                        <td class=""><%= attrs.desc %></td>
+                        <td class=""><%= attrs.price %></td>
+                        <td><%= status[attrs.status] %></td>
+                        <td class=""><%= attrs.start_ts %></td>
+                        <td class=""><%= attrs.expire_ts %></td>
+                        <td><%= attrs.from %></td>
+                        <td><%= attrs.target || '-'%></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+    <% }else{ %>
+    <h4 class="text-muted">无数据</h4>
+    <% } %>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+        <h4 class="mt5 text-muted fw500">总体数据：</h4>
+        <hr class="short">
+        <h5 class="title-divider text-muted mb20"> 可使用数量/金额 <span class="pull-right"> <%= overview.left_count %>/<%= overview.left_price %> </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 已使用数量/金额 <span class="pull-right"> <%= overview.used_count %>/<%= overview.used_price %> </span> </h5>
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+        <hr class="short">
+        <div class="section mb15">
+            <label for="searchIdOrName" class="field prepend-icon">
+                <input title="红包ID或名称" type="text" data-field="id" id="searchIdOrName" class="gui-input" placeholder="红包ID或名称" value="<%= searched.idOrName  %>">
+                <label for="searchIdOrName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchUserId" class="field prepend-icon">
+                <input title="用户ID" type="text" data-field="user_id" id="searchUserId" class="gui-input" placeholder="用户ID" value="<%= searched.user_id  %>">
+                <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">生效时间</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                    <input type="text" title="下限，包含当天" name="searchCreatedLower" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
+            </div>
+            <div class="col-md-6">
+                    <input type="text" title="上限，不包括当天" name="searchCreatedUpper" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
+            </div>
+        </div>
+        <h6 class="fw400">红包状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" name="searchStatus" data-field="status">
+                    <option value="-1" <%= searched.status == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="1" <%= searched.status == 1 ? 'selected' : '' %>>未使用</option>
+                    <option value="2" <%= searched.status == 2 ? 'selected' : '' %>>已使用</option>
+                    <option value="4" <%= searched.status == 4 ? 'selected' : '' %>>已过期</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <h6 class="fw400">红包类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchType" name="searchType" data-field="type">
+                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>直减</option>
+                    <option value="2" <%= searched.type == 2 ? 'selected' : '' %>>满减</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

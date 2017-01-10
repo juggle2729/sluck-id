@@ -1,0 +1,128 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">晒单详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#show/">晒单管理</a>
+            </li>
+            <li class="crumb-trail"><%= info.status >= 2 ? "晒单审核" : "新增晒单" %></li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='showSave'><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <form id="show-form" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-md-1 control-label">晒单所属活动:</label>
+                    <p class="form-control-static text-muted">
+                        <a href="#template/<%= info.template_id %>/"><%= info.template_name || "(模板丢失...)" %>(第<%= info.term_number %>期)</a>
+                    </p>
+                </div>
+                <div class="form-group">
+            <% if(info.status >= 2 ){ %>
+                    <label class="col-md-1 control-label">订单编号:</label>
+                    <div class="col-md-4">
+                        <p class="form-control-static text-muted">
+                            <a href="#order/<%= info.order_id %>/"><%= info.order_id %></a>
+                        </p>
+                    </div>
+            <% } %>
+                    <label class="col-md-1 control-label">中奖者ID:</label>
+                    <div class="col-md-4">
+                        <p class="form-control-static text-muted">
+                            <a href="#stats/account/?id=<%= info.user_id %>"><%= info.user_id %></a>
+                        </p>
+                    </div>
+                </div>
+            <% if(info.status < 2 ){ %>
+            <div class="form-group">
+                <label class="col-md-1 control-label">用户头像:</label>
+                <div class="col-md-1" id="container">
+                    <img id="avatar" width="100%" src="<%= account.avatar_id %>" alt="头像" >
+                    <button id="uploadAvatar" class="form-control" data-img="avatar">更换头像</button>
+                </div>
+            </div>
+            <% } %>
+            <div class="form-group">
+                <label class="col-md-1 control-label">晒单内容:</label>
+                <div class="col-md-9">
+                    <textarea name="content" rows="3" class="form-control" id="inputContent" <%= info.status > 2 ? "readonly": ""%>><%= info.content %></textarea>
+                    <div class="row">
+                        <% var imageList = info.images.split(',');
+                            _.each(imageList, function(url){
+                                if(!url)return; %>
+                                <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+                                    <% if(info.status <= 2){ %>
+                                        <a class="close delete-image" href="#">x</a>
+                                    <% } %>
+                                    <a class="thumbnail image-popup" href=<%= url %>>
+                                    <img class="detail-image" src=<%= url %>>
+                                </a>
+                                </div>
+                            <% })
+                         if(info.status <= 2){ %>
+                        <div class="col-lg-3 col-md-4 col-xs-6" id="container">
+                            <a href="#" id="uploadImg">
+                                <div class="upload-placeholder">
+                                    <div class="row">
+                                        <div class="col-md-offset-5 mt85">
+                                            上传图片
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% if(info.status >= 2){ %>
+            <div class="form-group">
+                <label class="col-md-1 control-label">晒单状态：</label>
+                <div class="col-md-3">
+                    <select id="inputStatus" class="form-control">
+                        <% if(info.status == 2){ %>
+                        <option value="2" selected>待审核</option>
+                        <% } %>
+                        <option value="4" <%=  info.status == 4 ? 'selected' : '' %>>已通过</option>
+                        <% if(info.status != 4){ %>
+                        <option value="8" <%=  info.status == 8 ? 'selected' : '' %>>未通过</option>
+                        <option value="16" <%=  info.status == 16 ? 'selected' : '' %>>预审核</option>
+                        <% } %>
+                    </select>
+                </div>
+                <label class="col-md-1 control-label">奖励积分: </label>
+                    <% if(info.status != 4){ %>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" id="inputVerifyAward" min=0 placeholder="仅通过时有效..." value="<%= info.verify_award %>">
+                        </div>
+                    <% }else{ %>
+                        <div class="col-md-2">
+                            <p class="form-control-static text-muted">
+                                <%= info.verify_award %>
+                            </p>
+                        </div>
+
+                    <% } %>
+                <div class="col-md-3">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="inputHighlight" <%= info.highlight? "checked" : "" %>>
+                    设为精华贴</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputComment" class="col-md-1 control-label">审核意见:</label>
+                <div class="col-md-9">
+                    <textarea name="comment" id="inputComment" rows="2" placeholder="可不填" class="form-control"><%= info.verify_comment %></textarea>
+                </div>
+            </div>
+        <% } %>
+        </form>
+    </div>
+
+</section>

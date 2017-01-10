@@ -1,0 +1,71 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#goods/brand/">供货商列表</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#goods/brand/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增供货商</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th class="sortable" data-field="name">名称</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){ %>
+                    <tr data-id="<%= item.id %>" >
+                        <td><a href="#goods/brand/<%= item.id %>/" ><%= item.id %></a></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#goods/brand/<%= item.id %>/"></a>
+                            <a class="glyphicons glyphicons-remove_2 delete-item" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchId" class="field prepend-icon">
+                <input title="供货商名称" type="text" id="searchName" class="gui-input" placeholder="供货商名称" data-field="name">
+                <label for="searchName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

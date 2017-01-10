@@ -1,0 +1,269 @@
+<header id="topbar" class="affix" style="top:60px;">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#stats/vips/missed/">流失管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <span class="text text-muted" id="selectTips">已选中0个</span>
+        <button class="btn btn-default btn-sm" id="updateStatus">修改召回状态</button>
+        <button class="btn btn-default btn-sm" id="sendCoupon">发送红包</button>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <% if(items.length > 0){ %>
+    <div class="panel overflow">
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="text-center">
+                        <input type="checkbox" id="selectAll">
+                    </th>
+                    <th class="sortable" data-field="uid">用户ID</th>
+                    <th>用户昵称</th>
+                    <th>联系电话</th>
+                    <th>活跃天数</th>
+                    <th>最后活跃时间</th>
+                    <th>流失类型</th>
+                    <th>流失天数</th>
+                    <th>流失次数</th>
+                    <th class="sortable" data-field="rank">用户排名</th>
+                    <th class="sortable" data-field="recharge_amount">充值金额</th>
+                    <th>中奖次数/金额</th>
+                    <th>消费差值</th>
+                    <th>礼包档次</th>
+                    <th>召回状态</th>
+                    <th>召回后充值</th>
+                    <th>心跳红包消费</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){
+                    var level = '低档';
+                    if(item.user_type == 0){
+                        if(item.recharge_amount >=1000 && item.recharge_amount < 4000){
+                                level= '中档';
+                        } else if(item.recharge_amount > 4000)level='高档';
+                    }else{
+                        if(item.recharge_amount > 10 && item.recharge_amount <= 50){
+                                level = '中档';
+                        }else if (item.recharge_amount > 50)level = '高档';
+                    }
+                %>
+                    <tr data-uid="<%= item.uid %>" data-id="<%= item.id %>">
+                        <td class="text-center">
+                            <label class="option block mn">
+                                <input type="checkbox" value="FR" class="check-row">
+                                <span class="checkbox mn"></span>
+                            </label>
+                        </td>
+                        <td><a href="#stats/account/?id=<%= item.uid %>"><%= item.uid %></a></td>
+                        <td><%= item.nick_name %></td>
+                        <td><%= item.phone %></td>
+                        <td><%= item.active_days %></td>
+                        <td><%= item.updated_time %></td>
+                        <td><%= MISSED_TYPE[item.user_type] %></td>
+                        <td><%= item.lost_days %></td>
+                        <td><%= item.type %></td>
+                        <td><%= item.rank %></td>
+                        <td><%= item.recharge_amount%></td>
+                        <td><%= item.win_count%>/<%= item.win_amount %></td>
+                        <td><%= item.win_amount - item.recharge_amount %></td>
+                        <td><%= level %></td>
+                        <td><%= item.status %></td>
+                        <td><%= item.back_recharge || '-' %></td>
+                        <td><%= item.used_coupon || '-' %></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+    <% }else{ %>
+    <h4 class="text-muted">无数据</h4>
+    <% } %>
+</section>
+
+<!-- 修改召回状态 -->
+<div id="updateStatusPannel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">更新召回状态</span>
+        </div>
+        <div class="panel-body">
+            <form id="status-form" class="form-horizontal" role="form">
+            <div class="form-group" id="status-group">
+                <label for="inputStatus" class="col-md-2 control-label">请选择：</label>
+                <div class="col-md-6">
+                    <select id="inputStatus" class="form-control" multiple>
+                        <% _.each(CALLBACK_STATUS, function(value, key){
+                        if(key > 0 && key < 4){ %>
+                            <option value="<%= key %>"><%= value %></option>
+                        <% }}) %>
+                    </select>
+                </div>
+            </div>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="submitUpdateStatus">确定</button>
+        </div>
+    </div>
+</div>
+
+<!-- 发红包 -->
+<div id="addCouponPanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">添加红包</span>
+        </div>
+        <div class="panel-body">
+            <form id="coupon-form" class="form-horizontal" role="form">
+            <div class="form-group" id="coupon-group">
+                <label for="inputCoupon" class="col-md-2 control-label">选择红包：</label>
+                <div class="col-md-5">
+                    <select id="inputCoupon" class="form-control">
+                        <% _.each(coupons, function(coupon){ %>
+                            <option value="<%= coupon.id %>"><%= coupon.desc %>(<%= coupon.title %>)</option>
+                        <%})%>
+                    </select>
+                </div>
+                <label for="inputCount" class="col-md-2 control-label">红包数量：</label>
+                <div class="col-md-2">
+                    <input type="number" id="inputCount" class="form-control" value="1">
+                </div>
+                <div class="col-md-1">
+                    <a id="addCoupon" class="fa fa-plus form-control-static"></a>
+                </div>
+            </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>数量</th>
+                        </tr>
+                    </thead>
+                    <tbody id="chosenCoupon">
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="submitAddCoupon">确定</button>
+        </div>
+    </div>
+</div>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano" style="top: 110px;">
+ <div class="sidebar_right_content nano-content">
+     <div class="tab-block sidebar-block br-n">
+        <ul class="nav nav-tabs tabs-border nav-justified">
+            <li class="active">
+                <a href="#sidebar-right-tab1" data-toggle="tab">统计数据</a>
+            </li>
+            <li>
+                <a href="#sidebar-right-tab2" data-toggle="tab">过滤搜索</a>
+            </li>
+        </ul>
+        <div class="tab-content br-n">
+            <div id="sidebar-right-tab1" class="tab-pane active">
+                <h4 class="mt5 text-muted fw500">回流率/留存率/付费率：</h4>
+                <hr class="short">
+                <h5 class="title-divider text-muted mb20">新增<span class="pull-right"> <%= (overview.new.back_rate * 100).toFixed(1) %>%/<%= (overview.new.stay_rate * 100).toFixed(1) %>%/<%= (overview.new.recharge_rate * 100).toFixed(1) %>% </span> </h5>
+                <h5 class="title-divider text-muted mb20">3日<span class="pull-right"> <%= (overview[3].back_rate * 100).toFixed(1) %>%/<%= (overview[3].stay_rate * 100).toFixed(1) %>%/<%= (overview[3].recharge_rate * 100).toFixed(1) %>% </span> </h5>
+                <h5 class="title-divider text-muted mb20">7日<span class="pull-right"> <%= (overview[7].back_rate * 100).toFixed(1) %>%/<%= (overview[7].stay_rate * 100).toFixed(1) %>%/<%= (overview[7].recharge_rate * 100).toFixed(1) %>%</span> </h5>
+                <h5 class="title-divider text-muted mb20">14日<span class="pull-right"> <%= (overview[14].back_rate * 100).toFixed(1) %>%/<%= (overview[14].stay_rate * 100).toFixed(1) %>%/<%= (overview[14].recharge_rate * 100).toFixed(1) %>%</span> </h5>
+            </div>
+            <div id="sidebar-right-tab2" class="tab-pane">
+                <div class="p20 admin-form">
+                    <div class="section mb15">
+                            <label class="field prepend-icon">
+                                <input title="用户ID" type="text" id="searchUid" class="gui-input" placeholder="用户ID" value="<%= searched.uid %>">
+                                <label class="field-icon"><i class="fa fa-tag"></i>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="section mb15">
+                            <label class="field prepend-icon">
+                                <input title="清单日期" type="text" id="searchCreatedAt" class="gui-input" placeholder="清单日期" value="<%= searched.created_at %>">
+                                <label class="field-icon"><i class="fa fa-tag"></i>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="section mb15">
+                            <label class="field prepend-icon">
+                                <input title="流失天数" type="text" id="searchLostDays" class="gui-input" placeholder="流失天数" value="<%= searched.lost_days %>">
+                                <label class="field-icon"><i class="fa fa-tag"></i>
+                                </label>
+                            </label>
+                        </div>
+                        <h6 class="fw400">流失类型</h6>
+                        <div class="section mb15">
+                            <label class="field select">
+                                <select id="searchUserType" data-field="user_type">
+                                    <option value="-1" <%= searched.user_type == -1 ? 'selected' : '' %>>所有</option>
+                                    <% _.each(MISSED_TYPE, function(v, k){ %>
+                                    <option value="<%= k %>" <%= searched.user_type == k ? 'selected' : '' %>><%= v %></option>
+                                    <% }) %>
+                                </select>
+                                <i class="arrow double"></i>
+                            </label>
+                        </div>
+                        <h6 class="fw400">流失次数</h6>
+                        <div class="section mb15">
+                            <label class="field select">
+                                <select id="searchType" name="searchType" data-field="type">
+                                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>1</option>
+                                    <option value="2" <%= searched.type == 2 ? 'selected' : '' %>>2</option>
+                                    <option value="3" <%= searched.type == 3 ? 'selected' : '' %>>3</option>
+                                </select>
+                                <i class="arrow double"></i>
+                            </label>
+                        </div>
+                        <h6 class="fw400">召回状态</h6>
+                        <div class="section mb15">
+                            <label class="field select">
+                                <select id="searchStatus" name="searchStatus" data-field="status">
+                                    <option value="-1" <%= searched.status == -1 ? 'selected' : '' %>>所有</option>
+                                    <% _.each(CALLBACK_STATUS, function(v, k){ %>
+                                    <option value="<%= k %>" <%= searched.status == k ? 'selected' : '' %>><%= v %></option>
+                                    <% }) %>
+                                </select>
+                                <i class="arrow double"></i>
+                            </label>
+                        </div>
+                        <h6 class="fw400">礼包档次</h6>
+                        <div class="section mb15">
+                            <label class="field select">
+                                <select id="searchCouponLevel" name="searchCouponLevel" data-field="coupon_level">
+                                    <option value="-1" <%= searched.coupon_level == -1 ? 'selected' : '' %>>所有</option>
+                                    <option value="1" <%= searched.coupon_level == 1 ? 'selected' : '' %>>低档</option>
+                                    <option value="2" <%= searched.coupon_level == 2 ? 'selected' : '' %>>中档</option>
+                                    <option value="3" <%= searched.coupon_level == 3 ? 'selected' : '' %>>高档</option>
+                                </select>
+                                <i class="arrow double"></i>
+                            </label>
+                        </div>
+                        <hr class="short">
+
+                        <button class="btn btn-primary btn-block" id="search">搜索</button>
+                        <button class="btn btn-default btn-block" id="export">导出</button>
+                </div>
+            </div>
+        </div>
+     </div>
+ </div>
+</aside>
+<!-- End: Right Sidebar -->

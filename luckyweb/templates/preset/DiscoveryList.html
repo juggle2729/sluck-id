@@ -1,0 +1,97 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#preset/discovery/">Discovery数据管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#preset/discovery/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Discovery数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>描述</th>
+                    <th>图像</th>
+                    <th>标签</th>
+                    <th class="sortable" data-field="start_ts">生效时间</th>
+                    <th class="sortable" data-field="end_ts">结束时间</th>
+                    <th>命令</th>
+                    <th>灰度策略</th>
+                    <th class="sortable" data-field="updated_at">最后修改时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(discoverys, function(discovery){ %>
+                    <tr data-id="<%= discovery.id %>" <%= discovery.id.toString().indexOf('group')>-1 ? 'hidden' : '' %> >
+                        <td><a href="#preset/discovery/<%= discovery.id %>/" ><%= discovery.id %></a></td>
+                        <td><%= discovery.title %></td>
+                        <td><%= discovery.desc %></td>
+                        <td>
+                            <img src="<%= discovery.icon %>" height="30" max-width="30" />
+                        </td>
+                        <td><%= discovery.tag %></td>
+                        <td><%= moment.unix(discovery.start_ts).format('YYYY-MM-DD') %></td>
+                        <td><%= moment.unix(discovery.end_ts).format('YYYY-MM-DD') %></td>
+                        <td><%= discovery.cmd %></td>
+                        <td><%= discovery.abtest || '-'%></td>
+                        <td><%= discovery.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#preset/discovery/<%= discovery.id %>/"></a>
+                            <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+        <div class="section mb15">
+            <label for="searchTitle" class="field prepend-icon">
+                <input title="名称" type="text" data-field="title" id="searchTitle" class="gui-input" placeholder="名称" value="<%= searched.title  %>">
+                <label for="searchTitle" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">当前状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" name="searchStatus" data-field="status">
+                    <option value="-1" <%= searched.status == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="1" <%= searched.status == 1 ? 'selected' : '' %>>已过期</option>
+                    <option value="2" <%= searched.status == 2 ? 'selected' : '' %>>生效中</option>
+                    <option value="3" <%= searched.status == 3 ? 'selected' : '' %>>待生效</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <hr class="short">
+
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

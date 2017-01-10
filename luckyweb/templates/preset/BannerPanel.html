@@ -1,0 +1,52 @@
+<div class="dd-handle dd-nodrag dd-primary">Banner配置
+    <span class="pull-right">
+        <a class="fa fa-plus pt5 pull-right add-select" id="addBanner" href="#"></a>
+    </span>
+</div>
+<ol class="dd-list" data-field="banner" data-type="flat">
+    <li class="dd-item">
+        <div class="dd-content">
+            <div class="row sortable">
+                <% _.each(banners, function(banner){ %>
+                    <div class="col-lg-3 col-md-4 col-xs-6 thumb" data-field="-" data-value="<%= banner.id %>" data-type="int">
+                        <div class="row">
+                            <a href="#" class="close delete-banner" data-id=<%= banner.id %>>x</a>
+                            <a href="<%= banner.image %>" class="thumbnail image-popup" data-id="<%= banner.id %>">
+                                <img src="<%= banner.image %>" alt="图像丢失">
+                            </a>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    </li>
+</ol>
+
+    <!-- Panel popup -->
+<div id="addBannerPanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">添加Banner</span>
+        </div>
+        <div class="panel-body">
+            <form id="coupon-form" class="form-horizontal" role="form">
+                <div class="form-group" id="coupon-group">
+                    <label for="inputBanner" class="col-md-2 control-label">请勾选：</label>
+                    <div class="col-md-6">
+                        <% var selected = _.pluck(banners, 'id'); %>
+                        <select id="inputBanner" class="form-control" multiple>
+                            <% _.each(allBanners, function(banner){
+                            if(selected.indexOf(banner.id) >= 0 )return; %>
+                                <option value="<%= banner.id %>"><%= banner.title %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="submitAddBanner">确定</button>
+        </div>
+    </div>
+</div>

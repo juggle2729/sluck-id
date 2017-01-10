@@ -1,0 +1,168 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">系统通知详情</a>
+            </li>
+            <li class="crumb-link">
+                <a href="#notification/">系统通知管理</a>
+            </li>
+            <li class="crumb-trail">编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id="save"><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
+            </span>
+            <span class="panel-title">参数设置</span>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" id="content-form">
+                <div class="form-group">
+                    <label for="inputTitle" class="col-md-1 control-label">标题:</label>
+                    <div class="col-md-9">
+                        <input type="text" id="inputTitle" class="form-control" value="<%= info.content.title %>" placeholder="通知标题..." data-field="content.title" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputContent" class="col-md-1 control-label">内容:</label>
+                    <div class="col-md-9">
+                        <textarea id="inputContent" class="form-control" rows="3" placeholder="通知内容..." data-field="content.content" required><%= info.content.content %></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputStatus" class="col-md-1 control-label">状态:</label>
+                    <div class="col-md-1">
+                        <% if(info.status == 0) {%>
+                            <select class="form-control" id="inputStatus" data-field="status" data-type="int">
+                                <% _.each(NOTIFY_STATUS, function(v, k){ %>
+                                    <option value="<%= k %>" <%= info.status == k ? "selected" : "" %>><%= v %></option>
+                                <% }) %>
+                            </select>
+                        <% }else{ %>
+                            <p class="form-control-static text-muted"><%= NOTIFY_STATUS[info.status] %></p>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputExpireTs" class="col-md-1 control-label">过期时间：</label>
+                    <div class="col-md-1">
+                        <input type="text" class="form-control" data-field="expire_ts"
+                         value="<%= info.expire_ts ? moment.unix(info.expire_ts).format('YYYY-MM-DD') : '' %>" id="inputExpireTs" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputAlert" class="col-md-1 control-label">弹窗提示:</label>
+                    <div class="col-md-2">
+                        <div class="switch switch-info switch-inline switch-xs mt10">
+                            <input id="inputAlert" type="checkbox" <%= info.extend.alert ? "checked" : "" %>>
+                            <label for="inputAlert"></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="alertContent" <%= info.extend.alert ? "" : "hidden" %>>
+                    <% var alert = info.extend.alert || {}; %>
+                    <div class="form-group">
+                        <label class="control-label col-md-1">弹窗类型：</label>
+                        <div class="col-md-1">
+                            <select class="form-control" data-field="extend.alert.type">
+                                <option value="">普通</option>
+                                <option value="update" <%= alert.type == 'update' ? 'selected' : '' %>>升级</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="uploadImage" class="col-md-1 control-label">弹窗图像：</label>
+                        <div class="col-md-1" id="container">
+                            <img id="image" width="70%" src="<%= alert.image %>" alt="弹窗图像" data-field="extend.alert.image" data-useless="">
+                            <button id="uploadImage" class="form-control" data-img="image">更换</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1 control-label">弹窗命令：</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" value="<%= alert.cmd %>" placeholder="格式为N#XX" data-field="extend.alert.cmd" data-useless="">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
+                </span>
+                <span class="panel-title">发布对象</span>
+                <span class="panel-controls">
+                    <a href="#" class="fa fa-plus pt5" id="addFilter"></a>
+                </span>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" id="filter-form">
+                    <% _.each(info.extend.filter_list || [], function(filter){ %>
+                        <div class="form-group filter">
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="input-group">
+                                    <div class="input-group-btn">
+                                        <% var key = filter.chn.exclude ? "exclude" : "include",
+                                               values = filter.chn[key],
+                                               keyStr = (key == "exclude" ? "排除渠道" : "包含渠道"); %>
+                                        <button type="button" class="btn btn-default switch-key" data-key="<%= key %>"><%= keyStr %></button>
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" class="shortcut" data-aria="allAndroid">全部Android</a></li>
+                                            <li><a href="#" class="shortcut" data-aria="allIOS">全部IOS</a></li>
+                                            <li><a href="#" class="shortcut" data-aria="allQG">一元抢购</a></li>
+                                        </ul>
+                                    </div>
+                                    <input type="text" class="form-control filter-value" value="<%= values.join(',') %>" placeholder="以英文逗号分割">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" min=1 value="<%= filter.cvc.min || 1 %>" class="form-control" data-field="cvc.min" data-type="int" placeholder="最小版本(含)">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" min=1 value="<%= filter.cvc.max  %>" class="form-control" data-field="cvc.max" data-type="int" data-useless="" placeholder="最大版本(含)">
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-danger remove-filter">删除该项</button>
+                            </div>
+                        </div>
+                    <% }) %>
+                </form>
+            </div>
+        </div>
+</section>
+
+<div class="placeholder" id="filterTemplate" hidden>
+    <div class="form-group filter">
+        <div class="col-md-5 col-md-offset-1">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default switch-key" data-key="include">包含渠道</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="shortcut" data-aria="allAndroid">全部Android</a></li>
+                        <li><a href="#" class="shortcut" data-aria="allIOS">全部IOS</a></li>
+                        <li><a href="#" class="shortcut" data-aria="allQG">一元抢购</a></li>
+                    </ul>
+                </div>
+                <input type="text" class="form-control filter-value" value="" placeholder="以英文逗号分割">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <input type="number" min=1 value="1" class="form-control" placeholder="最小版本(含)" data-field="cvc.min" data-type="int">
+        </div>
+        <div class="col-md-2">
+            <input type="number" min=1 value="" class="form-control" placeholder="最大版本(含)" data-field="cvc.max" data-type="int" data-useless="">
+        </div>
+        <div class="col-md-1">
+            <button class="btn btn-danger remove-filter">删除该项</button>
+        </div>
+    </div>
+</div>

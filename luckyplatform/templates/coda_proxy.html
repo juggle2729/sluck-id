@@ -1,0 +1,23 @@
+<script type="text/javascript">
+function updateMerchantCompleteUrl(merchantCompleteUrl) {
+	try {
+		window.top.merchant_land_url = getParameter();
+	} catch(e) {};
+}
+
+function updateMerchantCompleteUrl(merchantCompleteUrl) {
+	try {
+		window.top.close_airtime_window();
+	} catch(e) {};
+}
+
+function getParameter() {
+	try {
+		return window.location.search.substring(1);
+	} catch(e) {};
+}
+
+try {
+	window.top.merchant_land_url = getParameter();
+} catch(e) {};
+</script>

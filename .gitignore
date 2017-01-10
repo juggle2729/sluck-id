@@ -1,0 +1,11 @@
+*.pyc
+*.db
+*/build
+*.log
+*.tar.gz
+.DS_Store
+codesnippets
+.idea/
+.python-version
+.vagrant
+.cache

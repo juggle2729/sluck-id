@@ -1,0 +1,55 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#console/perm/">权限管理</a>
+            </li>
+        </ol>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="perm-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>url</th>
+                    <th>权限</th>
+                    <th>最低角色</th>
+                    <th>描述</th>
+                    <th>最后修改时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes,
+                        permDict = {
+                            0: "无",
+                            1: "读",
+                            2: "写",
+                        }
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#console/perm/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td class=""><%= attrs.url %></td>
+                        <td class=""><%= permDict[attrs.permission] %></td>
+                        <td class=""><%= roleDict[attrs.min_role] %></td>
+                        <td class=""><%= attrs.desc %></td>
+                        <td class=""><%= attrs.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#console/perm/<%= attrs.id %>/"></a>
+<!--                             <% if(attrs.id != 1){ %>
+                                <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                            <% } %> -->
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>

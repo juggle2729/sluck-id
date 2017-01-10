@@ -1,0 +1,158 @@
+{
+	"id": "8486db00-3e75-1086-cec3-2e555f687b6f",
+	"name": "yyg-mobile-7450",
+	"description": "",
+	"order": [],
+	"folders": [
+		{
+			"id": "0f8a71a2-23e2-565f-20b1-89d166cc1992",
+			"name": "account",
+			"description": "",
+			"order": [
+				"7a458034-6ffb-e31f-3020-ac3c7705b188",
+				"c20f8a3b-bcbd-ed3d-d222-d7e03c0f23d6"
+			],
+			"owner": "449206"
+		},
+		{
+			"id": "f6f94473-1f5c-b45d-f696-2a12439346bd",
+			"name": "level",
+			"description": "",
+			"order": [
+				"43a692d9-81da-9012-f775-79e815c413c2",
+				"af861592-6106-5a83-d0fb-86c09ffe5836",
+				"ad29e08e-80a7-2f89-0643-0fde871d00d3",
+				"2472e616-eb7a-c9b8-3dd8-da4f78f53355"
+			],
+			"owner": "449206"
+		}
+	],
+	"timestamp": 1461054546171,
+	"owner": "449206",
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "2472e616-eb7a-c9b8-3dd8-da4f78f53355",
+			"headers": "X-AUTH-USER: 7450\nX-AUTH-TOKEN: 7885dcbe-cd34-4bfb-9ff2-bf21e8f84499\n",
+			"url": "http://121.41.6.238/api/v1/my/level/rank",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461569707718,
+			"name": "get level rank",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "43a692d9-81da-9012-f775-79e815c413c2",
+			"headers": "X-AUTH-USER: 7450\nX-AUTH-TOKEN: 7885dcbe-cd34-4bfb-9ff2-bf21e8f84499\n",
+			"url": "http://121.41.6.238/api/v1/my/level",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461219686696,
+			"name": "get my level",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "7a458034-6ffb-e31f-3020-ac3c7705b188",
+			"headers": "X-AUTH-USER: 7450\nX-AUTH-TOKEN: 7885dcbe-cd34-4bfb-9ff2-bf21e8f84499\n",
+			"url": "http://121.41.6.238/api/v1/user",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461219663855,
+			"name": "get user info",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "ad29e08e-80a7-2f89-0643-0fde871d00d3",
+			"headers": "X-AUTH-USER: 7450\nX-AUTH-TOKEN: 7885dcbe-cd34-4bfb-9ff2-bf21e8f84499\n",
+			"url": "http://121.41.6.238/api/v1/tips",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461556857198,
+			"name": "get tips",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "af861592-6106-5a83-d0fb-86c09ffe5836",
+			"headers": "X-AUTH-USER: 7450\nX-AUTH-TOKEN: 7885dcbe-cd34-4bfb-9ff2-bf21e8f84499\n",
+			"url": "http://121.41.6.238/api/v1/level/activate_coupon",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "level",
+					"value": "2",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461556212067,
+			"name": "activate level coupon",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": []
+		},
+		{
+			"id": "c20f8a3b-bcbd-ed3d-d222-d7e03c0f23d6",
+			"headers": "",
+			"url": "http://121.41.6.238/api/v1/user/login/",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1461219690952,
+			"name": "login",
+			"description": "",
+			"collectionId": "8486db00-3e75-1086-cec3-2e555f687b6f",
+			"responses": [],
+			"rawModeData": ""
+		}
+	]
+}

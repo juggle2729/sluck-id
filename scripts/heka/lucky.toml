@@ -1,0 +1,25 @@
+[LogstreamerInput]
+log_directory = "/var/log/lucky"
+file_match = 'track\.json'
+decoder = "LuckyDecoder"
+
+[LuckyDecoder]
+type = "SandboxDecoder"
+filename = "lua_decoders/luckydecoder.lua"
+
+[LuckyOutput]
+message_matcher = "Type == 'json' || Type == 'win' || Type == 'recharge' || Type == 'pay'"
+mongo_addr = ["10.168.5.23:27017"]
+redis_addr = "10.46.71.31:19000"
+mysql_addr = "lucky:P@55word@tcp(10.25.235.79:3306)/lucky"
+
+[NotifyOutput]
+message_matcher = "Type == 'recharge' || Type == 'win'"
+phone_nums = ["15927067926"]
+emails  = ["tryao@zhuohan-tech.com", "wangshanshan@zhuohan-tech.com", "wangfeng@zhuohan-tech.com"]
+redis_addr = "10.46.71.31:19000"
+
+[CouponOutput]
+message_matcher = "Type == 'coupon'"
+mongo_addr = ["10.168.5.23:27017"]
+redis_addr = "10.46.71.31:19000"

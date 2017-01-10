@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Prepaid Card Gateway</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/0.4.3/weui.min.css">
+</head>
+<body>
+<br>
+<div class="weui_cells_title">
+    Vui lòng chọn loại thẻ trả trước
+</div>
+<div class="weui_cells weui_cells_form weui_cells_radio">
+    <label class="weui_cell weui_check_label" for="x12">
+        <div class="weui_cell_bd weui_cell_primary">
+          MobiFone
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x12" value="VMS">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+    <label class="weui_cell weui_check_label" for="x13">
+        <div class="weui_cell_bd weui_cell_primary">
+            VinaPhone
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x13" value="VNP">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+    <label class="weui_cell weui_check_label" for="x14">
+        <div class="weui_cell_bd weui_cell_primary">
+            Viettel
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x14" value="VIETTEL">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+    <label class="weui_cell weui_check_label" for="x15">
+        <div class="weui_cell_bd weui_cell_primary">
+            Gate
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio" name="radio1" class="weui_check" id="x15" value="GATE">
+            <span class="weui_icon_checked"></span>
+        </div>
+    </label>
+</div>
+<br>
+<div class="weui_cells_title">Vui lòng nhập mã số thẻ trả trước, mật khẩu</div>
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">Số thẻ</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="card_num" class="weui_input" type="tel" placeholder="Vui lòng nhập số thẻ">
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">Mật khẩu</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="card_secret" class="weui_input" type="tel" placeholder="Vui lòng nhập mật khẩu">
+        </div>
+    </div>
+</div>
+<br>
+<a id='submit' href="javascript:;" class="weui_btn weui_btn_primary">OK</a>
+
+<script>
+    var card_type = "{{ card_type }}";
+    var card_num = "{{ card_num }}";
+    var card_secret = "{{ card_secret }}";
+
+    $('input[value="' + card_type + '"]').prop('checked', true);
+    $("#card_num").val(card_num);
+    $("#card_secret").val(card_secret);
+
+    $("#submit").click(function () {
+        card_type = $("input:checked").val();
+        card_num = $("#card_num").val();
+        card_secret = $("#card_secret").val();
+        if (card_type === "" || card_type == undefined) {
+            alert("Vui lòng chọn loại thẻ trả trước");
+        } else if (card_num === "" || card_secret === "") {
+            alert("Mật mã không được có khoảng trống");
+        } else {
+            $.post(window.location.href,
+                    {
+                        'card_type': card_type,
+                        'card_num': card_num,
+                        'card_secret': card_secret
+                    },
+                    function (data) {
+                        $("body").html(data);
+                    });
+        }
+    });
+</script>
+</body>
+</html>

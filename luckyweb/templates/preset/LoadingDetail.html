@@ -1,0 +1,69 @@
+<header id="topbar" class="affix">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">Loading详情</a>
+            </li>
+            <li class="crumb-trail">编辑</li>
+        </ol>
+    </div>
+    <div class="pull-right">
+        <a href="javascript:;" class="btn btn-primary btn-sm light fw600 ml10" id='save'><span class="fa fa-save"></span>保存</a>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-1 control-label">图像:</label>
+                <div class="col-md-1" id="container">
+                    <a class="image-popup" href="<%= info.imageUrl %>"><img src="<%= info.imageUrl %>" id="imageUrl" alt="图像" class="fix-icon" data-field="imageUrl"></a>
+                    <button id="uploadImage" class="form-control" data-img="imageUrl">更换图像</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputTitle" class="col-md-1 control-label">名称：</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control" data-field="title" value="<%= info.title %>" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" data-field="jump" <%= info.jump ? "checked" : "" %>>
+                    可跳过</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputStartDate" class="col-md-1 control-label">生效时间：</label>
+                <div class="col-md-2">
+                    <input type="text" id="inputStartDate" class="form-control date-box" data-field="start_date"
+                    value=<%= info.start_date %> required>
+                </div>
+                <label for="inputEndDate" class="col-md-1 control-label">失效时间：</label>
+                <div class="col-md-2">
+                    <input type="text" id="inputEndDate" class="form-control date-box" data-field="end_date"
+                    value=<%= info.end_date %> required>
+                </div>
+                <label for="inputStay" class="col-md-1 control-label">等待时间：</label>
+                <div class="col-md-2">
+                    <input type="number" id="inputStay" class="form-control" data-type="int" data-field="stay" placeholder="单位：毫秒"
+                    value=<%= info.stay || 3000 %> required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputCommand" class="col-md-1 control-label">命令：</label>
+                <div class="col-md-5">
+                    <input type="text" id="inputCommand" class="form-control" value="<%= info.command %>" data-field="command" required>
+                </div>
+                <label for="inputAbtest" class="col-md-1 control-label">灰度策略：</label>
+                <div class="col-md-2">
+                    <select data-field="abtest" data-type="int" class="form-control multiselect">
+                        <option value="-1" <%= info.abtest ? "" : "selected" %>>所有用户可见</option>
+                        <% _.each(abtests, function(o){ %>
+                        <option value="<%= o.id %>" <%= o.id == info.abtest ? "selected" : "" %>><%= o.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

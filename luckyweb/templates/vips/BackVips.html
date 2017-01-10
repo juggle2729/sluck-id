@@ -1,0 +1,92 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#stats/vips/back/">召回信息</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow">
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>召回日期</th>
+                    <th>统计日期</th>
+                    <th>流失类型</th>
+                    <th>流失天数</th>
+                    <th>召回人数/总人数</th>
+                    <th>召回率</th>
+                    <th>付费人数/金额</th>
+                    <th>付费率</th>
+                    <th>付费ARPU</th>
+                    <th>中奖人数/金额</th>
+                    <th>中奖率</th>
+                    <th>参加活动人数</th>
+                    <th>红包消费金额</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){ %>
+                    <tr data-id="<%= item.id %>">
+                        <td><%= item.call_at %></td>
+                        <td><%= item.calc_at %></td>
+                        <td><%= MISSED_TYPE[item.user_type] %></td>
+                        <td><%= item.lost_days %></td>
+                        <td><%= item.back_count %>/<%= item.total_count %></td>
+                        <td><%= item.total_count ? (item.back_rate * 100).toFixed(2) + '%' : '-' %></td>
+                        <td><%= item.recharge_count %>/<%= item.recharge_amount %></td>
+                        <td><%= item.total_count ? (item.recharge_rate * 100).toFixed(2) + '%' : '-' %></td>
+                        <td><%= item.recharge_arpu %></td>
+                        <td><%= item.win_count %>/<%= item.win_amount %></td>
+                        <td><%= item.total_count ? (item.win_rate * 100).toFixed(2) + '%' : '-' %></td>
+                        <td><%= item.pay_count %></td>
+                        <td><%= item.coupon_amount %></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+        <hr class="short">
+        <h6 class="fw400">统计日期</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                <input type="text" id="searchCalcAtLower" class="gui-input date-box" value="<%= searched.calc_at_lower %>" title="下限，含">
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="searchCalcAtUpper" class="gui-input date-box" value="<%= searched.calc_at_upper %>" title="上限，不含">
+            </div>
+        </div>
+        <h6 class="fw400">召回日期</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                <input type="text" id="searchCallAtLower" class="gui-input date-box" value="<%= searched.call_at_lower %>" title="下限，含">
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="searchCallAtUpper" class="gui-input date-box" value="<%= searched.call_at_upper %>" title="上限，不含">
+            </div>
+        </div>
+        <hr class="short">
+
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+        <button class="btn btn-default btn-block" id="export">导出</button>
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

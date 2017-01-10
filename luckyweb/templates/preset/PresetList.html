@@ -1,0 +1,93 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#preset/">预置数据管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#" class="btn btn-default btn-sm light fw600 ml10 add-new"><span class="fa fa-plus pr5"></span>新增预置数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>版本名称</th>
+                    <th>系统类型</th>
+                    <th class="sortable" data-field="min_version">最小版本</th>
+                    <th class="sortable" data-field="max_version">最大版本</th>
+                    <th class="sortable" data-field="updated_at">最后修改时间</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(presets, function(preset){
+                %>
+                    <tr data-id="<%= preset.id %>" >
+                        <td><a href="#preset/<%= preset.id %>/" ><%= preset.id %></a></td>
+                        <td><%= preset.title %></td>
+                        <td><%= preset.device_type %></td>
+                        <td><%= preset.min_version %></td>
+                        <td><%= preset.max_version || "-" %></td>
+                        <td><%= preset.updated_at %></td>
+                        <td><%= preset.remark %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#preset/<%= preset.id %>/"></a>
+                            <a class="fa fa-files-o clone" href="javascript:;"></a>
+                            <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchId" class="field prepend-icon">
+                <input title="版本号" type="text" name="version" id="searchVersion" class="gui-input" placeholder="具体版本号" data-field="version" value="<%= searched.version %>">
+                <label for="version" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">设备类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchDeviceType" class="form-control" data-field="device_type">
+                    <% _.each(DEVICE_TYPE, function(v, k){ %>
+                        <option value="<%= k %>" <%= parseInt(k) & searched.device_type ? "selected" : "" %>><%= v %></option>
+                    <% }) %>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-primary btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

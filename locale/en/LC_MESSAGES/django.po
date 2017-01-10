@@ -1,0 +1,163 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-07-28 11:05+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: luckyapi/logic/scrolling.py:24
+msgid "seconds"
+msgstr "%s seconds"
+
+#: luckyapi/logic/scrolling.py:26
+msgid "minutes"
+msgstr "%s minutes"
+
+#: luckyapi/logic/scrolling.py:28
+msgid "hours"
+msgstr "%s hours"
+
+#: luckyapi/views/credit.py:66
+msgid "share to sign title"
+msgstr "signin and share"
+
+#: luckyapi/views/credit.py:67
+msgid "daily sign slogan"
+msgstr "sign in and share everyday to earn +15 credits, 100 credits at most"
+
+#: luckyapi/views/credit.py:68
+msgid "to sign"
+msgstr "sign in"
+
+#: luckyapi/views/credit.py:74
+msgid "start consume title"
+msgstr "shop now"
+
+#: luckyapi/views/credit.py:75
+msgid "consume credit slogan"
+msgstr "10 creditsearned for every 1 dollarconsumed"
+
+#: luckyapi/views/credit.py:76 luckyapi/views/credit.py:84
+msgid "earn credit"
+msgstr "earn credit"
+
+#: luckyapi/views/credit.py:82
+msgid "invite partner title"
+msgstr "invite a friend"
+
+#: luckyapi/views/credit.py:83
+msgid "invite credit slogan"
+msgstr "both you and your friendwill receive a super gift"
+
+#: luckyapi/views/credit.py:89
+msgid "daily credit title"
+msgstr "dailycredit"
+
+#: luckyapi/views/credit.py:95
+msgid "growth credit title"
+msgstr "growth credit"
+
+#: luckyapi/views/credit.py:98
+msgid "fresh mission title"
+msgstr "newbie task"
+
+#: luckyapi/views/credit.py:99
+msgid "fresh mission credit slogan"
+msgstr "quick start to enjoy Luckyshop"
+
+#: luckyapi/views/credit.py:100
+msgid "fetch coupon tips"
+msgstr "get the coupon"
+
+#: luckycommon/campaign/miss_return.py:66
+msgid "10 Lucky Coins"
+msgstr "10 Lucky Coins"
+
+#: luckycommon/campaign/miss_return.py:69
+#, python-format
+msgid "%s Sure to Win Coupon"
+msgstr "%s Sure to Win Coupon"
+
+#: luckycommon/credit/db/credit.py:147
+msgid "sign in"
+msgstr "sign in"
+
+#: luckycommon/credit/db/credit.py:149
+msgid "share"
+msgstr "share"
+
+#: luckycommon/credit/db/credit.py:226
+msgid "treasure"
+msgstr "purchase"
+
+#: luckycommon/credit/db/credit.py:242
+msgid "redeem points to credits"
+msgstr "redeem %s points to %s credits"
+
+#: luckycommon/credit/db/credit.py:251
+msgid "redeem"
+msgstr "redeem the credits"
+
+#: luckycommon/db/campaign.py:351 luckycommon/model/campaign.py:91
+msgid "wealth god campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:28
+msgid "recharge campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:35
+msgid "recharge campaign stage 2"
+msgstr ""
+
+#: luckycommon/model/campaign.py:42
+msgid "recharge campaign stage 3"
+msgstr ""
+
+#: luckycommon/model/campaign.py:49
+msgid "recharge campaign stage 4"
+msgstr ""
+
+#: luckycommon/model/campaign.py:56
+msgid "recharge campaign stage 5"
+msgstr ""
+
+#: luckycommon/model/campaign.py:70
+msgid "daily buy campaign"
+msgstr ""
+
+#: luckycommon/model/campaign.py:77
+msgid "daily buy campaign stage 2"
+msgstr ""
+
+#: luckycommon/model/campaign.py:84
+msgid "moist campaign"
+msgstr ""
+
+#: luckycommon/order/db/order.py:628
+msgid "pay order"
+msgstr "proceed to checkout"
+
+#: luckycommon/order/db/order.py:725
+msgid "refund order"
+msgstr "refund"
+
+#: luckycommon/partner/callback.py:26 luckycommon/partner/callback.py:33
+msgid "partner reward"
+msgstr "credits for friends’desposit"
+
+#: luckycommon/timer/handler.py:716
+msgid "congratulations"
+msgstr "Congratulations {{ time }} ago <font color='#2189ff'>%s</font> won %s"

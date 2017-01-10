@@ -1,0 +1,72 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#goods/category/?parent_id=<%= parent.id || '$null' %>"><%= parent.name ? parent.name + "子类" : "一级分类" %></a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#goods/category/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增商品分类</a>
+        <!--<div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>-->
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){ %>
+                    <tr data-id="<%= item.id %>" >
+                        <td><a href="#goods/category/<%= item.id %>/" ><%= item.id %></a></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#goods/category/<%= item.id %>/"></a>
+                            <a href="#goods/category/?parent_id=<%= item.id %>" class="glyphicons glyphicons-folder_open" title="子分类"></a>
+                            <a class="glyphicons glyphicons-remove_2 delete-item" title="删除一个分类将删除该分类的所有子分类"
+                            href="javascript:;"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchId" class="field prepend-icon">
+                <input title="分类名称" type="text" id="searchName" class="gui-input" placeholder="分类名称" data-field="name">
+                <label for="searchName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

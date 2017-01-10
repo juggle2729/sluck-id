@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pay Result</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/0.4.3/weui.min.css">
+    <style>
+        .center {
+            text-align: center;
+        }
+
+        .spinner {
+            width: 100px;
+            height: 100px;
+
+            position: relative;
+            margin: 100px auto;
+        }
+
+        .double-bounce1, .double-bounce2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #333;
+            opacity: 0.6;
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+            animation: sk-bounce 2.0s infinite ease-in-out;
+        }
+
+        .double-bounce2 {
+            -webkit-animation-delay: -1.0s;
+            animation-delay: -1.0s;
+        }
+
+        @-webkit-keyframes sk-bounce {
+            0%, 100% {
+                -webkit-transform: scale(0.0)
+            }
+            50% {
+                -webkit-transform: scale(1.0)
+            }
+        }
+
+        @keyframes sk-bounce {
+            0%, 100% {
+                transform: scale(0.0);
+                -webkit-transform: scale(0.0);
+            }
+            50% {
+                transform: scale(1.0);
+                -webkit-transform: scale(1.0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="spin_indicator" class="spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+</div>
+<div id="progress_text" class="center">
+    <h2>Đang xác nhận kết quả thanh toán</h2>
+</div>
+
+<div id="success_msg" class="weui_msg">
+    <div class="weui_icon_area"><i class="weui_icon_success weui_icon_msg"></i></div>
+    <div class="weui_text_area">
+        <h2 class="weui_msg_title">Thanh toán thành công</h2>
+        <p class="weui_msg_desc">Vui lòng đến lịch sử tài khoản xem chi tiết</p>
+    </div>
+</div>
+
+<div id="failed_msg" class="weui_msg">
+    <div class="weui_icon_area"><i class="weui_icon_warn weui_icon_msg"></i></div>
+    <div class="weui_text_area">
+        <h2 class="weui_msg_title">Thanh toán thất bại</h2>
+        <p id="failed_reason" class="weui_msg_desc"></p>
+    </div>
+</div>
+
+<script>
+    $("#success_msg").hide();
+    $("#failed_msg").hide();
+
+    var timer = setInterval(get_pay_status, 3000);
+
+    function get_pay_status() {
+        $.get("{{ pay_status_url }}", function (data) {
+            console.log(data);
+            if (parseInt(data['data']['status']) === 2) {
+                clearInterval(timer);
+                $("#spin_indicator").hide();
+                $("#progress_text").hide();
+                $("#success_msg").show();
+            } else if (parseInt(data['data']['status']) == 4) {
+                var failed_reason = data['data']['extend']['failed_reason'];
+                $("#failed_reason").text(failed_reason);
+                clearInterval(timer);
+                $("#spin_indicator").hide();
+                $("#progress_text").hide();
+                $("#failed_msg").show();
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

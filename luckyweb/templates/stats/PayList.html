@@ -1,0 +1,163 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#stats/pay/">付费信息</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#" class="btn btn-default btn-sm light fw600 ml10" id="exportData"><span class="glyphicon glyphicon-cloud-download pr5"></span>导出数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <%if(models.length>0){%>
+    <div class="panel overflow">
+        <table class="table table-striped fs13" id="pay-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th class="sortable" data-field="created_at">创建时间</th>
+                    <th>用户ID</th>
+                    <th>用户类型</th>
+                    <th>充值类型</th>
+                    <th class="sortable" data-field="price">充值金额</th>
+                    <th class="">充值入口</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><%= attrs.id %></td>
+                        <td class=""><%= attrs.created_at %></td>
+                        <td class=""><a href="#stats/account/?id=<%= attrs.user_id %>"><%= attrs.is_virtual ? '*' : '' %><%= attrs.user_id %><a></td>
+                        <td class=""><%= USER_TYPE[attrs.user_type] || "(账户丢失)"%></td>
+                        <td class=""><%= PAY_TYPE[attrs.pay_type] || "(未知)"%></td>
+                        <td class=""><%= attrs.price %></td>
+                        <td class=""><%= attrs.activity_name || '-' %></td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+    <% }else{ %>
+    <h4 class="text-muted">无数据</h4>
+    <% } %>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+ <div class="sidebar_right_content nano-content">
+     <div class="tab-block sidebar-block br-n">
+        <ul class="nav nav-tabs tabs-border nav-justified">
+            <li class="active">
+                <a href="#sidebar-right-tab1" data-toggle="tab">统计数据</a>
+            </li>
+            <li>
+                <a href="#sidebar-right-tab2" data-toggle="tab">过滤搜索</a>
+            </li>
+        </ul>
+        <div class="tab-content br-n">
+            <div id="sidebar-right-tab1" class="tab-pane active">
+                <div class="p20 admin-form">
+                    <% var total = 0,
+                        count = 0;
+                    _.each(overview, function(obj){
+                    total += obj.total;
+                    count += obj.count;
+                    %>
+                        <h5 class="title-divider text-muted mb20"><%= PAY_TYPE[obj.pay_type] %><span class="pull-right"> <%= obj.total %>/<%= obj.count %>次 </span> </h5>
+                    <%})
+                    if(overview.length > 1){%>
+                        <h5 class="title-divider text-muted mb20">总计<span class="pull-right"> <%= total.toFixed(2) %>/<%= count %>次 </span> </h5>
+                    <% }else if(overview.length == 0){ %>
+                        <h5 class="text-muted mb20">无数据...</h5>
+                    <% } %>
+                </div>
+            </div>
+            <div id="sidebar-right-tab2" class="tab-pane">
+                <div class="p20 admin-form">
+                    <div class="section mb15">
+                        <label for="searchId" class="field prepend-icon">
+                            <input title="ID" type="text" data-field="user_id" id="searchId" class="gui-input" placeholder="ID" value="<%= searched.id  %>">
+                            <label for="searchId" class="field-icon"><i class="fa fa-tag"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="section mb15">
+                        <label for="searchUserId" class="field prepend-icon">
+                            <input title="用户ID" type="text" data-field="user_id" id="searchUserId" class="gui-input" placeholder="用户ID" value="<%= searched.user_id  %>">
+                            <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <h6 class="fw400">充值时间</h6>
+                    <div class="section row">
+                        <div class="col-md-6">
+                                <input type="text" title="下限，包含当天" name="searchCreatedAtLower" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
+                                </label>
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                                <input type="text" title="上限，不包括当天" name="searchCreatedAtUpper" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
+                                </label>
+                            </label>
+                        </div>
+                    </div>
+                    <h6 class="fw400">付费入口</h6>
+                    <div class="section mb15">
+                        <label class="field select">
+                            <select id="searchType" name="searchType" data-field="type">
+                                <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                                <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>仅充值</option>
+                                <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>充值并购买</option>
+                            </select>
+                            <i class="arrow double"></i>
+                        </label>
+                    </div>
+                    <h6 class="fw400">充值方式</h6>
+                    <div class="section mb15">
+                        <label class="field select">
+                            <select id="searchPayType" name="searchPayType" data-field="pay_type">
+                                <option value="-1" <%= searched.pay_type == -1 ? 'selected' : '' %>>所有</option>
+                                <% _.each(PAY_TYPE, function(v, k){%>
+                                    <option value="<%= k %>" searched.pay_type == k ? 'selected': 0><%= v %></option>
+                                <% }) %>
+                            </select>
+                            <i class="arrow double"></i>
+                        </label>
+                    </div>
+                    <h6 class="fw400">用户类型</h6>
+                    <div class="section mb15">
+                        <label class="field select">
+                            <select id="searchUserType" name="searchUserType" data-field="user_type">
+                                <option value="-1" <%= searched.user_type == -1 ? 'selected' : '' %>>所有</option>
+                                <% _.each(USER_TYPE, function(v, k){%>
+                                    <option value="<%= k %>" searched.user_type == k ? 'selected': 0><%= v %></option>
+                                <% }) %>
+                            </select>
+                            <i class="arrow double"></i>
+                        </label>
+                    </div>
+                    <hr class="short">
+
+                    <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+                </div>
+            </div>
+        </div>
+     </div>
+ </div>
+
+</aside>
+<!-- End: Right Sidebar -->

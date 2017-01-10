@@ -1,0 +1,56 @@
+{
+  "default": {
+    "user": "yangqiu",
+    "mm": "ubuntu"
+  },
+  "dependency": {
+    "luckyservice": [
+      {
+        "apt-get install -y": [
+          "supervisor",
+          "libmysqlclient-dev",
+          "python-dev",
+          "python-pip",
+          "git",
+          "openssl-dev",
+          "libffi-dev",
+          "build-essential",
+          "libtiff4-dev",
+          "libjpeg8-dev",
+          "zlib1g-dev",
+          "libfreetype6-dev",
+          "liblcms1-dev",
+          "libwebp-dev",
+          "tcl8.5-dev",
+          "tk8.5-dev"
+        ]
+      },
+      "pip install virtualenv uwsgi",
+      "mkdir -p /home/ubuntu/af-env/data/",
+      "wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.mmdb.gz -O /tmp/GeoLite2-City.mmdb.gz",
+      "gunzip -c /tmp/GeoLite2-City.mmdb.gz > /home/ubuntu/af-env/data/GeoLite2-City.mmdb",
+      "chown -R ubuntu /home/ubuntu/af-env/data/"
+    ],
+    "luckyweb": []
+  },
+  "env": {
+    "luckyservice": {
+      "121.41.6.238": {
+        "bash": [
+          "rm -rf luckyweb",
+          "mv luckyplatform/settings_release.py luckyplatform/env_settings.py"
+        ],
+        "debug": [
+          "mv luckyplatform/settings_test.py luckyplatform/env_settings.py"
+        ]
+      }
+    },
+    "luckyweb": {
+      "121.41.6.238": {
+        "bash": [
+          "mv assets/js/settings_test.js assets/js/env_settings.js"
+        ]
+      }
+    }
+  }
+}

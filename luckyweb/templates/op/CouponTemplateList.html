@@ -1,0 +1,96 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#coupon/template/">红包模板管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#coupon/template/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新建红包模板</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="coupon-template-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th>分类</th>
+                    <th>标题</th>
+                    <th class="">描述</th>
+                    <th class="sortable" data-field="price">金额</th>
+                    <th class="sortable" data-field="condition_price">条件金额</th>
+                    <th class="">有效期</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th class="">操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes,
+                        d = moment.duration(attrs.valid_ts, 'seconds').humanize();
+                    if(attrs.valid_ts == 0) d='当天';
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#coupon/template/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td class=""><%= types[attrs.coupon_type] %></td>
+                        <td><%= attrs.title %></td>
+                        <td class=""><%= attrs.desc %></td>
+                        <td class=""><%= attrs.price %></td>
+                        <td class=""><%= attrs.condition_price || 0 %></td>
+                        <td class=""><%= d %></td>
+                        <td class=""><%= attrs.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#coupon/template/<%= attrs.id %>/"></a>
+                            <!-- <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a> -->
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchIdOrName" class="field prepend-icon">
+                <input title="模板ID或名称" type="text" data-field="idOrName" id="searchIdOrName" class="gui-input" placeholder="模板ID或名称" value="<%= searched.idOrName  %>">
+                <label for="searchIdOrName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">红包类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchType" name="searchType" data-field="type">
+                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>直减</option>
+                    <option value="2" <%= searched.type == 2 ? 'selected' : '' %>>满减</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

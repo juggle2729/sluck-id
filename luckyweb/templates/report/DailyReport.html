@@ -1,0 +1,64 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">每日用户数据</a>
+            </li>
+        </ol>
+    </div>
+</header>
+<section id="content">
+    <div class="panel">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <div class="col-md-11">
+                    <input type="text" id="dateFilter" name="dateFilter" class="form-control text-center" value="<%= options.dateRange[0] %> ~ <%= options.dateRange[1] %>">
+                </div>
+                <div class="col-md-1">
+                    <input type="button" id="search" class="btn btn-primary btn-block form-control" value="提交">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="panel">
+        <table class="table table-striped fs13">
+            <thead>
+                <tr class="bg-light">
+                    <th>日期</th>
+                    <th>新增设备</th>
+                    <th>活跃设备</th>
+                    <th>注册人数</th>
+                    <th>注册率</th>
+                    <th>次日留存率</th>
+                    <th>新增用户付费人数</th>
+                    <th>新增用户付费率</th>
+                    <th>新增用户付费金额</th>
+                    <th>活跃用户</th>
+                    <th>付费人数</th>
+                    <th>付费率</th>
+                    <th>付费金额</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){ %>
+                    <tr>
+                        <td><%= item._id %></td>
+                        <td><%= item.new_device || 0 %></td>
+                        <td><%= item.active_device || 0 %></td>
+                        <td><%= item.new_user || 0 %></td>
+                        <td><%= (item.register_rate * 100).toFixed(2) %>%</td>
+                        <td><%= (item.stay_2_rate * 100).toFixed(2) %>%</td>
+                        <td><%= item.new_recharge_user || 0 %></td>
+                        <td><%= (item.new_recharge_rate * 100).toFixed(2)  %>%</td>
+                        <td><%= item.new_recharge_price || 0 %></td>
+                        <td><%= item.active_user %></td>
+                        <td><%= item.recharge_user %></td>
+                        <td><%= (item.recharge_rate * 100).toFixed(2) %>%</td>
+                        <td><%= item.recharge_price.toFixed(1) %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</section>

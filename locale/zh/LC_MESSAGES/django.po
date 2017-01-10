@@ -1,0 +1,127 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-03-07 20:24+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: luckyapi/views/credit.py:76
+msgid "daily sign"
+msgstr "每日签到"
+
+#: luckyapi/views/credit.py:77
+msgid "daily sign rule"
+msgstr "连续登陆，每天+30，200分封顶"
+
+#: luckyapi/views/credit.py:84
+msgid "daily share"
+msgstr "每日分享"
+
+#: luckyapi/views/credit.py:85
+msgid "daily share rule"
+msgstr "分享程序/商品/晒单/中奖记录都可以~"
+
+#: luckyapi/views/credit.py:92
+msgid "participate"
+msgstr "参与夺宝"
+
+#: luckyapi/views/credit.py:93
+msgid "for every $ 1, get 10 points"
+msgstr "每消费1元，获得10元宝"
+
+#: luckyapi/views/credit.py:94 luckyapi/views/credit.py:103
+msgid "earn points"
+msgstr "赚元宝"
+
+#: luckyapi/views/credit.py:101
+msgid "invite friends"
+msgstr "邀请好友"
+
+#: luckyapi/views/credit.py:102
+msgid "friends each recharge, both pro-integration"
+msgstr "好友每次充值，亲都有元宝哦~"
+
+#: luckyapi/views/credit.py:108
+msgid "daily points"
+msgstr "日常元宝"
+
+#: luckyapi/views/credit.py:114
+msgid "growth points"
+msgstr "成长元宝"
+
+#: luckyapi/views/credit.py:117 luckycommon/db/mission.py:95
+msgid "fresh mission"
+msgstr "新手任务"
+
+#: luckyapi/views/credit.py:118
+msgid "quick start, play one yuan purchase"
+msgstr "快速上手，玩转1元购"
+
+#: luckycommon/db/campaign.py:352 luckycommon/model/campaign.py:48
+msgid "wealth god campaign"
+msgstr "财神指路"
+
+#: luckycommon/db/credit.py:117
+msgid "sign in"
+msgstr "签到"
+
+#: luckycommon/db/credit.py:119
+msgid "share"
+msgstr "分享"
+
+#: luckycommon/db/credit.py:148
+msgid "treasure"
+msgstr "夺宝"
+
+#: luckycommon/db/credit.py:163
+msgid "redeem points to credits"
+msgstr "将%s元宝兑换成%s夺宝币"
+
+#: luckycommon/db/credit.py:171
+msgid "redeem"
+msgstr "元宝兑换"
+
+#: luckycommon/db/order.py:256
+msgid "pay order"
+msgstr "支付订单"
+
+#: luckycommon/db/order.py:351
+#, fuzzy
+msgid "refund order"
+msgstr "订单退款"
+
+#: luckycommon/model/campaign.py:27
+msgid "recharge campaign"
+msgstr "新年充值送红包活动"
+
+#: luckycommon/model/campaign.py:34
+msgid "daily buy campaign"
+msgstr "新春分享活动"
+
+#: luckycommon/model/campaign.py:41
+msgid "moist campaign"
+msgstr "充50得88元"
+
+#: luckycommon/partner/callback.py:28 luckycommon/partner/callback.py:36
+#: luckycommon/partner/callback.py:44
+msgid "partner reward"
+msgstr "好友充值返利"
+
+#: luckycommon/timer/handler.py:540
+msgid "congratulations"
+msgstr "恭喜<font color='#2189ff'>%s</font>{{ time }}前获得%s"
+
+#~ msgid "trans test"
+#~ msgstr "翻译测试"

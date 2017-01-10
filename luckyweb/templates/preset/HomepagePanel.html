@@ -1,0 +1,57 @@
+<div class="dd-handle dd-nodrag dd-primary">Homepage配置
+    <span class="pull-right">
+        <a class="fa fa-plus pt5 pull-right add-select" id="addHomepage" href="#"></a>
+    </span>
+</div>
+<ol class="dd-list" data-field="homepage" data-type="flat">
+    <li class="dd-item">
+        <div class="dd-content">
+            <div class="row sortable">
+                <% _.each(homepages, function(homepage){ %>
+                    <div class="col-lg-3 col-md-4 col-xs-6 thumb" data-field="-" data-value="<%= homepage.id %>">
+                        <div class="row">
+                            <a href="#" class="close delete-homepage" data-id=<%=homepage.id %>>x</a>
+                            <a title="<%= homepage.name %><%= homepage.remark ? '('+homepage.remark+')' : ''%>" href="<%= homepage.icon %>" data-id="<%= homepage.id %>"
+                                class="thumbnail image-popup">
+                                <img src="<%= homepage.icon %>" alt="<%= homepage.id.toString().indexOf('group')>-1 ? '分组用分隔符' : '图像丢失' %>">
+                            </a>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+    </li>
+</ol>
+
+<!--Panel popup-->
+<div id="addHomepagePanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+    <div class="panel">
+        <div class="panel-heading">
+            <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+            <span class="panel-title">添加Homepage</span>
+        </div>
+        <div class="panel-body">
+            <form id="coupon-form" class="form-horizontal" role="form">
+                <div class="form-group" id="coupon-group">
+                    <label for="inputHomepage" class="col-md-2 control-label">请勾选：</label>
+                    <div class="col-md-6">
+                        <% var selected = _.pluck(homepages, 'id'); %>
+                            <select id="inputHomepage" class="form-control" multiple>
+                            <% _.each(allHomepages, function(homepage){
+                            if(selected.indexOf(homepage.id) >= 0 )return; %>
+                                <option value="<%= homepage.id %>">
+                                    <%= homepage.name %>
+                                    <%= homepage.remark ? "(" + homepage.remark + ")" : "" %>
+                                    </option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-primary" type="button" id="submitAddHomepage">确定</button>
+        </div>
+    </div>
+</div>
+

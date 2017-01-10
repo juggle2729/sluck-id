@@ -1,0 +1,54 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#abtest/">灰度策略管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#abtest/add/" class="btn btn-default btn-sm light fw600 ml10 add-new"><span class="fa fa-plus pr5"></span>新增灰度策略</a>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>尾号范围</th>
+                    <th>渠道列表</th>
+                    <th>最后修改时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(items, function(item){
+                    var chn = item.chn || {};
+                    if(chn.include){
+                        chn = '包含' + chn.include.join(',');
+                    }else if(chn.exclude){
+                        chn = '排除' + chn.exclude.join(',');
+                    }
+                chn = Object.keys(chn).length > 0 ? chn : '全部渠道';
+                %>
+                    <tr data-id="<%= item.id %>" >
+                        <td><a href="#abtest/<%= item.id %>/" ><%= item.id %></a></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.user_id %></td>
+                        <td><%= chn  %></td>
+                        <td><%= item.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#abtest/<%= item.id %>/"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>

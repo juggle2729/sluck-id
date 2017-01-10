@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <title>一元购控制台</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font CSS  -->
+    <link rel='stylesheet' type='text/css' href='assets/fonts/fonts.css'>
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" type="text/css" href="vendor/plugins/magnific/magnific-popup.css">
+    <link rel="stylesheet" type="text/css" href="vendor/plugins/nestable/nestable.css">
+    <!-- Theme CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/skin/default_skin/css/theme.css">
+    <!-- Admin Panels CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/admin-tools/admin-plugins/admin-panels/adminpanels.css">
+    <!-- Admin Forms CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/admin-tools/admin-forms/css/admin-forms.css">
+    <link rel="stylesheet" type="text/css" href="assets/skin/custom.css">
+    <!-- Admin Modals CSS -->
+    <link rel="stylesheet" type="text/css" href="assets/admin-tools/admin-plugins/admin-modal/adminmodal.css">
+    <!-- datetime picker -->
+    <link rel="stylesheet" type="text/css" href="vendor/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/plugins/daterangepicker/daterangepicker.css">
+    <!--confirm-->
+    <link rel="stylesheet" type="text/css" href="vendor/plugins/confirm/jquery-confirm.min.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/img/favicon.ico">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body class="dashboard-page sb-l-o sb-r-c">
+    <!-- Start: Main -->
+    <div id="main">
+        <!-- Start: Header -->
+        <header class="navbar navbar-fixed-top bg-light">
+            <div class="navbar-branding">
+                <a class="navbar-brand" href="/"> <b>一元购</b>控制台
+                </a>
+                <span id="toggle_sidemenu_l" class="glyphicons glyphicons-show_lines"></span>
+                <ul class="nav navbar-nav pull-right hidden">
+                    <li>
+                        <a href="#" class="sidebar-menu-toggle">
+                            <span class="octicon octicon-ruby fs20 mr10 pull-right "></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="nav navbar-nav navbar-left">
+                <li class="hidden-xs">
+                    <a class="request-fullscreen toggle-active" href="#">
+                        <span class="octicon octicon-screen-full fs18"></span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
+                        <span id="user-full-name" class="lh30"></span>
+                        <span class="caret caret-tp hidden-xs"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-persist pn w250 bg-white" role="menu">
+                        <li class="br-t of-h">
+                            <a href="#" id="profile-link" onclick="return false;" class="fw600 p12 animated animated-short fadeInDown">
+                                <span class="fa fa-gear pr5 pr5"></span> 个人设置 </a>
+                        </li>
+                        <li class="br-t of-h">
+                            <a href="#" id="logout-link" onclick="return false;" class="fw600 p12 animated animated-short fadeInDown">
+                                <span class="fa fa-power-off pr5"></span> 注销 </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+        <!-- End: Header -->
+        <!-- Start: Sidebar -->
+        <aside id="sidebar_left" class="nano nano-primary affix">
+            <div class="nano-content">
+                <!-- sidebar menu -->
+                <ul class="nav sidebar-menu">
+                    <li class="sidebar-label pt20">Lucky Console</li>
+                    <li>
+                        <a class="accordion-toggle" id="opMenu" href="#">
+                            <span class="glyphicons glyphicons-settings"></span>
+                            <span class="sidebar-title">运营相关</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+                            <li>
+                                <a href="#template/?status=1&_reflush=1">
+                                    <span class="glyphicons glyphicons-stopwatch"></span>
+                                    活动管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="accordion-toggle" id="goodsMenu">
+                                    <span class="glyphicons glyphicons-shopping_cart"></span>
+                                    商品相关
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="nav sub-nav">
+                                    <li>
+                                        <a href="#goods/"> 商品管理 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#goods/source/"> 货源管理 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#goods/brand/"> 供货商管理 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#goods/category/"> 分类管理 </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href='#order/?status=5&ship_status={"$lt": 98}&_reflush=1'>
+                                    <span class="glyphicons glyphicons-coins"></span>
+                                    订单管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#redenvelope/">
+                                    <span class="glyphicons glyphicons-coins"></span>
+                                    卡密类订单管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#show/?status=2&_reflush=1">
+                                    <span class="glyphicons glyphicons-sampler"></span>
+                                    晒单管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#bigshow/">
+                                    <span class="glyphicons glyphicons-sampler"></span>
+                                    大件晒单管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#notification/">
+                                    <span class="glyphicons glyphicons-wifi_alt"></span>
+                                    系统通知管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#feedback/">
+                                    <span class="fa fa-bug"></span>
+                                    用户反馈管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="accordion-toggle" id="presetMenu">
+                                    <span class="glyphicons glyphicons-notes_2"></span>
+                                    预置数据管理
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="nav sub-nav">
+                                    <li>
+                                        <a href="#preset/banner/"> Banner </a>
+                                    </li>
+                                    <li>
+                                        <a href="#preset/discovery/"> Discovery </a>
+                                    </li>
+                                    <li>
+                                        <a href="#preset/loading/"> Loading </a>
+                                    </li>
+                                    <li>
+                                        <a href="#preset/shortcut/"> Shortcut </a>
+                                    </li>
+                                    <li>
+                                        <a href="#preset/theme/"> Theme </a>
+                                    </li>
+                                    <li>
+                                        <a href="#preset/homepage/">Homepage</a>
+                                    </li>
+                                    <li>
+                                        <a href="#preset/"> 版本配置 </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#category/">
+                                    <span class="glyphicons glyphicon-th-list"></span>
+                                    活动分类管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#virtual/">
+                                    <span class="glyphicons glyphicons-user"></span>
+                                    自有用户管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#coupon/template/">
+                                    <span class="fa fa-envelope-o"></span>
+                                    红包模板管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#abtest/">
+                                    <span class="glyphicons glyphicons-crop"></span>
+                                    灰度策略管理
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="accordion-toggle" id="statsMenu" href="#">
+                            <span class="glyphicons glyphicons-stats"></span>
+                            <span class="sidebar-title">数据统计相关</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+                            <li>
+                                <a href="#stats/account/">
+                                    <span class="glyphicons glyphicons-user"></span>
+                                    用户信息
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="accordion-toggle" id="vipsMenu">
+                                    <span class="glyphicons glyphicons-old_man"></span>
+                                    大客户信息
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="nav sub-nav">
+                                    <li>
+                                        <a href="#stats/vips/missed/"> 流失信息 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/vips/back/"> 召回信息 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/vips/active/"> 活跃榜单 </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#" data-key="activity">
+                                    <span class="glyphicons glyphicons-stopwatch"></span>
+                                    活动信息
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-key="order">
+                                    <span class="glyphicons glyphicons-coins"></span>
+                                    订单信息
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-key="coupon" class="ts">
+                                    <span class="fa fa-envelope-o"></span>
+                                    红包信息
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" data-key="pay">
+                                    <span class="fa fa-money"></span>
+                                    付费信息
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#stats/uninstall/">
+                                    <span class="fa fa-bug"></span>
+                                    卸载问卷统计
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="accordion-toggle" id="reportMenu">
+                                    <span class="glyphicons glyphicons-table"></span>
+                                    报表数据
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="nav sub-nav">
+                                    <li>
+                                        <a href="#stats/report/overview/"> 整体分析 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/daily/"> 每日用户分析 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/profit/"> 每日利润分析 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/recharge/"> 每日付费分析 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/tactics/"> 每日策略分析 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/resource/"> 每日资源分析 </a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/shipping/">每日发货统计</a>
+                                    </li>
+                                    <li>
+                                        <a href="#stats/report/top100/"> TOP100 </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="accordion-toggle" id="consoleMenu" href="#">
+                            <span class="glyphicons glyphicons-cogwheels"></span>
+                            <span class="sidebar-title">控制台相关</span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="nav sub-nav">
+                            <li>
+                                <a href="#console/user/?_reflush=1">
+                                    <span class="glyphicons glyphicons-user"></span>
+                                    用户管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#console/perm/">
+                                    <span class="glyphicons glyphicons-warning_sign"></span>
+                                    权限管理
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#console/record/">
+                                    <span class="glyphicons glyphicons-notes"></span>
+                                    操作记录
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="sidebar-toggle-mini">
+                    <a href="#">
+                        <span class="fa fa-sign-out"></span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        <!-- Start: Content-Wrapper -->
+        <section id="content_wrapper">
+        </section>
+        <!-- End: Content-Wrapper -->
+    </div>
+    <div id="editProfilePanel" class="popup-basic popup-lg bg-none mfp-with-anim mfp-hide">
+        <div class="panel">
+            <div class="panel-heading">
+                <span class="panel-icon"><i class="fa fa-pencil"></i></span>
+                <span class="panel-title">编辑资料</span>
+            </div>
+            <div class="panel-body">
+                <form id="behavior-form" class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="inputNickName" class="col-md-3 control-label">新昵称：</label>
+                    <div class="col-md-9">
+                        <input type="text" id="inputNickName" class="form-control" placeholder="不改则留空">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword" class="col-md-3 control-label">新密码：</label>
+                    <div class="col-md-9">
+                        <input type="password" id="inputPassword" class="form-control" placeholder="不改则留空">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="col-md-3 control-label">确认新密码：</label>
+                    <div class="col-md-9">
+                        <input type="password" id="confirmPassword" class="form-control" placeholder="同上">
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="panel-footer text-right">
+                <button class="btn btn-primary" type="button" id="submitProfileChange">确定</button>
+            </div>
+        </div>
+    </div>
+    <!-- End: Main -->
+    <!-- BEGIN: PAGE SCRIPTS -->
+    <!-- jQuery -->
+    <script type="text/javascript" src="vendor/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="vendor/jquery/jquery_ui/jquery-ui.min.js"></script>
+    <!-- Bootstrap -->
+    <script type="text/javascript" src="vendor/bootstrap/transition.js"></script>
+    <script type="text/javascript" src="vendor/bootstrap/collapse.js"></script>
+    <script type="text/javascript" src="vendor/bootstrap/bootstrap.min.js"></script>
+    <!-- fullscreen -->
+    <script type="text/javascript" src="vendor/plugins/fullscreen/jquery.fullscreen.js"></script>
+    <!--confirm-->
+    <script type="text/javascript" src="vendor/plugins/confirm/jquery-confirm.min.js"></script>
+    <!-- multiselect -->
+    <script type="text/javascript" src="vendor/plugins/multiselect/bootstrap-multiselect.js"></script>
+    <!-- pnotify -->
+    <script type="text/javascript" src="vendor/plugins/pnotify/pnotify.js"></script>
+    <!-- moment -->
+    <script type="text/javascript" src="vendor/plugins/moment/moment.min.js"></script>
+    <!-- datetimepicker -->
+    <script type="text/javascript" src="vendor/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="vendor/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Page Plugins -->
+    <script type="text/javascript" src="vendor/plugins/magnific/jquery.magnific-popup.js"></script>
+    <!-- validator -->
+    <script type="text/javascript" src="vendor/plugins/validate/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="vendor/plugins/validate/i18n/messages_zh.min.js"></script>
+    <!-- paginator -->
+    <script type="text/javascript" src="vendor/plugins/pagination/bootstrap-paginator.min.js"></script>
+    <!-- Qiniu -->
+     <!--<script type="text/javascript" src="vendor/plugins/plupload/js/moxie.js"></script>-->
+     <!--<script type="text/javascript" src="vendor/plugins/plupload/js/plupload.dev.js"></script>-->
+    <script type="text/javascript" src="vendor/plugins/plupload/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="vendor/plugins/qiniu/qiniu.min.js"></script>
+    <script type="text/javascript" src="vendor/plugins/qiniu/ui.js"></script>
+    <!-- Holder js  -->
+    <script type="text/javascript" src="vendor/bootstrap/holder.min.js"></script>
+    <!-- nestable -->
+    <script type="text/javascript" src="vendor/plugins/nestable/jquery.nestable.js"></script>
+    <!-- backbone -->
+    <!--<script type="text/javascript" src="vendor/underscore/underscore-min.js"></script>-->
+    <script type="text/javascript" src="vendor/underscore/underscore.js"></script>
+    <script type="text/javascript" src="vendor/backbone/backbone-min.js"></script>
+    <!-- nanoscroller -->
+    <script type="text/javascript" src="vendor/plugins/nanoscroller/jquery.nanoscroller.min.js"></script>
+    <!-- highcharts -->
+    <script type="text/javascript" src="vendor/plugins/Highcharts/js/highcharts.js"></script>
+    <!-- admin -->
+    <!-- <script type="text/javascript" src="assets/admin-tools/admin-plugins/admin-panels/adminpanels.js"></script> -->
+    <!-- yours -->
+    <script type="text/javascript" src="assets/js/main.js"></script>
+    <script type="text/javascript" src="assets/js/env_settings.js"></script>
+    <script type="text/javascript" src="assets/js/global.js"></script>
+    <script type="text/javascript" src="assets/js/pages/index.js"></script>
+    <!-- Page Javascript -->
+    <script type="text/javascript">
+    jQuery(document).ready(function() {
+        "use strict";
+
+        Core.init({
+            sbm: "sb-l-c"
+        });
+        ADQ.utils.checkUserToken(function(){
+            LuckyConsole.init();
+        });
+
+        $('#logout-link').click(function() {
+            ADQ.utils.deleteCookie('lucky_user_id');
+            ADQ.utils.deleteCookie('lucky_user_token');
+            window.location.reload();
+        });
+        $('#profile-link').magnificPopup({
+            items: {
+                src: '#editProfilePanel',
+                type: 'inline'
+            },
+            midClick: true,
+            closeOnBgClick: false,
+            callbacks: {
+                beforeOpen: function () {
+                    $('#submitProfileChange').off('click').click(function() {
+                        var nickname = $('#inputNickName').val(),
+                            password = $('#inputPassword').val(),
+                            confirmPassword = $('#confirmPassword').val(),
+                            data = {};
+                        if(nickname != '')data.nickname = nickname;
+                        if(password != '' && password == confirmPassword)data.password=password;
+                        if(password != confirmPassword){
+                            ADQ.notify.failed('警告', '两次输入密码不一致');
+                            return;
+                        }
+                        $('#submitProfileChange').attr('disabled', 'disabled');
+                        $.ajax({
+                            url: '/admin/user/' + USER_INFO.info.id,
+                            type: 'PUT',
+                            data: JSON.stringify(data),
+                            success: function(){
+                                ADQ.notify.success();
+                                location.reload();
+                                $.magnificPopup.close();
+                                if(data.password){
+                                    $('#logout-link').click();
+                                }
+                            },
+                            error: function(data){
+                                ADQ.notify.notifyResp(data);
+                                $('#submitProfileChange').removeAttr('disabled');
+                            }
+                        })
+                    });
+                },
+            }
+        });
+
+        var today = moment().format('YYYY-MM-DD'),
+            today_ts = moment(today, 'YYYY-MM-DD').unix(),
+            qs = 'created_at={"$gt":"' + today +'"}&_reflush=1',
+            qs_ts = 'start_ts={"$gt":' + today_ts + '}&_reflush=1',
+            href = window.location.href;
+        $('[data-key]').each(function(){
+            var qstr = $(this).hasClass("ts") ? qs_ts : qs;
+            $(this).attr("href", "#stats/" + $(this).data('key') + '/?' + qstr);
+        });
+        if(href.indexOf('#stats') != -1){
+            $('#statsMenu').addClass('menu-open');
+            if(href.indexOf('vips/') != -1){
+                $('#vipsMenu').addClass("menu-open");
+            }else if (href.indexOf('report/') != -1){
+                $('#reportMenu').addClass("menu-open");
+            }
+        }else if(href.indexOf('#console') != -1){
+            $('#consoleMenu').addClass("menu-open");
+        }else{
+            $('#opMenu').addClass('menu-open');
+            if(location.href.indexOf('#goods') != -1){
+                $('#goodsMenu').addClass('menu-open');
+            }else if(location.href.indexOf('#preset') != -1){
+                        $('#presetMenu').addClass('menu-open');
+            }
+        }
+    });
+    </script>
+    <!-- END: PAGE SCRIPTS -->
+</body>
+
+</html>

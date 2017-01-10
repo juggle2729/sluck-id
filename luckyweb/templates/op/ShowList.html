@@ -1,0 +1,122 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#show/">晒单管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="show-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">ID</th>
+                    <th>活动名</th>
+                    <th>中奖者ID</th>
+                    <th>期数</th>
+                    <th>晒单状态</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th class="">操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td class=""><a href="#show/<%= attrs.id %>/"><%= attrs.id %></a></td>
+                        <td class=""><%= attrs.template_name || "(模板丢失...)" %></td>
+                        <td class=""><%= attrs.is_virtual ? '*' : '' %><%= attrs.user_id %></td>
+                        <td class=""><%= attrs.term_number %></td>
+                        <td class=""><%= status_dct[attrs.status] %></td>
+                        <td class=""><%= attrs.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-pencil" href="#show/<%= attrs.id %>/"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchIdOrName" class="field prepend-icon">
+                <input title="用户ID" type="text" id="searchUserId" class="gui-input" placeholder="用户ID" data-field="user_id" value="<%= searched.userId %>">
+                <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchActivityName" class="field prepend-icon">
+                <input title="活动名称" type="text" id="searchActivityName" class="gui-input" placeholder="活动名称" data-field="activity_name" value="<%= searched.activity_name %>">
+                <label for="searchActivityName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">晒单状态</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchStatus" class="form-control" data-field="status">
+                    <option value="-1" <%= searched.status == -1 ? "selected" : "" %>>所有</option>
+                    <option value="2" <%= searched.status == 2 ? "selected" : "" %>>待审核</option>
+                    <option value="16" <%= searched.status == 16 ? "selected" : "" %>>预审核</option>
+                    <option value="4" <%= searched.status == 4 ? "selected" : "" %>>已通过</option>
+                    <option value="8" <%= searched.status == 8 ? "selected" : "" %>>未通过</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <h6 class="fw400">用户类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchUserType" class="form-control" data-field="user_type">
+                    <option value="-1" <%= searched.user_type == -1 ? "selected" : "" %>>所有</option>
+                    <option value="0" <%= searched.user_type == 0 ? "selected" : "" %>>渠道用户</option>
+                    <option value="1" <%= searched.user_type == 1 ? "selected" : "" %>>自有用户</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+
+        <!--<h6 class="fw400">商品类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchShippingType" class="form-control" data-field="shipping_type">
+                    <option value="-1" <%= searched.shipping_type == -1 ? "selected" : "" %>>所有</option>
+                    <option value="0" <%= searched.shipping_type == 0 ? "selected" : "" %>>普通商品</option>
+                    <option value="1" <%= searched.shipping_type == 1 ? "selected" : "" %>>虚拟商品</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>                -->
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

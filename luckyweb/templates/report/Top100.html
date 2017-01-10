@@ -1,0 +1,56 @@
+<header id="topbar">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="<%= window.location.href %>">TOP100用户数据</a>
+            </li>
+        </ol>
+    </div>
+</header>
+<section id="content">
+<div class="panel">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-11">
+                <input type="text" id="dateFilter" name="dateFilter" class="form-control text-center" value="<%= options.dateRange[0] %> ~ <%= options.dateRange[1] %>">
+            </div>
+            <div class="col-md-1">
+                <input type="button" id="search" class="btn btn-primary btn-block form-control" value="提交">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="panel">
+    <table class="table table-striped fs13" id="main-list">
+        <thead>
+            <tr class="bg-light">
+                <th class="sortable" data-field="rank">排名</th>
+                <th>用户ID</th>
+                <th>注册时间</th>
+                <th>充值金额</th>
+                <th>累计参与人次</th>
+                <th>中奖次数</th>
+                <th>累计中奖金额</th>
+                <th class="sortable" data-field="gain">盈亏状况</th>
+                <th class="sortable" data-field="lost_days">流失天数</th>
+            </tr>
+        </thead>
+        <tbody class="admin-form">
+            <% _.each(items, function(item){ %>
+                <tr>
+                    <td><%= item.rank %></td>
+                    <td><a href="#stats/account/?id=<%= item._id %>"><%= item._id %></a></td>
+                    <td><%= item.created_at %></td>
+                    <td><%= item.recharge %></td>
+                    <td><%= item.pay %></td>
+                    <td><%= item.win_count %></td>
+                    <td><%= item.win %></td>
+                    <td><%= item.gain  %></td>
+                    <td><%= item.lost_days %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+</section>

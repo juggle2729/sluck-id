@@ -1,0 +1,95 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#bigshow/">大件晒单管理</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <div class="panel overflow" >
+        <table class="table table-striped fs13" id="main-list">
+            <thead>
+                <tr class="bg-light">
+                    <th class="sortable" data-field="id">模板ID</th>
+                    <th>名称</th>
+                    <th class="sortable" data-field="target_amount">目标数量</th>
+                    <th>当前期数</th>
+                    <th>晒单数量</th>
+                    <th class="sortable" data-field="updated_at">最后更新时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody class="admin-form">
+                <% _.each(templates, function(obj){
+                %>
+                    <tr data-id="<%= obj.id %>" >
+                        <td class=""><a href="#template/<%= obj.id %>/" ><%= obj.id %></a></td>
+                        <td class=""><%= obj.name %></td>
+                        <td class=""><%= obj.target_amount %></td>
+                        <td class=""><%= obj.current_term %></td>
+                        <td class=""><%= obj.show_count %></td>
+                        <td class=""><%= obj.updated_at %></td>
+                        <td class="text-left">
+                            <a class="glyphicons glyphicons-search" href="#bigshow/<%= obj.id %>/?show_count=<%= obj.show_count %>&name=<%= obj.name %>&current_term=<%= obj.current_term %>"></a>
+                        </td>
+                    </tr>
+                <%
+                }) %>
+            </tbody>
+        </table>
+    </div>
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+    <div class="p20 admin-form">
+
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
+        <hr class="short">
+
+        <div class="section mb15">
+            <label for="searchIdOrName" class="field prepend-icon">
+                <input title="活动ID或名称" type="text" data-field="idOrName" id="searchIdOrName" class="gui-input" placeholder="活动ID或名称" value="<%= searched.idOrName  %>">
+                <label for="template-id" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+
+        <h6 class="fw400">价格区间</h6>
+        <div class="section mb15">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="searchIdOrName" class="field prepend-icon">
+                        <input title="下限(含)" type="text" data-field="price_lower" id="searchPriceLower" class="gui-input" placeholder="下限(含)" value="<%= searched.price_lower  %>">
+                        <label for="template-id" class="field-icon"><i class="fa fa-tag"></i>
+                        </label>
+                    </label>
+                </div>
+                <div class="col-md-6">
+                    <label for="searchIdOrName" class="field prepend-icon">
+                        <input title="上限(含)" type="text" data-field="price_upper" id="searchPriceUpper" class="gui-input" placeholder="上限(含)" value="<%= searched.price_upper  %>">
+                        <label for="template-id" class="field-icon"><i class="fa fa-tag"></i>
+                        </label>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <hr class="short">
+
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
+</aside>
+<!-- End: Right Sidebar -->

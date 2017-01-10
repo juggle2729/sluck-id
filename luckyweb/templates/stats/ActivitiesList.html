@@ -1,0 +1,212 @@
+<header id="topbar" class="">
+    <div class="topbar-left">
+        <ol class="breadcrumb">
+            <li class="crumb-active">
+                <a href="#stats/activity/">活动信息</a>
+            </li>
+        </ol>
+    </div>
+    <div class="topbar-right">
+        <a href="#" class="btn btn-default btn-sm light fw600 ml10" id="exportData"><span class="glyphicon glyphicon-cloud-download pr5"></span>导出数据</a>
+        <div class="ml15 ib va-m" id="toggle_sidemenu_r">
+            <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<section id="content" class="animated fadeIn">
+    <% if(models.length > 0){ %>
+    <div class="panel" >
+        <div class="overflow">
+            <table class="table table-striped fs13" id="activity-list">
+                <thead>
+                    <tr class="bg-light">
+                        <th>活动简称</th>
+                        <th class="sortable" data-field="created_at">开始时间</th>
+                        <th>模板ID</th>
+                        <th class="">类型</th>
+                        <th class="">状态</th>
+                        <th class="">当前期数</th>
+                        <th class="sortable" data-field="target_amount">目标人次</th>
+                        <th title="括号内：渠道用户/自有用户">当前人次</th>
+                        <th title="括号内：渠道用户/自有用户">参与人</th>
+                        <th title="渠道用户/自有用户">最多人次</th>
+                        <th>开奖时间</th>
+                        <th class="sortable" data-field="buy_time">买满时长</th>
+                        <th>中奖者ID/参与人次</th>
+                    </tr>
+                </thead>
+                <tbody class="admin-form">
+                    <% _.each(models, function(model){
+                        var attrs = model.attributes,
+                            type = "1元购",
+                            buy_time = '-';
+                        if(attrs.price == 0){
+                            type = "0元购"
+                        }else if(attrs.unit == 10){
+                            type = "10元购"
+                        }
+                        if(attrs.status >= 2){
+                            var e = moment(attrs.announced_at, "YYYY-MM-DD HH:mm:ss").subtract(3, 'minutes'),
+                                s = moment(attrs.created_at, "YYYY-MM-DD HH:mm:ss"),
+                                d = moment.duration(e.diff(s)),
+                                hours = d.hours();
+                            if(d.days() >0){
+                                hours += d.days() * 24;
+                            }
+                            buy_time = [hours, d.minutes(), d.seconds()].join(':');
+
+                            if(attrs.status == 4){
+                                var prefix = '';
+                                if(attrs.is_winner_virtual){
+                                    prefix='*';
+                                }
+                                attrs.winner = '<a href="#stats/account/?id=' + attrs.winner + '">' + prefix + attrs.winner +'</a>';
+                                attrs.winner += '/' + attrs.winner_buy_count;
+                            }
+                        }
+                    %>
+                        <tr data-id="<%= attrs.id %>" >
+                            <td class=""><%= attrs.name %></td>
+                            <td class=""><%= attrs.created_at %></td>
+                            <td class=""><a href="#template/<%= attrs.template_id %>/"><%= attrs.template_id %><a></td>
+                            <td class=""><%= type %></td>
+                            <td class=""><%= status[attrs.status] %></td>
+                            <td class=""><%= attrs.term_number %></td>
+                            <td class=""><%= attrs.target_amount %></td>
+                            <td class=""><%= attrs.current_amount %>(<%= attrs.current_amount - attrs.virtual_amount %>/<%= attrs.virtual_amount %>)</td>
+                            <td class=""><%= attrs.buyer_count %>(<%= attrs.buyer_count - attrs.virtual_count %>/<%= attrs.virtual_count %>)</td>
+                            <td class=""><%= attrs.max_real %>/<%= attrs.max_virtual %></td>
+                            <td><%= attrs.status >= 2 ? attrs.announced_at : "-" %></td>
+                            <td><%= buy_time %></td>
+                            <td><%= attrs.winner || "-" %></td>
+                        </tr>
+                    <%
+                    }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div><div class="pull-left" id="page-tips"></div><div id="paginator"></div></div>
+    <% }else{ %>
+    <h4 class="text-muted">无数据</h4>
+    <% } %>
+</section>
+
+<!-- Start: Right Sidebar -->
+<aside id="sidebar_right" class="nano">
+ <div class="sidebar_right_content nano-content">
+     <div class="tab-block sidebar-block br-n">
+        <ul class="nav nav-tabs tabs-border nav-justified">
+            <li class="active">
+                <a href="#sidebar-right-tab1" data-toggle="tab">统计数据</a>
+            </li>
+            <li>
+                <a href="#sidebar-right-tab2" data-toggle="tab">过滤搜索</a>
+            </li>
+        </ul>
+        <div class="tab-content br-n">
+            <div id="sidebar-right-tab1" class="tab-pane active">
+                <div class="p20 admin-form">
+                    <h5 class="title-divider text-muted mb20"> 总体购买进度 <span class="pull-right"> <%= (overview.buy_process * 100).toFixed(2) %>% </span> </h5>
+                    <h5 class="title-divider text-muted mb20"> 进行中活动数 <span class="pull-right"> <%= overview.ongoing_count %> </span> </h5>
+                    <h5 class="title-divider text-muted mb20"> 等待开奖活动数 <span class="pull-right"> <%= overview.announce_ready_count %> </span> </h5>
+                    <h5 class="title-divider text-muted mb20"> 已开奖活动数 <span class="pull-right"> <%= overview.announced_count %> </span> </h5>
+                    <h5 class="title-divider text-muted mb20"> 平均买满时长 <span class="pull-right"> <%= overview.average_buy_time %> </span> </h5>
+                </div>
+             </div>
+            <div id="sidebar-right-tab2" class="tab-pane">
+                <div class="p20 admin-form">
+                    <div class="section mb15">
+                        <label for="searchTemplateId" class="field prepend-icon">
+                            <input title="活动ID或名称" type="text" data-field="template_id" id="searchTemplateId" class="gui-input" placeholder="活动ID或名称" value="<%= searched.template_id  %>">
+                            <label for="searchTemplateId" class="field-icon"><i class="fa fa-tag"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="section mb15">
+                        <label for="searchWinnerId" class="field prepend-icon">
+                            <input title="中奖者ID" type="text" data-field="winner_id" id="searchWinnerId" class="gui-input" placeholder="中奖者ID" value="<%= searched.winner_id  %>">
+                            <label for="searchWinnerId" class="field-icon"><i class="fa fa-tag"></i>
+                            </label>
+                        </label>
+                    </div>
+                    <h6 class="fw400">开始时间</h6>
+                    <div class="section row">
+                        <div class="col-md-6">
+                                <input type="text" title="下限，包含当天" name="searchCreatedAtLower" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
+                                </label>
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                                <input type="text" title="上限，不包括当天" name="searchCreatedAtUpper" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
+                                </label>
+                            </label>
+                        </div>
+                    </div>
+
+                    <h6 class="fw400">开奖时间</h6>
+                    <div class="section row">
+                        <div class="col-md-6">
+                                <input type="text" title="下限，包含当天" name="searchAnnouncedAtLower" id="searchAnnouncedAtLower" class="gui-input" data-type="date" value="<%= searched.announced_at_lower %>">
+                                </label>
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                                <input type="text" title="上限，不包括当天" name="searchAnnouncedAtUpper" id="searchAnnouncedAtUpper" class="gui-input" data-type="date" value="<%= searched.announced_at_upper %>">
+                                </label>
+                            </label>
+                        </div>
+                    </div>
+
+                    <h6 class="fw400">活动状态</h6>
+                    <div class="section mb15">
+                        <label class="field select">
+                            <select id="searchStatus" name="searchStatus" data-field="status">
+                                <option value="-1" <%= searched.status == -1 ? 'selected' : '' %>>所有</option>
+                                <option value="1" <%= searched.status == 1 ? 'selected' : '' %>>进行中</option>
+                                <option value="2" <%= searched.status == 2 ? 'selected' : '' %>>待开奖</option>
+                                <option value="4" <%= searched.status == 4 ? 'selected' : '' %>>已开奖</option>
+                            </select>
+                            <i class="arrow double"></i>
+                        </label>
+                    </div>
+
+                    <h6 class="fw400">活动类型</h6>
+                    <div class="section mb15">
+                        <label class="field select">
+                            <select id="searchType" name="searchType" data-field="type">
+                                <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                                <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>0元购</option>
+                                <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>1元购</option>
+                                <option value="10" <%= searched.type == 10 ? 'selected' : '' %>>10元购</option>
+                                <option value="100" <%= searched.type == 100 ? 'selected' : '' %>>100元购</option>
+                            </select>
+                            <i class="arrow double"></i>
+                        </label>
+                    </div>
+
+                    <h6 class="fw400 announced-filter">中奖用户类型</h6>
+                    <div class="section announced-filter mb15">
+                        <label class="field select">
+                            <select id="searchWinnerType" name="searchWinnerType" data-field="winner_type">
+                                <option value="-1" <%= searched.winner_type == -1 ? 'selected' : '' %>>所有</option>
+                                <option value="1" <%= searched.winner_type == 1 ? 'selected' : '' %>>渠道用户</option>
+                                <option value="2" <%= searched.winner_type == 2 ? 'selected' : '' %>>自有用户</option>
+                            </select>
+                            <i class="arrow double"></i>
+                        </label>
+                    </div>
+                    <hr class="short">
+
+                    <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+                </div>
+             </div>
+        </div>
+     </div>
+ </div>
+</aside>
+<!-- End: Right Sidebar -->

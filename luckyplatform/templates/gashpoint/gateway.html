@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GashPoint GateWay</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript">
+           //从PA选择页面调转到该页面，在服务端计算出url和data，然后从这里模拟POST提交给gashpoint
+           $(document).ready(function(){
+                "use strict";
+                $('#tmpForm').attr('action', "{{url}}");
+                $('#data').val("{{data}}");
+                $('#tmpForm').submit();
+           });
+    </script>
+</head>
+<body>
+    <form id="tmpForm" name="tmpForm" action="" method="post">
+      <input type="text" id="data" name="DATA" value="" hidden>
+    </form>
+</body>
+</html>
