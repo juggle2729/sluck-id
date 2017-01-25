@@ -52,7 +52,6 @@ _DELAY_CHECK_SECONDS = 3600
 
 
 class EventHandler(object):
-
     """
     Abstract class
     """
@@ -63,7 +62,6 @@ class EventHandler(object):
 
 
 class AnnounceNotifyHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Announce Notify Event[%s]' % event_msg)
         try:
@@ -77,7 +75,6 @@ class AnnounceNotifyHandler(EventHandler):
 
 
 class ActivityExpiredHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Activity Expired Event[%s]' % event_msg)
         try:
@@ -101,7 +98,6 @@ class ActivityExpiredHandler(EventHandler):
 
 
 class ActivityNextHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Activity Next Event[%s]' % event_msg)
         try:
@@ -118,7 +114,6 @@ class ActivityNextHandler(EventHandler):
 
 
 class ActivityResumeHandler(EventHandler):
-
     def resume_activity(self, activity_id):
         activity = get_activity(activity_id, need_fill=False)
         if not activity:
@@ -154,33 +149,21 @@ class ActivityResumeHandler(EventHandler):
 
 
 class ActivityAnnounceHandler(EventHandler):
-
     _MAX_TRY = 100
     _DEFAULT_RAND_LIMIT = 50  # 0 代表关闭
     _BASE_NUM = 10000001L
     _INTERNAL_SETTING = [
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20000,
-            'NET': -0.1, 'DAILY_FREE': 0, 'FREE_NET': 10000},  # (20000
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 15000, 'NET': - \
-            0.5, 'DAILY_FREE': 0, 'FREE_NET': 8000},  # (15000, 20000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 10000, 'NET': - \
-            1, 'DAILY_FREE': 0, 'FREE_NET': 5000},  # (10000, 15000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 4000, 'NET': - \
-            1.5, 'DAILY_FREE': 1, 'FREE_NET': 2000},  # (6000, 10000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2000, 'NET': - \
-            2, 'DAILY_FREE': 1, 'FREE_NET': 1000},  # (4000, 6000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1000, 'NET': - \
-            3, 'DAILY_FREE': 2, 'FREE_NET': 500},   # (2000, 4000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 500, 'NET': None,
-            'DAILY_FREE': 2, 'FREE_NET': 200},     # (1000, 2000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 100, 'NET': None,
-            'DAILY_FREE': 5, 'FREE_NET': 50},       # (500, 1000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20, 'NET': None,
-            'DAILY_FREE': 0, 'FREE_NET': 20},       # (120, 500]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2, 'NET': None,
-            'DAILY_FREE': 0, 'FREE_NET': 1},         # (50, 120]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1, 'NET': None,
-            'DAILY_FREE': 0, 'FREE_NET': 1},          # 50]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20000, 'NET': -0.1, 'DAILY_FREE': 0, 'FREE_NET': 10000},  # (20000
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 15000, 'NET': -0.5, 'DAILY_FREE': 0, 'FREE_NET': 8000},  # (15000, 20000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 10000, 'NET': -1, 'DAILY_FREE': 0, 'FREE_NET': 5000},  # (10000, 15000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 4000, 'NET': -1.5, 'DAILY_FREE': 1, 'FREE_NET': 2000},  # (6000, 10000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2000, 'NET': -2, 'DAILY_FREE': 1, 'FREE_NET': 1000},  # (4000, 6000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1000, 'NET': -3, 'DAILY_FREE': 2, 'FREE_NET': 500},  # (2000, 4000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 500, 'NET': None, 'DAILY_FREE': 2, 'FREE_NET': 200},  # (1000, 2000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 100, 'NET': None, 'DAILY_FREE': 5, 'FREE_NET': 50},  # (500, 1000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 20},  # (120, 500]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 1},  # (50, 120]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 1},  # 50]
     ]
     _DAILY_LIMIT = 1000
 
@@ -205,11 +188,10 @@ class ActivityAnnounceHandler(EventHandler):
                 _LOGGER.error('announce_activity split error %s' % e)
 
         result = (result_a + result_b) % target_amount + \
-            ActivityAnnounceHandler._BASE_NUM
+                 ActivityAnnounceHandler._BASE_NUM
         return result, result_a, a_list
 
-    def adjust_result(self, default_num, result_a, a_list,
-                      candidates, orders, target_amount):
+    def adjust_result(self, default_num, result_a, a_list, candidates, orders, target_amount):
         adjust_a = result_a
         b_list = deepcopy(a_list)
         _LOGGER.debug('result_a:%s\na_list:%s' % (result_a, a_list))
@@ -364,12 +346,10 @@ class ActivityAnnounceHandler(EventHandler):
         total_recharge = int(user_stats.get('total_recharge', 0))
         total_pay = float(user_stats.get('total_pay', len(nums)))
         total_win = int(user_stats.get('total_win', 0))
-        if (len(nums) < single_buy_limit or
-                total_pay < total_buy_limit or total_recharge < total_buy_limit - 1):
+        if (len(nums) < single_buy_limit or total_pay < total_buy_limit or total_recharge < total_buy_limit - 1):
             return False
         if net_ratio:
-            user_net_ratio = float(
-                total_recharge - total_win - activity.target_amount) / total_pay
+            user_net_ratio = float(total_recharge - total_win - activity.target_amount) / total_pay
             if user_net_ratio < net_ratio:
                 return False
         # check illegal
@@ -516,6 +496,7 @@ class ActivityAnnounceHandler(EventHandler):
         except Exception as e:
             _LOGGER.error('get privilege users exception, %s', e)
             privilege_users = []
+            p_conf = {}
         _LOGGER.info('found %s privilege users', len(privilege_users))
         user_activitys = get_activity_users(activity.id)
         for user_activity in user_activitys:
@@ -544,15 +525,15 @@ class ActivityAnnounceHandler(EventHandler):
             loser_win = True
         # check loser
         if len(loser_list) >= 1:
+            if activity.price == 0 and len(loser_list) > 0:
+                need_loser = True
+        elif len(loser_list) >= 1 and 'skip_ratio' not in p_conf:
             rand = random.randint(1, 100)
             # miss it by fifty percent
             if rand <= 50:
                 loser_list = []
                 _LOGGER.info('miss loser by ratio, %s', activity.id)
         need_loser = True if len(loser_list) > 0 else False
-        # mandatory loser strategy for Zero activity
-        if activity.price == 0 and len(loser_list) > 0:
-            need_loser = True
         need_adjust = False
         adjust_reason = ''
         first_candidates = []
@@ -566,6 +547,8 @@ class ActivityAnnounceHandler(EventHandler):
             if not self.reached_manual_limit(activity.target_amount):
                 need_adjust = True
                 adjust_reason = u'输家'
+                if 'skip_ratio' in p_conf:
+                    adjust_reason = u'输家a+'
                 first_candidates = loser_list
                 if not virtual_win and self.reached_limit(activity.target_amount):
                     if len(v_list) > 0:
@@ -608,15 +591,15 @@ class ActivityAnnounceHandler(EventHandler):
                 adjust_reason = u'赢家-未知异常'
                 first_candidates = v_list
 
-        _LOGGER.info('check result %s, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
-                     activity.id, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust, adjust_reason)
+        _LOGGER.info(
+            'check result %s, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
+            activity.id, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust, adjust_reason)
         return need_adjust, need_virtual, need_loser, first_candidates, second_candidates
 
     def announce_activity(self, activity_id, last_payat):
         activity = get_activity(activity_id, need_fill=False)
         if not activity:
-            _LOGGER.error(
-                'announce activity, but activity %s not exists' % activity_id)
+            _LOGGER.error('announce activity, but activity %s not exists' % activity_id)
             return
         if activity.status != ACTIVITY_STATUS.ANNOUNCE_READY:
             _LOGGER.error('announce activity, but activity %s status invalid' % activity_id)
@@ -624,11 +607,27 @@ class ActivityAnnounceHandler(EventHandler):
 
         orders = get_last_valid_orders(last_payat)
         lottery = lottery_handler.get_latest_lottery()
-        result, result_a, a_list = self.calc_result(
-            orders, activity.target_amount, lottery.number)
+        result, result_a, a_list = self.calc_result(orders, activity.target_amount, lottery.number)
         _LOGGER.info('activity %s calc luckynumber:%s', activity_id, result)
+
+        need_adjust, need_virtual, need_loser, first_candidates, second_candidates = self.check_result(
+            activity, result)
+        adjust_success = False
+        if need_adjust:
+            if len(first_candidates) > 0:
+                adjust_success, result, result_a, a_list = self.adjust_result(result,
+                                                                              result_a, a_list, first_candidates, orders,
+                                                                              activity.target_amount)
+                if not adjust_success and len(second_candidates) > 0:
+                    adjust_success, result, result_a, a_list = self.adjust_result(result,
+                                                                                  result_a, a_list, second_candidates, orders,
+                                                                                  activity.target_amount)
+            elif len(second_candidates) > 0:
+                adjust_success, result, result_a, a_list = self.adjust_result(result,
+                                                                              result_a, a_list, second_candidates, orders,
+                                                                              activity.target_amount)
+
         try:
-            self.load_strategy()
             lucky_order_id = redis_cache.get_lucky_order(activity_id, result)
             lucky_order = ActivityAnnouncer.announce(
                 activity, result, result_a, lottery, a_list, lucky_order_id)
@@ -643,8 +642,14 @@ class ActivityAnnounceHandler(EventHandler):
                 god_campaign.register(lucky_order.buyer, activity)
                 redis_cache.add_user_pending(lucky_order.buyer, 'award')
                 # 记录开奖金额
-                if str(lucky_order.buyer) not in self.virtual_accounts:
-                    add_current_amount(activity.target_amount, lucky_order.buyer)
+                if not redis_cache.is_virtual_account(lucky_order.buyer):
+                    manual_intervention = True if need_loser and adjust_success else False
+                    if (activity.template_id not in settings.COIN_TIDS and
+                                activity.template_id not in settings.CARD_TIDS):
+                        add_current_amount(
+                            activity.target_amount, lucky_order.buyer, manual_intervention)
+                        if manual_intervention:
+                            consume_privilege(lucky_order.buyer, activity)
                 # track
                 track_info = {'user_id': lucky_order.buyer, 'type': 'win',
                               'activity_id': lucky_order.activity_id,
@@ -714,7 +719,6 @@ class ActivityAnnounceHandler(EventHandler):
 
 
 class CouponExpiredHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Coupon Expired Event[%s]' % event_msg)
         try:
@@ -726,7 +730,6 @@ class CouponExpiredHandler(EventHandler):
 
 
 class ShowNotifyHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Show Notify Event[%s]' % event_msg)
         try:
@@ -738,7 +741,6 @@ class ShowNotifyHandler(EventHandler):
 
 
 class CouponNotifyHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Coupon Notify Event[%s]' % event_msg)
         try:
@@ -750,7 +752,6 @@ class CouponNotifyHandler(EventHandler):
 
 
 class CampaignAwardHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Campaign Award Event[%s]' % event_msg)
         try:
@@ -778,7 +779,6 @@ class CampaignAwardHandler(EventHandler):
 
 
 class SundayReturnHandler(EventHandler):
-
     def process(self, event_msg):
         _LOGGER.info('start processing Sunday Return Event[%s]' % event_msg)
         try:

@@ -241,7 +241,7 @@ def create_activity_detail(user_id, activity, user_activity=None, use_cache=Fals
     if int(detail.gid) in (774, 775):
         detail.is_star = 1
         detail.star_desc = '''
-Dalam rangka peluncuran TokoSeribu, kamu bisa mendapatkan kesempatan untuk makan malam di restoran mewah bersama salah satu selebriti online yang sedang naik daun. Mereka adalah Vania Gemash dan Donna Visca. 
+Dalam rangka peluncuran TokoSeribu, kamu bisa mendapatkan kesempatan untuk makan malam di restoran mewah bersama salah satu selebriti online yang sedang naik daun. Mereka adalah Vania Gemash dan Donna Visca.
 
 Vania Gemash memiliki ratusan ribu militan follower di Instragram. Pose sensual dia yang menggemaskan akan bikin hati kamu meleleh.
 
@@ -693,7 +693,7 @@ def start_next_activity(user_id, template_id):
 
     success = redis_cache.try_template_lock(template_id)
     if not success:
-        raise_with_traceback(CacheError('activity has started by others!'))
+        raise_with_traceback(CacheError('activity has started by others! template id: %s' % template_id))
 
     try:
         activity = ActivityStarter.start(
