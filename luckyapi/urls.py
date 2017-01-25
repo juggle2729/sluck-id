@@ -53,6 +53,7 @@ urlpatterns = patterns(
     url(r'^pay/coda_pay/proxy/?$', 'luckyapi.views.transaction.coda_proxy'),
     url(r'^pay/coda_pay/gateway/(?P<token>[^/]+)/?$', 'luckyapi.views.transaction.coda_gateway'),
     url(r'^pay/coda_pay/notify/?$', 'luckyapi.views.transaction.coda_notify'),
+    url(r'^pay/google_pay/notify/?$', 'luckyapi.views.transaction.google_notify'),
     url(r'^pay/nganluong/return/(?P<pay_id>[^/]+)/?$', 'luckyapi.views.transaction.nganluong_return_page'),
     url(r'^pay/nganluong/notify/?$', 'luckyapi.views.transaction.nganluong_handle_notify'),
     url(r'^pay/nganluong/check_order/?$', 'luckyapi.views.transaction.nganluong_check_order'),

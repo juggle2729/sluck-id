@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 import os
 import sys
+import tablib
 from datetime import timedelta
 from datetime import datetime
 
@@ -20,6 +21,7 @@ from luckycommon.utils.tz import utc_to_local_str
 from django.conf import settings
 
 
+EXPORT_PATH = '/home/ubuntu/af-env/data/stats/'
 mail_sender = MailSender.getInstance()
 mail_sender.init_conf({
     'server': 'smtp.mxhichina.com:25',
@@ -30,11 +32,19 @@ mail_sender.init_conf({
         'zhulei@zhuohan-tech.com',
         'mahongli@zhuohan-tech.com',
         'liuyu@zhuohan-tech.com',
-#        'sstong@zhuohan-tech.com',
+        'sstong@zhuohan-tech.com',
         'renxiaoyu@zhuohan-tech.com',
         'wjxiao@zhuohan-tech.com',
     ]
 })
+def redirect_to_file(items, header, filename):
+    file_path = os.path.join(EXPORT_PATH, filename)
+    data = tablib.Dataset(*items, headers=header)
+    with open(file_path, 'wb') as f:
+        f.write(data.xlsx)
+    return file_path
+
+
 
 virtual_set = redis_cache.get_virtual_account()
 
@@ -126,10 +136,16 @@ html_str += u'''<table border="1"><tr><td>商品编号</td>
                                       <td>渠道用户中奖次数</td>
                                       <td>自有用户中奖次数</td>
 </tr>'''
+v_list = []
 for item in b_dict:
     html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (item['id'], item['name'], item['category'], item['goods_price'], item['activity_price'], item['real_person'], item['virtual_person'],
 item['real_amount'], item['virtual_amount'], item['real_win'], item['virtual_win'])
+    v_list.append((item['id'], item['name'], item['category'], item['goods_price'], item['activity_price'], item['real_person'], item['virtual_person'], item['real_amount'], item['virtual_amount'], item['real_win'], item['virtual_win']))
 html_str += '</table>'
 html_str += '</body></html>'
 
-mail_sender.send(u"昨日商品排名", html_str)
+
+excel_header = []
+file_path = redirect_to_file(v_list, excel_header, u'top_goods_daily.xlsx')
+
+mail_sender.send(u"昨日商品排名", html_str, attachments=[file_path])

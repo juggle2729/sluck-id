@@ -270,7 +270,7 @@ def get_all_activitys(limit=0, offset=0, unit=None, status=None):
     return activitys, len(activitys)
 
 
-BMW_LIST = [774, 775]
+BMW_LIST = [774, 775,]
 
 
 def adjust_hot_activitys(activity_list):

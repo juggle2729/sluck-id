@@ -348,15 +348,20 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
             )
             return
         product = carrier + '.' + str(recharge_price)
+    check_status = redis_cache.exists_15phone(charge_account)
+    if check_status:
+        print charge_account, ' already charged 15mins before, just wait'
+        return
     req = _REQ_DATA % (product, charge_account, await_order.order_id, base64.b64encode(stringxor(charge_account[-4:]+'145339', '62LF934757')))
     resp = requests.post(_DATACELL_URL, data=req)
-    if '<resultcode>0</resultcode>' in resp.content or await_order.order_id==24145:
+    if '<resultcode>0</resultcode>' in resp.content:
         print 'done', await_order.order_id
         order_db.update_order_info(
                 await_order.order_id,
                 {'status': ORDER_STATUS.DEAL}
         )
         show_order(await_order)
+        redis_cache.set_15phone(charge_account)
     else:
         print resp.content, charge_account, product
         order_db.update_order_info(
@@ -538,6 +543,8 @@ def start():
     for await_order in await_orders:
         activity_id = await_order.activity_id
         activity = get_activity(activity_id)
+        if not activity:
+            continue
         if activity.template_id in COIN_TIDS:
             shipping_coin(await_order, activity)
         if activity.template_id in HUAFEI_TIDS:
@@ -563,6 +570,8 @@ def start_steam():
     for await_order in await_orders:
         activity_id = await_order.activity_id
         activity = get_activity(activity_id)
+        if not activity:
+            continue
         if activity.template_id in _STEAM_TIDS:
             print 'check steam order, %s %s' % (await_order.order_id, activity.template_id)
             shipping_steam(await_order, activity)

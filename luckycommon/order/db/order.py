@@ -300,8 +300,8 @@ def export_awarded_orders(query_dct):
         if not goods:
             continue
         # default no virtual goods type
-        if not ship_status and goods.shipping_type != 0:
-            continue
+        #if not ship_status and goods.shipping_type != 0:
+        #    continue
         if goods.source and 'jd.com' in goods.source:
             try:
                 source_id = _get_jd_ids(goods.source)[0]
@@ -424,7 +424,7 @@ def update_receipt_info(order_id, receipt_info, remark=None):
         AwardedOrder.order_id == order_id).first()
     receipt_addr = json.dumps(receipt_info, ensure_ascii=False)
     order.receipt_address = receipt_addr
-    order.status = ORDER_STATUS.WAIT_SHIP
+    order.status = ORDER_STATUS.PROCESSING if 'resell_name' in receipt_info else ORDER_STATUS.WAIT_SHIP
     if remark:
         order.remark = remark
     extend = json.loads(order.extend or '{}')
@@ -532,10 +532,19 @@ def update_order_info(order_id, info, by=None, admin=False):
 
 @sql_wrapper
 def receipt_order(order_id):
-    AwardedOrder.query.filter(AwardedOrder.order_id == order_id).update({
-        'status': ORDER_STATUS.DEAL,
-        'updated_at': datetime.utcnow()
-    })
+    
+    order = AwardedOrder.query.filter(
+        AwardedOrder.order_id == order_id).first()
+    if order.status == ORDER_STATUS.WAIT_AFFIRM:
+        AwardedOrder.query.filter(AwardedOrder.order_id == order_id).update({
+            'status': ORDER_STATUS.AFFIRMED,
+            'updated_at': datetime.utcnow()
+        })
+    else:
+        AwardedOrder.query.filter(AwardedOrder.order_id == order_id).update({
+            'status': ORDER_STATUS.DEAL,
+            'updated_at': datetime.utcnow()
+        })
     # Order.query.filter(Order.id == order_id).update({
     #     'status': ORDER_STATUS.DEAL,
     #     'updated_at': datetime.utcnow()

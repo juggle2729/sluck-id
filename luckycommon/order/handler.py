@@ -137,13 +137,26 @@ def update_award_order(user_id, order_id, receipt_info):
                 'addr_code': receipt_item.addr_code
             })
     if shipping_type:
-        receipt_info = {
-            'shipping_type': shipping_type,
-            'name': SHIPPING_TYPE.get_label(shipping_type),
-            'phone': receipt_item.number if receipt_item else receipt_info.get(
-                'number'),
-            'address': ''
-        }
+        is_resell = receipt_info.get('is_resell')
+        if not is_resell:
+            receipt_info = {
+                'shipping_type': shipping_type,
+                'name': SHIPPING_TYPE.get_label(shipping_type),
+                'phone': receipt_item.number if receipt_item else receipt_info.get(
+                    'number'),
+                'address': ''
+            }
+        else:
+            receipt_info = {
+                'shipping_type': shipping_type,
+                'name': SHIPPING_TYPE.get_label(shipping_type),
+                'resell_phone': receipt_info.get('resell_phone'),
+                'resell_cabang': receipt_info.get('resell_cabang'),
+                'resell_bank': receipt_info.get('resell_bank'),
+                'resell_rekening': receipt_info.get('resell_rekening'),
+                'resell_name': receipt_info.get('resell_name'),
+                'address': ''
+            }
     order_db.update_receipt_info(order_id, receipt_info, remark)
     redis_cache.remove_user_pending(user_id, 'award')
 
@@ -194,7 +207,7 @@ def view_current_status(user_id, activity_id, order_id):
             order_detail.shipping_type = SHIPPING_TYPE.COIN
     receipt_address = {} if not order.receipt_address else json.loads(
         order.receipt_address)
-    if order.status >= ORDER_STATUS.WAIT_SHIP:
+    if order.status in (ORDER_STATUS.WAIT_SHIP, ORDER_STATUS.WAIT_RECEIPT, ORDER_STATUS.DEAL, ORDER_STATUS.SHOW):
         # shipping_type = receipt_address.get('shipping_type')
         order_detail.receipt_info = {
             'name': receipt_address.get('name'),
@@ -205,7 +218,7 @@ def view_current_status(user_id, activity_id, order_id):
         }
         if 'remark' in extend:
             order_detail.remark = extend.get('remark')
-    if order.status >= ORDER_STATUS.WAIT_RECEIPT:
+    if order.status in (ORDER_STATUS.WAIT_RECEIPT, ORDER_STATUS.DEAL, ORDER_STATUS.SHOW):
         express_name = extend.get('express')
         if express_name == 'coupon':
             express_name = None
@@ -216,12 +229,16 @@ def view_current_status(user_id, activity_id, order_id):
             'express': express_name or '',
             'express_num': express_num or ''
         }
-    if order.status >= ORDER_STATUS.DEAL:
+    if order.status in (ORDER_STATUS.DEAL, ORDER_STATUS.SHOW):
         try:
             order_show = show_db.get_show_by_order(order_id)
             order_detail.show_id = order_show.id
         except:
             pass
+    if order.status in (ORDER_STATUS.PROCESSING, ORDER_STATUS.WAIT_AFFIRM, ORDER_STATUS.AFFIRMED):
+        order_detail.receipt_info = receipt_address
+        if 'remark' in extend:
+            order_detail.remark = extend.get('remark')
     return order_detail
 
 

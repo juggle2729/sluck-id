@@ -42,6 +42,11 @@ class OrderView(TemplateView):
                              u'街道', u'送货地址', u'收货人手机号', u'商品编号',
                              u'商品名称', u'备注']
                 data = db.export_awarded_orders(query_dct)
+            elif status and int(status) == ORDER_STATUS.AWARDED:
+                cn_header = [u'订单ID', u'用户ID', u'收货人', u'省', u'市', u'县',
+                             u'街道', u'送货地址', u'收货人手机号', u'商品编号',
+                             u'商品名称', u'备注']
+                data = db.export_awarded_orders(query_dct)
             elif status and int(status) == ORDER_STATUS.WAIT_RECEIPT:
                 cn_header = [u'发货时间', u'订单ID', u'用户ID', u'活动名称',
                              u'快递名', u'快递单号', u'供货商', u'购买价格']

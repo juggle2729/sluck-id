@@ -15,7 +15,7 @@ TIME_ZONE = 'Asia/Vientiane'
 ADMIN_BUCKET_NAME = 'en-lucky-pics'
 
 EXCHANGE_RATIO = 1000
-REGION = u'越南'
+REGION = u'印尼'
 
 COUNTRY = 'id'
 
@@ -67,7 +67,7 @@ COIN_TIDS = {
 }
 
 GP_FLAG = False # GP 审核开关, True 为开�开启
-GP_VERSION_CODE = 126
+GP_VERSION_CODE = 128
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751,665  ]
 
 FRESH_RECOMMEND = [0, 0]

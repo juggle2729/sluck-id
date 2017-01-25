@@ -147,6 +147,9 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
         if pay_type == PayType.ATM.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
+        if pay_type == PayType.GOOGLE_BILLING.value:
+            _LOGGER.info('start pay by google billing, pay_id[%s]' % pay_id)
+            return {}
         if pay_type == PayType.DOKU.value:
 #            charge, params = doku.generate_doku_gateway(pay)
             charge = doku.doku_create_charge(pay, pay_amount, None)

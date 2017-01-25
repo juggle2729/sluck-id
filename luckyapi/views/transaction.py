@@ -15,7 +15,7 @@ from luckycommon.cache import redis_cache
 from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
-from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion,bluepay,mimo_pay
+from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion,bluepay,mimo_pay, google_wallet
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
@@ -113,15 +113,19 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.FORTUMO_PAY.value],
             pay_types[PayType.PRE_CARD_NG.value],
         ]
-    if 122 <= int(version_code):
+    if 122 <= int(version_code) < 126:
         return [
-    #        pay_types[PayType.EWALLET.value],
-    #        pay_types[PayType.CARRIER_BILLING.value],
-    #        pay_types[PayType.TELCO_VOUCHER.value],
-    #        pay_types[PayType.CONVENNIENCE_STORE.value],
-    #        pay_types[PayType.ATM.value],
-    #        pay_types[PayType.CODA_PAY.value],
-    #        pay_types[PayType.SMS.value],
+            pay_types[PayType.CODA_SMS.value],
+            pay_types[PayType.MIMO_BCA.value],
+            pay_types[PayType.MOGPLAY.value],
+            pay_types[PayType.GAME_ON.value],
+            pay_types[PayType.MANDIRI_ECASH.value],
+            pay_types[PayType.CONVENNIENCE_STORE.value],
+            pay_types[PayType.ATM.value],
+        ]
+    if 126 <= int(version_code):
+        return [
+            pay_types[PayType.GOOGLE_BILLING.value],
             pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
@@ -139,6 +143,8 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
     #        pay_types[PayType.ATM.value],
     #        pay_types[PayType.CODA_PAY.value],
     #        pay_types[PayType.SMS.value],
+            pay_types[PayType.CODA_SMS.value],
+            pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
             pay_types[PayType.MANDIRI_ECASH.value],
@@ -299,6 +305,17 @@ def coda_notify(request):
     except Exception as e:
         _LOGGER.exception('Coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
+
+@require_POST
+@response_wrapper
+def google_notify(request):
+    try:
+        _LOGGER.error('GGGGGGGGGGGGGGGPPPPPPPPP google, %s %s', request.GET, request.POST)
+        resp = google_wallet.google_check_notify(request)
+        return resp
+    except Exception as e:
+        _LOGGER.exception('Google Pay notify exception.(%s)' % e)
+        return {'msg':e}
 
 @require_GET
 def bluepay_notify(request):

@@ -85,6 +85,22 @@ def unlock_numbers(activity_id, *num_list):
     key = prefix_key('numberspool:%s' % activity_id)
     return ProxyAgent().sadd(key, *num_list)
 
+@cache_wrapper
+def exists_15phone(phone):
+    """
+    used for autoship
+    """
+    key = prefix_key('phonenumber:%s' % phone)
+    return ProxyAgent().exists(key)
+
+@cache_wrapper
+def set_15phone(phone):
+    """
+    used for autoship
+    """
+    key = prefix_key('phonenumber:%s' % phone)
+    ProxyAgent().setnx(key, 'lala')
+    ProxyAgent().expire(key, 15*62)
 
 @cache_wrapper
 def get_left_numbers_count(activity_id):

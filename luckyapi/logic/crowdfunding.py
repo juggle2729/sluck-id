@@ -196,6 +196,11 @@ def create_activity_detail(user_id, activity, user_activity=None, use_cache=Fals
         'graphics': activity.graphics
     }
     detail.price = activity.price
+    goods = get_goods(activity.goods_id)
+    detail.is_resell = 1 if int(activity.target_amount) >= 1000 and goods.shipping_type==0 else 0
+    if detail.is_resell:
+        detail.resell_price_h = int(float(goods.price)*0.9*1000)
+        detail.resell_price_l = int(float(goods.price)*0.8*1000)
     detail.unit = activity.unit
     detail.buy_limit = pay_handler.adjust_buy_limit(user_id, activity)
     detail.target_amount = activity.target_amount
@@ -253,6 +258,61 @@ Syarat & Ketentuan:
 4. Keputusan TokoSeribu tidak dapat diganggu gugat
 
         '''
+    elif int(detail.gid) in (780, ):
+        detail.is_star = 1
+        detail.star_desc = '''
+Keberangkatan tanggal 25 Maret 2017
+Keindahan Belitung sudah tak diragukan lagi, maka tak heran jika pulau ini menjadi salah satu tujuan favorit para wisatawan. Salah satu objek wisata yang menjadi andalan Pulau Belitung adalah Pantai Tanjung Tinggi. Pantai ini semakin terkenal karena merupakan lokasi syuting film Laskar Pelangi. Pantai ini memiliki bebatuan besar yang dapat Anda naiki sambil menyaksikan pemandangan laut yang indah.
+
+Selain itu Anda juga dapat mengunjungi pulau-pulau lainnya yang tak kalah indah, seperti Pulau Batu Berlayar dan Pulau Lengkuas untuk melakukan snorkeling atau hanya sekedar menikmati keindahan pantai. Dapatkan semua itu hanya di paket Belitung Long Weekend 4D3N By Citilink bersama Panorama Tours.
+
+Rencana Perjalanan
+Hari 1 Jakarta - Belitung by Citilink QG 9533 05.55 - 07.00
+Hari 2 Island Hopping
+Hari 3 Belitung Timur
+Hari 4 Belitung - Jakarta By Citilink QG 9534 07.30 - 08.40
+
+Paket Termasuk:
+  Transportasi secara Seat In Coach (bergabung dengan penumpang lain)
+  Local Guide
+  Air mineral 1 botol per orang
+  Life vest (pelampung)
+  Alat snorkeling
+  Transfer, tour dan makan sesuai itinerary
+  3 Malam akomodasi sesuai hotel pilihan TokoSeribu termasuk sarapan
+  Traditional boat ke Island Hoping
+  1x Free Mie Khas Belitung
+  Tiket pesawat Jakarta-Tanjung Pandan-Jakarta By Citilink (kelas ekonomi include bagasi 20 kg)
+
+Paket Tidak Termasuk:
+  Kunjungan tambahan (optional tour)
+  Tipping porter, local guide dan supir
+  Pengeluaran Pribadi (Minibar, Telephone, etc)
+'''
+    elif int(detail.gid) in (781, ):
+        detail.is_star = 1
+        detail.star_desc = '''
+Keberangkatan tanggal 13 April 2017
+Bali masih menjadi destinasi favorit para wisatawan. Saat musim liburan tiba, banyak wisatawan yang datang untuk berlibur ke Bali. Begitu pun pada saat libur di akhir pekan, Bali semakin ramai dan meriah dengan berbagai keseruan. Paket Bali Long Weekend 4D3N by Citilink dari Panorama Tours akan mengajak Anda menikmati akhir pekan yang spesial di Bali. Paket ini sudah termasuk pesawat terbang menggunakan Citilink dan juga fasilitas akomodasi di hotel pilihan beserta sarapan pagi.
+
+Rencana Perjalanan
+Hari 1 Jakarta - Denpasar By Citilink (QG 850 CGK 07.35 - DPS 10.30)
+Hari 2 Bali Free Program
+Hari 3 Bali Free Program
+Hari 4 Denpasar - Jakarta By Citilink (QG 853 DPS 20.05 - CGK 21.00)
+
+Paket Termasuk:
+  Transportasi secara Seat In Coach (bergabung dengan penumpang lain)
+  Transfer in/out Bandara
+  3 Malam akomodasi sesuai hotel pilihan TokoSeribu termasuk sarapan
+  Tiket pesawat Jakarta - Bali - Jakarta By Citilink (kelas ekonomi termasuk bagasi 20 kg)
+
+Paket Tidak Termasuk:
+  Kunjungan tambahan (optional tour)
+  Tipping porter, local guide dan supir
+  Pengeluaran Pribadi (Minibar, Telephone, etc)
+'''
+
     return detail
 
 
@@ -419,6 +479,11 @@ def create_activity_lite(activity):
     }
     lite_obj['unit'] = activity.unit
     lite_obj['price'] = activity.price
+    goods = get_goods(activity.goods_id)
+    lite_obj['is_resell'] = 1 if int(activity.target_amount) >= 1000 and goods.shipping_type==0 else 0
+    if lite_obj['is_resell']:
+        lite_obj['resell_price_h'] = int(float(goods.price)*0.9*1000)
+        lite_obj['resell_price_l'] = int(float(goods.price)*0.8*1000)
     lite_obj['buy_limit'] = activity.buy_limit
     lite_obj['status'] = activity.status
     lite_obj['target_amount'] = activity.target_amount

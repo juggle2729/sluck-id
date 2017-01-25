@@ -49,7 +49,7 @@ def _filter_star(request, item_list):
     else:
         filter_list = []
         for item in item_list:
-            if int(item.get('gid')) in (774,775, ):
+            if int(item.get('gid')) in (774,775,780,781 ):
                 item['is_star'] = 1
             filter_list.append(item)
         return filter_list

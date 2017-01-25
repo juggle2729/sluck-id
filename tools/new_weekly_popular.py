@@ -30,7 +30,7 @@ mail_sender.init_conf({
         'zhulei@zhuohan-tech.com',
         'mahongli@zhuohan-tech.com',
         'liuyu@zhuohan-tech.com',
-#        'sstong@zhuohan-tech.com',
+        'sstong@zhuohan-tech.com',
         'renxiaoyu@zhuohan-tech.com',
         'wjxiao@zhuohan-tech.com',
     ]

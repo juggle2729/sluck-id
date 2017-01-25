@@ -12,6 +12,9 @@ ORDER_STATUS = Enum({
     "WAIT_SHIP": (5L, u"已领奖，待发货"),
     "WAIT_RECEIPT": (6L, u"已发货，待收货"),
     "DEAL": (7L, u"已收货"),
+    "PROCESSING": (11L, u"resell, processing"),
+    "WAIT_AFFIRM": (12L, u"resell, wait for user affirm"),
+    "AFFIRMED": (13L, u"user affirmed"),
     "SHOW": (8L, u"已晒单"),
 })
 

@@ -36,7 +36,7 @@ mail_sender.init_conf({
         'zhulei@zhuohan-tech.com',
         'mahongli@zhuohan-tech.com',
         'liuyu@zhuohan-tech.com',
-#        'sstong@zhuohan-tech.com',
+        'sstong@zhuohan-tech.com',
         'renxiaoyu@zhuohan-tech.com',
         'wjxiao@zhuohan-tech.com',
     ]
@@ -195,7 +195,10 @@ def get_today_new(delta_day=1):
         pay_dict.setdefault(pay_type, 0)
         user_id = item.user_id
         price = item.price
-        pay_dict[pay_type] += price
+        try:
+            pay_dict[pay_type] += price
+        except:
+            print item.id
         total_recharge += price
         total_count += 1
         total_users.add(user_id)

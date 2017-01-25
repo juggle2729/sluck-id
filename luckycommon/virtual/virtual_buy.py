@@ -69,8 +69,8 @@ def has_virtual_account_in(activity_id):
 
 def need_virtual_buy(activity_id):
     activity = get_activity(activity_id)
-    if activity.template_id in (774, 775):
-        return False
+#    if activity.template_id in (774, 775):
+#        return False
     too_cold = False
     if (float(activity.current_amount) / activity.target_amount) < _COLD_MIN:
         too_cold = True
@@ -124,6 +124,10 @@ def select_buy_info_latest(activity_dict, diaosi):
             r = random.randint(target_amount/4, target_amount/3)
         else:
             r = 1
+    if template_id in (780, 781, 774, 775):
+        r = random.randint(1,32) * 10
+        if r > 160:
+            r = random.randint(2,9)
 
     if r > 10000:
         r = 1000
@@ -165,7 +169,7 @@ def choose_activity(activitys):
 def monitor_activity(diaosi=False):
     while True:
         now = local_now()
-        time.sleep(25)
+        time.sleep(21)
         activitys = get_available_activitys(diaosi)
         if not activitys:
             continue
@@ -187,7 +191,7 @@ def monitor_activity(diaosi=False):
         if diaosi:
             rand_ts = random.randint(1, 10)
         else:
-            rand_ts = random.randint(20, 40)
+            rand_ts = random.randint(1, 10)
         time.sleep(rand_ts)
 
 

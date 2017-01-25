@@ -111,6 +111,9 @@ class ActivityDetail(BaseModel):
         'start_time': basestring,  # 夺宝开始的事件，或者第一次购买的时间
         'is_star': int,
         'star_desc': basestring,
+        'is_resell': int,
+        'resell_price_h': int,
+        'resell_price_l': int,
     }
 
 
@@ -139,4 +142,6 @@ class ActivityLite(BaseModel):
             'nick_name': basestring,  # nick name
         },
         'is_star': int,
+        'is_resell': int,
+        'resell_price': int,
     }

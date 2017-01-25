@@ -23,6 +23,7 @@ class PayType(CustomEnum):
     MANDIRI_ECASH = 17
     MIMO_BCA = 18
     CODA_SMS = 19
+    GOOGLE_BILLING = 20
 
 
 
@@ -161,6 +162,12 @@ AVAILABLE_PAY_TYPES = {
            'name': u'MIMO BCA',
            'pay_type': PayType.MIMO_BCA.value,
            'comment': u'MIMO BCA',
+           'highlight': 0,
+    },
+    PayType.GOOGLE_BILLING.value: {
+           'name': u'Google Billing',
+           'pay_type': PayType.GOOGLE_BILLING.value,
+           'comment': u'GOOGLE BILLING',
            'highlight': 0,
     },
 
