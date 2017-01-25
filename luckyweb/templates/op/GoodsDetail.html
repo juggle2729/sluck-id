@@ -18,32 +18,21 @@
     <div class="panel">
         <form id="goods-form" class="form-horizontal" role="form">
             <div class="form-group">
-                <label for="inputBrand" class="col-md-1 control-label">供货商：</label>
-                <div class="col-md-4">
-                    <select id="inputBrand" class="form-control search-select" data-field="brand_id" data-useless="0" data-type="int">
-                        <option value="0">无</option>
-                        <% _.each(brands, function(brand){ %>
-                            <option value="<%= brand.id %>" <%= brand.id == info.brand_id ? "selected" : "" %>><%= brand.name %></option>
-                        <%})%>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
                 <label for="inputName" class="col-md-1 control-label">商品名称：</label>
                 <div class="col-md-9">
-                    <input type="text" id="inputName" class="form-control" data-field="name" value="<%= info.name %>" placeholder="请输入商品名称..." required>
+                    <input type="text" id="inputName" class="form-control" value="<%= info.name %>" placeholder="请输入商品名称..." required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="inputSourceName" class="col-md-1 control-label">货源名称：</label>
                 <div class="col-md-9">
-                    <input type="text" id="inputSourceName" class="form-control" data-field="source_name" value="<%= info.source_name %>" placeholder="即商品在货源方的名称">
+                    <input type="text" id="inputSourceName" class="form-control" value="<%= info.source_name %>" placeholder="请输入货源名称..." required>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-1 control-label" for="inputSource">货源链接:<br>(以英文逗号分割)</label>
                 <div class="col-md-9">
-                    <textarea class="form-control" data-field="source" id="inputSource" rows="2"><%= info.source %></textarea>
+                    <textarea class="form-control required" id="inputSource" rows="2"><%= info.source %></textarea>
                 </div>
             </div>
             <div class="form-group">
@@ -52,20 +41,20 @@
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-usd"></i>
                         </span>
-                        <input id="inputPrice" data-field="price" data-type="float" type="text" min="0" class="form-control" value="<%= info.price %>" required>
+                        <input id="inputPrice" type="number" min="0" class="form-control" value="<%= info.price %>" required>
                     </div>
                 </div>
-                <label for="inputNum" title="即商品在货源方的数量，比如货源是一瓶啤酒，这里是12瓶，就填12; 用于自动发货。" class="col-md-1 control-label">货源数量：</label>
+                <label for="inputNum" class="col-md-1 control-label">货源数量：</label>
                 <div class="col-md-2">
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-level-up"></i>
                         </span>
-                        <input id="inputNum" class="form-control" data-field="num" data-type="int" type="number" min="1" value="<%= info.num || 1 %>" required>
+                        <input id="inputNum" class="form-control" type="number" min="0" value="<%= info.num || 1 %>" required>
                     </div>
                 </div>
                 <label for="inputShippingType" class="col-md-1 control-label">商品类型：</label>
                 <div class="col-md-2">
-                    <select id="inputShippingType" data-field="shipping_type" data-type="int" class="form-control">
+                    <select id="inputShippingType" class="form-control">
                         <% _.each(SHIPPING_TYPE, function(v, k){ %>
                             <option value="<%= k %>" <%= info.shipping_type == k ? "selected" : "" %>><%= v %></option>
                         <% }) %>
@@ -75,9 +64,9 @@
             <div class="form-group">
                 <label for="inputSold" class="col-md-1 control-label">货源类型：</label>
                 <div class="col-md-2">
-                    <select id="inputSourceType" data-type="int" data-field="source_type" class="form-control">
-                        <% _.each(sourceTypes, function(source){ %>
-                            <option value="<%= source.id %>" <%= info.source_type == source.id ? "selected" : "" %>><%= source.name %></option>
+                    <select id="inputSourceType" class="form-control">
+                        <% _.each(SOURCE_TYPE, function(v, k){ %>
+                            <option value="<%= k %>" <%= info.source_type == k ? "selected" : "" %>><%= v %></option>
                         <% }) %>
                     </select>
                 </div>
@@ -86,7 +75,7 @@
                     <div class="input-group">
                         <span class="input-group-addon"><i class="fa fa-level-up"></i>
                         </span>
-                        <input id="inputTotal" class="form-control" data-type="int" data-field="total" type="number" min="0" value="<%= info.total %>" required>
+                        <input id="inputTotal" class="form-control" type="number" min="0" value="<%= info.total %>" required>
                     </div>
                 </div>
                 <label for="inputSold" class="col-md-1 control-label">已售出：</label>

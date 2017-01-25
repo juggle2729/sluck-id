@@ -5,7 +5,7 @@
                 <a href="<%= window.location.href %>">订单详情</a>
             </li>
             <li class="crumb-link">
-                <a href="#order/?status=5">订单管理</a>
+                <a href="#order/">订单管理</a>
             </li>
             <li class="crumb-trail">订单编辑</li>
         </ol>
@@ -16,222 +16,137 @@
 </header>
 <section id="content">
     <div class="panel">
-        <div class="panel-heading">
-            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
-            </span>
-            <span class="panel-title">关联商品信息</span>
-        </div>
-        <div class="panel-body">
-            <form class="form-horizontal" role="form">
+        <form id="order-form" class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-md-1 control-label">订单编号：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <%= info.id %>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">订单所属活动：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <%= info.activity_name %>(第<%= info.term_number %>期)
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="" class="col-md-1 control-label">对应商品源：</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                    <% if(info.source){
+                        _.each(info.source.split(','), function(link){
+                        if(link.trim()){ %>
+                        <a href="<%= link %>"><%= link %></a>
+                    <% }})} %>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">商品市场价：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <%= info.goods_price %>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">商品活动价：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <%= info.target_amount %>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">购买者ID：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <a href="#stats/account/?id=<%= info.buyer %>"><%= info.buyer %></a>
+                    </p>
+                </div>
+                <label class="col-md-1 control-label">自有用户：</label>
+                <div class="col-md-4">
+                    <p class="form-control-static text-muted">
+                        <% var not_real = info.is_virtual ? '是' : '否'; %>
+                        <%= not_real %>
+                    </p>
+                </div>
+            </div>
+            <% if(info.status >= 5){ %>
                 <div class="form-group">
-                    <label class="col-md-1 control-label">对应商品：</label>
+                    <label class="col-md-1 control-label">领奖时间：</label>
                     <div class="col-md-4">
                         <p class="form-control-static text-muted">
-                            <a href="#goods/<%= info.goods_id %>/"><%= info.goods_id %></a>
+                            <%= info.extend.award_time %>
                         </p>
                     </div>
-                    <label class="col-md-1 control-label">货源类型：</label>
+                    <label class="col-md-1 control-label">发货时间：</label>
                     <div class="col-md-4">
                         <p class="form-control-static text-muted">
-                            <%= info.source_type %>
+                            <%= info.extend.send_time %>
                         </p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">商品类型：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.category_name.join('/') || '无' %>
-                        </p>
-                    </div>
-                    <label class="col-md-1 control-label">供货商名称：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.brand_name || '无' %>
-                        </p>
-                    </div>
+            <% } %>
+            <div class="form-group">
+                <label class="col-md-1 control-label">订单状态：</label>
+                <div class="col-md-4">
+                    <select id="inputStatus" class="form-control">
+                        <% _.each(ORDER_STATUS, function(v, k){ %>
+                            <option value="<%= k %>" <%= info.status == k ? "selected" : "" %>> <%= v %> </option>
+                        <% }) %>
+                    </select>
+                    <% if(info.status == 5 && info.ship_status){
+                        if(info.extend.ship_msg){ %>
+                            <span class="label label-danger"><%= info.extend.ship_msg %></span>
+                        <% }else { %>
+                            <span class="label label-danger"><%= SHIP_STATUS[info.ship_status] %></span>
+                        <% }
+                    } %>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">商品市场价：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.price %>
-                        </p>
-                    </div>
-                    <label class="col-md-1 control-label">商品活动价：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.target_amount %>
-                        </p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="col-md-1 control-label">对应商品源：</label>
-                    <div class="col-md-9">
-                        <p class="form-control-static">
-                        <% if(info.source){
-                            _.each(info.source.split(','), function(link){
-                            if(link.trim()){ %>
-                            <a href="<%= link %>"><%= link %></a>
-                        <% }})} else { %>
-                            无
-                        <% } %>
-                        </p>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <div class="panel">
-        <div class="panel-heading">
-            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
-            </span>
-            <span class="panel-title">订单信息</span>
-        </div>
-        <div class="panel-body">
-            <form id="order-form" class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="col-md-1 control-label">订单编号：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.id %>
-                        </p>
-                    </div>
-                    <label class="col-md-1 control-label">订单所属活动：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.activity_name %>(第<%= info.term_number %>期)
-                        </p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">购买者ID：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <a href="#stats/account/?id=<%= info.buyer %>"><%= info.buyer %></a>
-                        </p>
-                    </div>
-                    <label class="col-md-1 control-label">自有用户：</label>
-                    <div class="col-md-4">
-                        <p class="form-control-static text-muted">
-                            <%= info.is_virtual ? '是' : '否' %>
-                        </p>
-                    </div>
-                </div>
-                <% if(info.status >= 5){ %>
-                    <div class="form-group">
-                        <label class="col-md-1 control-label">领奖时间：</label>
-                        <div class="col-md-4">
-                            <p class="form-control-static text-muted">
-                                <%= info.extend.award_time || '未知' %>
-                            </p>
-                        </div>
-                        <label class="col-md-1 control-label">发货时间：</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="inputSendTime" value="<%= info.extend.send_time %>" placeholder="格式为2000-01-01， 默认为今天">
-                        </div>
-                    </div>
-                <% } %>
-                <div class="form-group">
-                    <label class="col-md-1 control-label">订单状态：</label>
-                    <div class="col-md-4">
-                        <select id="inputStatus" class="form-control multiselect">
-                            <% _.each(ORDER_STATUS, function(v, k){
-                            if(k >= info.status ){ %>
-                                <option value="<%= k %>" <%= info.status == k ? "selected" : "" %>> <%= v %> </option>
-                            <% }}) %>
-                        </select>
-                    </div>
-                    <% if(info.status == 5){ %>
-                    <label class="col-md-1 control-label">发货状态：</label>
-                        <div class="col-md-4">
-                            <select id="inputShipStatus" class="form-control multiselect">
-                            <% _.each(SHIP_STATUS, function(v, k){
-                                if(k >= 98 || k == info.ship_status ){ %>
-                                    <option value="<%= k %>" <%= info.ship_status == k ? "selected" : "" %>> <%= v %> </option>
-                                <% }}) %>
-                            </select>
-                            <% if(info.extend.ship_msg){ %>
-                                <span class="label label-danger"><%= info.extend.ship_msg %></span>
-                            <% }else{ %>
-                                <a href="#" id="refreshStatus" class="glyphicons glyphicons-refresh"></a>
-                            <% } %>
-                        </div>
-                        <% } %>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-1 control-label" for="inputAddr">收件人信息：</label>
-                    <div class="col-md-9">
-                    <div class="col-md-9">
-                        <div class="form-control-static text-muted">
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label" for="inputAddr">收件人信息：</label>
+                <div class="col-md-9">
+                <div class="col-md-9">
+                    <div class="form-control-static text-muted">
+                        <% if(info.receipt_address.is_resell == 1){ %>
+                            <p>resell 姓名: <%= info.receipt_address.resell_name || '' %></p>
+                            <p>resell 账户: <%= info.receipt_address.resell_rekening || '' %></p>
+                            <p>resell 联系方式 : <%= info.receipt_address.resell_phone || '' %></p>
+                            <p>resell 银行: <%= info.receipt_address.resell_bank || '' %></p>
+                            <p>resell 支行: <%= info.receipt_address.resell_cabang || '' %></p>
+                        <% }else { %>
                             <p>姓名: <%= info.receipt_address.name || ''%></p>
                             <p>联系方式: <%= info.receipt_address.phone %></p>
                             <p>通信地址: <%= info.receipt_address.address || '' %></p>
                             <p>备注: <%= info.remark || '' %></p>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputBuyPrice" class="col-md-1 control-label">购买价格：</label>
-                    <div class="col-md-4">
-                        <input id="inputBuyPrice" class="form-control" type="text" value="<%= info.extend.buy_price %>" />
-                    </div>
-                    <label for="inputBuyFrom" class="col-md-1 control-label">实际供货商：</label>
-                    <div class="col-md-4">
-                        <input id="inputBuyFrom" class="form-control" type="text" value="<%= info.extend.buy_from %>" />
+                      <%  } %>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputExpress" class="col-md-1 control-label">所用快递：</label>
-                    <div class="col-md-4">
-                        <input id="inputExpress" class="form-control" type="text" value="<%= info.extend.express %>" />
-                    </div>
-                    <label for="inputExpressNum" class="col-md-1 control-label">快递编号：</label>
-                    <div class="col-md-4">
-                        <input id="inputExpressNum" class="form-control" type="text" value="<%= info.extend.express_num %>" />
-                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="inputRemark" class="col-md-1 control-label">备注：</label>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" id="inputRemark" value="<%= info.extend.remark %>" placeholder="发给用户的短信中会显示">
-                    </div>
+            </div>
+            <div class="form-group">
+                <label for="inputBuyPrice" class="col-md-1 control-label">购买价格：</label>
+                <div class="col-md-4">
+                    <input id="inputBuyPrice" class="form-control" type="text" value="<%= info.extend.buy_price %>" />
                 </div>
-                <div class="form-group">
-                    <label for="inputInternalRemark" class="col-md-1 control-label">内部备注：</label>
-                    <div class="col-md-9">
-                        <input type="text" class="form-control" id="inputInternalRemark" value="<%= info.extend.internal_remark %>" placeholder="仅供内部人员查看">
-                    </div>
+                <label for="inputBuyFrom" class="col-md-1 control-label">供货商：</label>
+                <div class="col-md-4">
+                    <input id="inputBuyFrom" class="form-control" type="text" value="<%= info.extend.buy_from %>" />
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="form-group">
+                <label for="inputExpress" class="col-md-1 control-label">所用快递：</label>
+                <div class="col-md-4">
+                    <input id="inputExpress" class="form-control" type="text" value="<%= info.extend.express %>" />
+                </div>
+                <label for="inputExpressNum" class="col-md-1 control-label">快递编号：</label>
+                <div class="col-md-4">
+                    <input id="inputExpressNum" class="form-control" type="text" value="<%= info.extend.express_num %>" />
+                </div>
+            </div>
+        </form>
     </div>
-    <% if(card.length > 0){ %>
-    <div class="panel">
-        <div class="panel-heading">
-            <span class="panel-icon"><i class="fa fa-gear text-primary"></i>
-            </span>
-            <span class="panel-title">卡密相关信息</span>
-        </div>
-        <div class="panel-body">
-            <table class="table fs13">
-                <thead>
-                    <th>第三方ID</th>
-                    <th>卡号</th>
-                    <th>第三方产品编号</th>
-                </thead>
-                <tbody>
-                    <% _.each(card, function(t){ %>
-                    <tr>
-                        <td><%= t.third_id %></td>
-                        <td><%= t.card_number %></td>
-                        <td><%= t.product_id %></td>
-                    </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <% } %>
+
 </section>

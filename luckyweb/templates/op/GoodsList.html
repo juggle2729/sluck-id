@@ -17,7 +17,7 @@
 
 <section id="content" class="animated fadeIn">
     <div class="panel overflow" >
-        <table class="table table-striped fs13" id="main-list">
+        <table class="table table-striped fs13" id="goods-list">
             <thead>
                 <tr class="bg-light">
                     <th class="sortable" data-field="id">ID</th>
@@ -28,29 +28,26 @@
                     <th class="sortable" data-field="total">总库存</th>
                     <th>发货方式</th>
                     <th>货源类型</th>
-                    <th>商品分类</th>
-                    <th>供货商</th>
                     <th class="sortable" data-field="updated_at">最后更新时间</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody class="admin-form">
-                <% _.each(items, function(item){
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
                 %>
-                    <tr data-id="<%= item.id %>" >
-                        <td><a href="#goods/<%= item.id %>/" ><%= item.id %></a></td>
-                        <td><%= item.name %></td>
-                        <td><%= item.price %></td>
-                        <td><%= PRICE_UNITS[item.unit] %></td>
-                        <td><%= item.sold %></td>
-                        <td><%= item.total %></td>
-                        <td><%= SHIPPING_TYPE[item.shipping_type] %></td>
-                        <td><%= sourceCollection.length > 0 ? sourceCollection.get(item.source_type).get('name') : '-' %></td>
-                        <td><%= item.category_name.join('/') || '-' %></td>
-                        <td><%= item.brand_name || '-' %></td>
-                        <td><%= item.updated_at %></td>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td><a href="#goods/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td><%= attrs.name %></td>
+                        <td><%= attrs.price %></td>
+                        <td><%= goods_unit[attrs.unit] %></td>
+                        <td><%= attrs.sold %></td>
+                        <td><%= attrs.total %></td>
+                        <td><%= SHIPPING_TYPE[attrs.shipping_type] %></td>
+                        <td><%= SOURCE_TYPE[attrs.source_type] %></td>
+                        <td><%= attrs.updated_at %></td>
                         <td class="text-left">
-                            <a class="glyphicons glyphicons-pencil" href="#goods/<%= item.id %>/"></a>
+                            <a class="glyphicons glyphicons-pencil" href="#goods/<%= attrs.id %>/"></a>
                             <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
                         </td>
                     </tr>
@@ -66,28 +63,11 @@
 <!-- Start: Right Sidebar -->
 <aside id="sidebar_right" class="nano">
     <div class="p20 admin-form">
-        <h4 class="mt5 text-muted fw500">第三方库存：</h4>
-        <hr class="short">
-        <div class="section mb15">
-            <table class="table">
-                <thead>
-                    <th>ID</th>
-                    <th>名称</th>
-                    <th>库存</th>
-                </thead>
-                <tbody>
-                <% _.each(stock, function(x){ %>
-                    <tr>
-                        <td><%= x.product_id %></td>
-                        <td><%= x.title %></td>
-                        <td><%= x.count %></td>
-                    </tr>
-                <% }) %>
-                </tbody>
-            </table>
-        </div>
+
         <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+
         <hr class="short">
+
         <div class="section mb15">
             <label for="searchIdOrName" class="field prepend-icon">
                 <input type="text" title="商品ID或名称" name="show-id" id="searchIdOrName" class="gui-input" placeholder="商品ID或名称" data-field="idOrName" value=<%= searched.idOrName %>>
@@ -110,11 +90,10 @@
         <h6 class="fw400">货源类型</h6>
         <div class="section mb15">
             <label class="field select">
-                <select id="searchSourceType" class="form-control search-select" data-field="source_type">
+                <select id="searchSourceType" class="form-control" data-field="source_type">
                     <option value="-1" <%= searched.source_type == -1 ? "selected" : "" %>>所有</option>
-                    <% var sources = sourceCollection.toJSON();
-                        _.each(sources, function(source){ %>
-                    <option value="<%= source.id %>" <%= searched.source_type == source.id ? "selected" : "" %>><%= source.name %></option>
+                    <%_.each(SOURCE_TYPE, function(v, k){ %>
+                    <option value="<%= k %>" <%= searched.source_type == k ? "selected" : "" %>><%= v %></option>
                     <% })%>
                 </select>
                 <i class="arrow double"></i>

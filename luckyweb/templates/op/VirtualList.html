@@ -23,7 +23,6 @@
             <thead>
                 <tr class="bg-light">
                     <th class="sortable" data-field="id">ID</th>
-                    <th>用户ID</th>
                     <th class="sortable" data-field="nick_name">昵称</th>
                     <th>头像</th>
                     <th class="">IP</th>
@@ -39,7 +38,6 @@
                 %>
                     <tr data-id="<%= attrs.id %>" >
                         <td class=""><a href="#virtual/<%= attrs.id %>/" ><%= attrs.id %></a></td>
-                        <td><a href="#stats/account/?id=<%= attrs.user_id %>"> <%= attrs.user_id %></a></td>
                         <td class=""><%= attrs.nick_name %></td>
                         <td class="">
                             <img src="<%= attrs.avatar_id || 'assets/img/avatars/placeholder.png' %>" height="30" max-width="30" />
@@ -108,13 +106,6 @@
             <label for="searchNickName" class="field prepend-icon">
                 <input title="昵称" type="text" data-field="nick_name" id="searchNickName" class="gui-input" placeholder="昵称" value="<%= searched.nick_name  %>">
                 <label for="searchNickName" class="field-icon"><i class="fa fa-tag"></i>
-                </label>
-            </label>
-        </div>
-        <div class="section mb15">
-            <label for="searchUserId" class="field prepend-icon">
-                <input title="用户ID" type="text" data-field="user_id" id="searchUserId" class="gui-input" placeholder="用户ID" value="<%= searched.user_id  %>">
-                <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
                 </label>
             </label>
         </div>

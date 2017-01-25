@@ -3,7 +3,6 @@
         <li class="dd-item">
             <div class="dd-handle dd-nodrag dd-primary">基本信息</div>
             <div class="dd-content mb15">
-
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
                         <label for="inputTitle" class="col-md-1 control-label">版本信息:</label>
@@ -11,8 +10,19 @@
                             <input type="text" class="form-control" data-field="title" id="inputTitle" value="<%= info.title %>" placeholder="形如V1.0, 适配的最高或最低版本" required>
                         </div>
                         <label for="inputRemark" class="col-md-1 control-label">备注:</label>
-                        <div class="col-md-7">
+                        <div class="col-md-3">
                             <input type="text" class="form-control" data-field="remark" id="inputRemark" value="<%= info.remark %>" placeholder="主要修改">
+                        </div>
+                        <label for="inputRegion" class="col-md-1 control-label">地区:</label>
+                        <div class="col-md-3">
+                            <select id="inputRegion" class="form-control">
+                                <%_.each(SERVER_REGION, function(v, k){
+                                    var code = info.content.region || {};
+                                    code = code.code || 0;
+                                %>
+                                    <option value="<%= k %>" <%= code == k ? 'selected' : '' %> ><%= v.areaName %></option>
+                                <%})%>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -31,50 +41,6 @@
                         <label for="inputMaxVersion" class="col-md-1 control-label">支持最高版本(含):</label>
                         <div class="col-md-3">
                             <input id="inputMaxVersion" type="number" class="form-control" data-useless="" data-type="int" data-field="max_version" value="<%= info.max_version %>" placeholder="可不填">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-1" for="inputHomepageContact">Homepage Contact排序</label>
-                        <div class="col-md-4">
-                            <select id="inputHomepageContact" data-field="homepage_contact" class="form-control multiselect">
-                                <% for (key in homepage_contacts) { %>
-                                    <option value="<%= key %>" <%= info.content.homepage_contact == key ? "selected" : "" %> > <%= homepage_contacts[key] %></option>
-                                <% } %>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="dd-handle dd-nodrag dd-primary">
-                首页模块排序(填写数字,从小到大排序,0表示隐藏)
-                </div>
-            <div class="dd-content mb15">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
-                        <label for="ViewConfigZeroFresh" class="col-md-1 control-label">零元购倒计时条</label>
-                        <% var view_config = info.content.view_config || {} ; %>
-                        <div class="col-md-1">
-                            <input type="text" class="form-control" id="ViewConfigZeroFresh" value="<%= view_config.zero_fresh || 0%>">
-                        </div>
-                        <label for="ViewConfigBanner" class="col-md-1 control-label">Banner</label>
-                        <div class="col-md-1">
-                            <input type="text" class="form-control" id="ViewConfigBanner" value="<%= view_config.banner || 1%>">
-                        </div>
-                        <label for="ViewConfigShortcut" class="col-md-1 control-label">快捷入口</label>
-                        <div class="col-md-1">
-                            <input type="text" class="form-control" id="ViewConfigShortcut" value="<%= view_config.shortcut || 2%>">
-                        </div>
-                        <label for="ViewConfigScrolling" class="col-md-1 control-label">跑马灯</label>
-                        <div class="col-md-1">
-                            <input type="text" class="form-control" id="ViewConfigScrolling" value="<%= view_config.scrolling || 3%>">
-                        </div>
-                        <label for="ViewConfigRevealed" class="col-md-1 control-label">最新揭晓</label>
-                        <div class="col-md-1">
-                            <input type="text" class="form-control" id="ViewConfigRevealed" value="<%= view_config.revealed || 5%>">
-                        </div>
-                        <label for="ViewConfigBoldline" class="col-md-1 control-label">分隔线</label>
-                        <div class="col-md-1">
-                            <input type="text" class="form-control" id="ViewConfigBoldline" value="<%= view_config.boldline || 4%>">
                         </div>
                     </div>
                 </form>
@@ -124,28 +90,6 @@
                                         <% var webmode = info.content.ipay ? info.content.ipay.webmode : 0 %>
                                         <option value="0" <%= webmode == '0' ? 'selected' : '' %>>审核模式</option>
                                         <option value="1" <%= webmode == '1' ? 'selected' : '' %>>发布模式</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </li>
-            </ol>
-        </li>
-        <li class="dd-item" id="themeSpecific">
-            <div class="dd-handle dd-nodrag dd-primary">主题配置</div>
-            <ol class="dd-list" data-type="dict">
-                <li class="dd-item">
-                    <div class="dd-content">
-                        <form role="form" class="form-horizontal">
-                            <div class="form-group">
-                                <label class="control-label col-md-1">主题选择:</label>
-                                <div class="col-md-9">
-                                    <select data-field="theme" class="form-control">
-                                        <% var theme = info.content.theme; if(!theme){theme = 0} %>
-                                        <% for(i in theme_config){ %>
-                                            <option <%= theme == theme_config[i].id ? 'selected' : '' %> value="<%= theme_config[i].id  %>"> <%= theme_config[i].title %> </option>
-                                        <% } %>
                                     </select>
                                 </div>
                             </div>

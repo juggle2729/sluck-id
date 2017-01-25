@@ -2,12 +2,12 @@
     <div class="topbar-left">
         <ol class="breadcrumb">
             <li class="crumb-active">
-                <a href="#preset/banner/">Banner数据管理</a>
+                <a href="#banner/">Banner数据管理</a>
             </li>
         </ol>
     </div>
     <div class="topbar-right">
-        <a href="#preset/banner/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Banner数据</a>
+        <a href="#banner/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Banner数据</a>
         <div class="ml15 ib va-m" id="toggle_sidemenu_r">
             <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
             </a>
@@ -34,7 +34,7 @@
             <tbody class="admin-form">
                 <% _.each(banners, function(banner){ %>
                     <tr data-id="<%= banner.id %>" >
-                        <td><a href="#preset/banner/<%= banner.id %>/" ><%= banner.id %></a></td>
+                        <td><a href="#banner/<%= banner.id %>/" ><%= banner.id %></a></td>
                         <td><%= banner.title %></td>
                         <td>
                             <img src="<%= banner.image %>" height="30" max-width="30" />
@@ -45,7 +45,7 @@
                         <td><%= banner.abtest || '-'%></td>
                         <td><%= banner.updated_at %></td>
                         <td class="text-left">
-                            <a class="glyphicons glyphicons-pencil" href="#preset/banner/<%= banner.id %>/"></a>
+                            <a class="glyphicons glyphicons-pencil" href="#banner/<%= banner.id %>/"></a>
                             <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
                         </td>
                     </tr>

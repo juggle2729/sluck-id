@@ -24,33 +24,21 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-md-1 control-label">ID末两位范围：</label>
+                <label class="col-md-1 control-label">用户ID末两位范围：</label>
                 <div class="col-md-1">
                     <input type="text" id="inputUserIdLower" class="form-control" value="<%= info.user_id ? info.user_id[0] : '00' %>">
                 </div>
                 <div class="col-md-1">
                     <input type="text" id="inputUserIdUpper" class="form-control" value="<%= info.user_id ? info.user_id[1] : '99' %>">
-                </div>
+                </div>                
             </div>
             <div class="form-group">
-                <label class="col-md-1 control-label">渠道选择：</label>
-                <div class="col-md-9">
+                <label for="inputChannel" class="col-md-1 control-label">渠道范围：</label>
+                <div class="col-md-4">
                     <div class="input-group">
-                        <div class="input-group-btn">
-                            <%  if(!info.chn) info.chn = {exclude: []};
-                                var key = info.chn.exclude ? "exclude" : "include",
-                                    values = info.chn[key],
-                                    keyStr = (key == "exclude" ? "排除渠道" : "包含渠道"); %>
-                            <button type="button" class="btn btn-default switch-key" id="inputKey" data-key="<%= key %>"><%= keyStr %></button>
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                <span class="caret"></span></button>
-                            <ul class="dropdown-menu">
-                                <li><a href="#" class="shortcut" data-aria="allAndroid">全部Android</a></li>
-                                <li><a href="#" class="shortcut" data-aria="allIOS">全部IOS</a></li>
-                                <li><a href="#" class="shortcut" data-aria="allQG">一元抢购</a></li>
-                            </ul>
-                        </div>
-                        <input type="text" class="form-control" id="inputChannel" value="<%= values.join(',') %>" placeholder="以英文逗号分割">
+                        <select id="inputChannel" class="form-control" multiple>
+                            <option value="-1" selected>所有渠道</option>
+                        </select>
                     </div>
                 </div>
             </div>

@@ -38,8 +38,8 @@
                         <td class=""><%= attrs.id %></td>
                         <td class=""><%= attrs.created_at %></td>
                         <td class=""><a href="#stats/account/?id=<%= attrs.user_id %>"><%= attrs.is_virtual ? '*' : '' %><%= attrs.user_id %><a></td>
-                        <td class=""><%= USER_TYPE[attrs.user_type] || "(账户丢失)"%></td>
-                        <td class=""><%= PAY_TYPE[attrs.pay_type] || "(未知)"%></td>
+                        <td class=""><%= utype[attrs.user_type] || "(账户丢失)"%></td>
+                        <td class=""><%= ptype[attrs.pay_type] || "(未知)"%></td>
                         <td class=""><%= attrs.price %></td>
                         <td class=""><%= attrs.activity_name || '-' %></td>
                     </tr>
@@ -57,107 +57,87 @@
 
 <!-- Start: Right Sidebar -->
 <aside id="sidebar_right" class="nano">
- <div class="sidebar_right_content nano-content">
-     <div class="tab-block sidebar-block br-n">
-        <ul class="nav nav-tabs tabs-border nav-justified">
-            <li class="active">
-                <a href="#sidebar-right-tab1" data-toggle="tab">统计数据</a>
-            </li>
-            <li>
-                <a href="#sidebar-right-tab2" data-toggle="tab">过滤搜索</a>
-            </li>
-        </ul>
-        <div class="tab-content br-n">
-            <div id="sidebar-right-tab1" class="tab-pane active">
-                <div class="p20 admin-form">
-                    <% var total = 0,
-                        count = 0;
-                    _.each(overview, function(obj){
-                    total += obj.total;
-                    count += obj.count;
-                    %>
-                        <h5 class="title-divider text-muted mb20"><%= PAY_TYPE[obj.pay_type] %><span class="pull-right"> <%= obj.total %>/<%= obj.count %>次 </span> </h5>
-                    <%})
-                    if(overview.length > 1){%>
-                        <h5 class="title-divider text-muted mb20">总计<span class="pull-right"> <%= total.toFixed(2) %>/<%= count %>次 </span> </h5>
-                    <% }else if(overview.length == 0){ %>
-                        <h5 class="text-muted mb20">无数据...</h5>
-                    <% } %>
-                </div>
+    <div class="p20 admin-form">
+        <h4 class="mt5 text-muted fw500">统计数据(按筛选内容)：</h4>
+        <hr class="short">
+        <% var total = 0,
+               count = 0;
+         _.each(overview, function(obj){
+         total += obj.total;
+         count += obj.count;
+        %>
+            <h5 class="title-divider text-muted mb20"><%= ptype[obj.pay_type] %><span class="pull-right"> <%= obj.total %>/<%= obj.count %>次 </span> </h5>
+        <%})
+          if(overview.length > 1){%>
+            <h5 class="title-divider text-muted mb20">总计<span class="pull-right"> <%= total.toFixed(2) %>/<%= count %>次 </span> </h5>
+          <% }else if(overview.length == 0){ %>
+            <h5 class="text-muted mb20">无数据...</h5>
+          <% } %>
+        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
+        <hr class="short">
+        <div class="section mb15">
+            <label for="searchUserId" class="field prepend-icon">
+                <input title="用户ID" type="text" data-field="user_id" id="searchUserId" class="gui-input" placeholder="用户ID" value="<%= searched.user_id  %>">
+                <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <h6 class="fw400">充值时间</h6>
+        <div class="section row">
+            <div class="col-md-6">
+                    <input type="text" title="下限，包含当天" name="searchCreatedAtLower" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
+                    </label>
+                </label>
             </div>
-            <div id="sidebar-right-tab2" class="tab-pane">
-                <div class="p20 admin-form">
-                    <div class="section mb15">
-                        <label for="searchId" class="field prepend-icon">
-                            <input title="ID" type="text" data-field="user_id" id="searchId" class="gui-input" placeholder="ID" value="<%= searched.id  %>">
-                            <label for="searchId" class="field-icon"><i class="fa fa-tag"></i>
-                            </label>
-                        </label>
-                    </div>
-                    <div class="section mb15">
-                        <label for="searchUserId" class="field prepend-icon">
-                            <input title="用户ID" type="text" data-field="user_id" id="searchUserId" class="gui-input" placeholder="用户ID" value="<%= searched.user_id  %>">
-                            <label for="searchUserId" class="field-icon"><i class="fa fa-tag"></i>
-                            </label>
-                        </label>
-                    </div>
-                    <h6 class="fw400">充值时间</h6>
-                    <div class="section row">
-                        <div class="col-md-6">
-                                <input type="text" title="下限，包含当天" name="searchCreatedAtLower" id="searchCreatedAtLower" class="gui-input" data-type="date" value="<%= searched.created_at_lower %>">
-                                </label>
-                            </label>
-                        </div>
-                        <div class="col-md-6">
-                                <input type="text" title="上限，不包括当天" name="searchCreatedAtUpper" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
-                                </label>
-                            </label>
-                        </div>
-                    </div>
-                    <h6 class="fw400">付费入口</h6>
-                    <div class="section mb15">
-                        <label class="field select">
-                            <select id="searchType" name="searchType" data-field="type">
-                                <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
-                                <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>仅充值</option>
-                                <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>充值并购买</option>
-                            </select>
-                            <i class="arrow double"></i>
-                        </label>
-                    </div>
-                    <h6 class="fw400">充值方式</h6>
-                    <div class="section mb15">
-                        <label class="field select">
-                            <select id="searchPayType" name="searchPayType" data-field="pay_type">
-                                <option value="-1" <%= searched.pay_type == -1 ? 'selected' : '' %>>所有</option>
-                                <% _.each(PAY_TYPE, function(v, k){%>
-                                    <option value="<%= k %>" searched.pay_type == k ? 'selected': 0><%= v %></option>
-                                <% }) %>
-                            </select>
-                            <i class="arrow double"></i>
-                        </label>
-                    </div>
-                    <h6 class="fw400">用户类型</h6>
-                    <div class="section mb15">
-                        <label class="field select">
-                            <select id="searchUserType" name="searchUserType" data-field="user_type">
-                                <option value="-1" <%= searched.user_type == -1 ? 'selected' : '' %>>所有</option>
-                                <% _.each(USER_TYPE, function(v, k){%>
-                                    <option value="<%= k %>" searched.user_type == k ? 'selected': 0><%= v %></option>
-                                <% }) %>
-                            </select>
-                            <i class="arrow double"></i>
-                        </label>
-                    </div>
-                    <hr class="short">
-
-                    <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
-
-                </div>
+            <div class="col-md-6">
+                    <input type="text" title="上限，不包括当天" name="searchCreatedAtUpper" id="searchCreatedAtUpper" class="gui-input" data-type="date" value="<%= searched.created_at_upper %>">
+                    </label>
+                </label>
             </div>
         </div>
-     </div>
- </div>
+        <h6 class="fw400">付费入口</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchType" name="searchType" data-field="type">
+                    <option value="-1" <%= searched.type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="0" <%= searched.type == 0 ? 'selected' : '' %>>仅充值</option>
+                    <option value="1" <%= searched.type == 1 ? 'selected' : '' %>>充值并购买</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <h6 class="fw400">充值方式</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchPayType" name="searchPayType" data-field="pay_type">
+                    <option value="-1" <%= searched.pay_type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="3" <%= searched.pay_type == 3 ? 'selected' : '' %>>微信</option>
+                    <option value="10" <%= searched.pay_type == 10 ? 'selected' : '' %>>友信</option>
+                    <option value="2" <%= searched.pay_type == 2 ? 'selected' : '' %>>支付宝</option>
+                    <option value="8" <%= searched.pay_type == 8 ? 'selected' : '' %>>支付宝WAP</option>
+                    <option value="7" <%= searched.pay_type == 7 ? 'selected' : '' %>>爱贝</option>
+                    <option value="11" <%= searched.pay_type == 11 ? 'selected' : '' %>>爱贝WAP</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <h6 class="fw400">用户类型</h6>
+        <div class="section mb15">
+            <label class="field select">
+                <select id="searchUserType" name="searchUserType" data-field="user_type">
+                    <option value="-1" <%= searched.user_type == -1 ? 'selected' : '' %>>所有</option>
+                    <option value="1" <%= searched.user_type == 1 ? 'selected' : '' %>>新用户</option>
+                    <option value="2" <%= searched.user_type == 2 ? 'selected' : '' %>>次日用户</option>
+                    <option value="3" <%= searched.user_type == 3 ? 'selected' : '' %>>周用户</option>
+                    <option value="4" <%= searched.user_type == 4 ? 'selected' : '' %>>老用户</option>
+                </select>
+                <i class="arrow double"></i>
+            </label>
+        </div>
+        <hr class="short">
 
+        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
+    </div>
 </aside>
 <!-- End: Right Sidebar -->

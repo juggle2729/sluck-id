@@ -77,6 +77,9 @@ window.ORDER_STATUS = {
     "5": '已领奖，待发货',
     "6": '已发货，待收货',
     "7": '已收货',
+    "11": '已提交，处理中',
+    "12": '已处理，待确认',
+    "13": '已确认',
     "8": '已晒单',
 };
 
@@ -127,7 +130,8 @@ window.ACTIVITY_STATUS = {
 
 window.COUNTRY_CODE = {
     'cn': '中国',
-    'vn': '越南'
+    'vn': '越南',
+    'id': '印尼'
 };
 
 window.DEVICE_TYPE = {
@@ -140,7 +144,6 @@ window.DEVICE_TYPE = {
     '64': 'QG iOS',
     '128': 'QG PRO',
     '256': 'QG HD',
-    '512': 'XingYunPinGou'
 };
 
 window.IOS_CHN = ['ios_pro', 'ios_hd', 'ios']
@@ -166,23 +169,20 @@ window.USER_TYPE = {
 };
 
 window.PAY_TYPE = {
-    // 0: '预付卡',
-    // 1: 'E-WALLET',
+    0: '预付卡',
+    1: 'NGANLUONG',
     2: '支付宝',
     3: '微信',
     4: '银联支付',
-    // 5: '京东支付',
-    // 6: '百度钱包',
+    5: '京东支付',
+    6: '百度钱包',
     7: '爱贝支付',
     8: '支付宝WAP',
     9: 'wii pay',
     10: '友信',
     11: '爱贝WAP',
     12: '即刻支付WAP',
-    13: 'swift',
-    15: '爱贝马甲',
-    17: '羔羊',
-    20: '聚合付',
+    13: 'swift'
 };
 
 window.USER_ROLE = {
@@ -220,6 +220,7 @@ window.SHIPPING_TYPE = {
     1: "手机号",
     2: "Q币",
     3: "夺宝币",
+    4: "Email",
 }
 
 window.SHIP_STATUS = {
@@ -229,8 +230,8 @@ window.SHIP_STATUS = {
     3: "自动发货中",
     4: "自动发货失败",
     5: "自动发货成功",
-    98: '非法订单',
-    99: "异常订单"
+    98: '异常订单',
+    99: "非法订单"
 }
 
 window.NOTIFY_STATUS = {
@@ -273,6 +274,34 @@ window.VIP_TYPE = {
     0: '周榜',
     1: '半月榜',
     2: '月榜'
+}
+
+window.SOURCE_TYPE = {
+    2: '直付供应商',
+    3: '自主发货',
+    4: '其他',
+    5: '月结供应商'
+}
+
+window.SERVER_REGION = {
+    1: {
+        code: 'tw',
+        areaName: '台湾',
+        server: "http://tw.lucky-gou.com",
+        currency: "twd"
+    },
+    2: {
+        code: 'en',
+        areaName: "America",
+        server: "http://us.lucky-gou.com",
+        currency: "usd",
+    },
+    3: {
+        code: 'eu',
+        areaName: "Euro",
+        server: "http://lucky-gou.com",
+        currency: "eur"
+    }
 }
 
 window.ADQ = function($, _, Backbone) {
@@ -1021,7 +1050,7 @@ window.ADQ = function($, _, Backbone) {
             }
             return hash.join('/');
         },
-        getFileUploader: function (url, btn, callback) {
+        getFileUploader: function (url, btn) {
             var uploader = new plupload.Uploader({
                 runtimes : 'html5,flash,silverlight,html4',
                 browse_button: btn || 'importExcel',
@@ -1047,21 +1076,17 @@ window.ADQ = function($, _, Backbone) {
                     'X-AUTH-TOKEN': ADQ.utils.getCookie('lucky_user_token')
                 },
                 init: {
-                    'FilesAdded': function(up, files) {
+                    FilesAdded: function(up, files) {
                         up.start();
                     },
-                    'UploadProgress': function(up, file) {
+                    UploadProgress: function(up, file) {
                         ADQ.notify.warning("警告", "上传中，请耐心等待...");
                     },
-                    'FileUploaded': function (up, file, info) {
-                        if (callback) {
-                            callback(JSON.parse(info.response));
-                        } else {
-                            ADQ.notify.success("通知", "上传成功！");
-                            setTimeout(function() {
-                                location.reload();
-                            }, 500);
-                        }
+                    'FileUploaded': function() {
+                        ADQ.notify.success("通知", "上传成功！");
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
                     },
                     'Error': function(up, err, errTip) {
                         ADQ.notify.error("上传失败", errTip);

@@ -24,25 +24,24 @@
                     <th>标题</th>
                     <th>内容</th>
                     <th class="sortable" data-field="status">状态</th>
-                    <th>过期时间</th>
                     <th class="sortable" data-field="updated_at">最后更新时间</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tbody class="admin-form">
-                <% _.each(items, function(item){ %>
+                <% _.each(items, function(item){
+                %>
                     <tr data-id="<%= item.id %>" >
                         <td><a href="#notification/<%= item.id %>/" ><%= item.id %></a></td>
                         <td><%= item.content.title %></td>
-                        <td><%= item.content.content.substr(0, 15) %>...</td>
+                        <td><%= item.content.content.substr(0, 10) %>...</td>
                         <td><%= NOTIFY_STATUS[item.status] %></td>
-                        <td><%= item.expire_ts ? moment.unix(item.expire_ts).format('YYYY-MM-DD') : '' %></td>
                         <td><%= item.updated_at %></td>
                         <td class="text-left">
-                            <a class="glyphicons glyphicons-pencil" href="#notification/<%= item.id %>/"></a>
                             <% if(item.status == 0) {%>
+                            <a class="glyphicons glyphicons-pencil" href="#notification/<%= item.id %>/"></a>
                             <a class="glyphicons glyphicons-remove_2 delete-item" href="javascript:;"></a>
-                            <% } %>
+                            <% } else { "-" }%>
                         </td>
                     </tr>
                 <%

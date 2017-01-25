@@ -81,6 +81,37 @@ var LuckyConsole = function ($, _) {
             }
         });
 
+        var Goods = Backbone.Model.extend({
+            defaults: {
+                name: '',
+                price: 0.00,
+                unit: 0,
+                sold: 0,
+                total: 100,
+                num: 1,
+                source: '',
+                extend: '',
+                shipping_type: '',
+                source_name: ''
+            },
+            urlRoot: "/admin/goods/",
+            parse: function (response) {
+                if (response.data) {
+                    return response.data;
+                }
+                return response;
+            }
+        });
+        var GoodsCollection = Backbone.Collection.extend({
+            model: Goods,
+            url: "/admin/goods/",
+            total: 0,
+            parse: function (response) {
+                this.total = response.data.total_count;
+                return response.data.list;
+            }
+        });
+
         var Order = Backbone.Model.extend({
             defaults: {
                 activity_id: 0,
@@ -93,9 +124,6 @@ var LuckyConsole = function ($, _) {
                 ship_status: 0,
                 pay_at: '',
                 receipt_address: '',
-                goods_price: '',
-                goods_id: '',
-                source_type: '',
                 is_virtual: false,
                 extend: ''
             },
@@ -114,61 +142,6 @@ var LuckyConsole = function ($, _) {
             parse: function (response) {
                 this.total = response.data.total_count;
                 return response.data.list;
-            }
-        });
-
-        var RedEnvelope = Backbone.Model.extend({
-            defaults: {
-                user_id: 0,
-                open_id: '',
-                third_id: 0,
-                order_id: 0,
-                price: 0,
-                updated_at: '',
-                created_at: ''
-            },
-            urlRoot: '/admin/order/red_envelope/',
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var RedEnvelopeCollection = Backbone.Collection.extend({
-            model: RedEnvelope,
-            url: "/admin/order/red_envelope/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-
-        var ChargeCard = Backbone.Model.extend({
-            defaults: {
-                user_id: 0,
-                order_id: '',
-                card_info: []
-            },
-            urlRoot: '/admin/order/charge_card/',
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var CardStock = Backbone.Model.extend({
-            defaults: {
-                list: []
-            },
-            urlRoot: '/admin/goods/stock/',
-            parse: function (resp) {
-                if (resp.data) {
-                    return resp.data;
-                }
-                return resp;
             }
         });
 
@@ -267,18 +240,13 @@ var LuckyConsole = function ($, _) {
         });
 
         var CouponTemplate = Backbone.Model.extend({
-            defaults : {
+            defaults: {
                 title: "",
                 coupon_type: 1,
                 desc: "",
                 price: 0,
                 condition_price: 0,
                 valid_ts: 3 * 24 * 60 * 60,
-                activity_tids: '',
-                activity_categories: '',
-                scope_all: 1,
-                cmd: '',
-                remark: '',
                 created_at: '',
                 updated_at: ''
             },
@@ -369,7 +337,6 @@ var LuckyConsole = function ($, _) {
                     }
                 },
                 status: 0,
-                expire_ts: null,
                 created_at: '',
                 updated_at: ''
             },
@@ -392,16 +359,14 @@ var LuckyConsole = function ($, _) {
         });
 
         return {
+            Goods: Goods,
+            GoodsCollection: GoodsCollection,
             Template: Template,
             TemplateCollection: TemplateCollection,
             Activity: Activity,
             ActivityCollection: ActivityCollection,
             Order: Order,
             OrderCollection: OrderCollection,
-            RedEnvelope: RedEnvelope,
-            RedEnvelopeCollection: RedEnvelopeCollection,
-            ChargeCard: ChargeCard,
-            CardStock: CardStock,
             Show: Show,
             ShowCollection: ShowCollection,
             Category: Category,
@@ -459,16 +424,6 @@ var LuckyConsole = function ($, _) {
                     'ipay': {
                         "webmode": 0
                     },
-                    'theme_config':[{id:'',title:''}],
-                    'theme': 0,
-                    'homepage_contact': '',
-                    'view_config': {
-                        'banner': 1,
-                        'boldline': 4,
-                        'shortcut': 2,
-                        'zero_fresh': 0,
-                        'revealed': 5
-                    }
                 }
             },
             urlRoot: "/admin/preset/",
@@ -548,9 +503,6 @@ var LuckyConsole = function ($, _) {
             total: 0,
             parse: function (response) {
                 this.total = response.data.total_count;
-                response.data.list.push({'id': 'group1', 'title': '分组分隔符'});
-                response.data.list.push({'id': 'group2', 'title': '分组分隔符'});
-                response.data.list.push({'id': 'group3', 'title': '分组分隔符'});
                 return response.data.list;
             }
         });
@@ -606,67 +558,7 @@ var LuckyConsole = function ($, _) {
                 return response.data.list;
             }
         });
-        var Theme = Backbone.Model.extend({
-            defaults: {
-                'title': '',
-                'remark': '',
-                'start_ts': moment().unix() + 1000,
-                'end_ts': moment().unix() + 1000,
-                'abtest': -1,
-                'content': {
-                    theme_color: {},
-                    theme_icon: {},
-                    main_tab: {
-                        item_icon:{
-                            main: {}, draw: {}, discover: {}, cart:{}, my: {}
-                        }
-                    }
-                }    
-            },
-            urlRoot: "/admin/preset/theme/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var ThemeCollection = Backbone.Collection.extend({
-            model: Theme,
-            url: "/admin/preset/theme/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-        var Homepage = Backbone.Model.extend({
-           defaults: {
-               'title': "",
-               'abtest': -1,
-               'icon': '',
-               'cmd': ''
-           },
-           urlRoot: '/admin/preset/homepage/',
-           parse: function (response) {
-               if (response.data) {
-                   return response.data;
-               }
-               return response;
-           }
-        });
-        var HomepageCollection = Backbone.Collection.extend({
-            model: Homepage,
-            url: "/admin/preset/homepage/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                response.data.list.push({'id': 'group1', 'name': '分组用分隔符', 'remark': '分组用分隔符1'});
-                response.data.list.push({'id': 'group2', 'name': '分组用分隔符', 'remark': '分组用分隔符2'});
-                response.data.list.push({'id': 'group3', 'name': '分组用分隔符', 'remark': '分组用分隔符3'});
-                return response.data.list;
-            }
-        });
+
         return {
             Preset: Preset,
             PresetCollection: PresetCollection,
@@ -677,11 +569,7 @@ var LuckyConsole = function ($, _) {
             Loading: Loading,
             LoadingCollection: LoadingCollection,
             Shortcut: Shortcut,
-            ShortcutCollection: ShortcutCollection,
-            Theme: Theme,
-            ThemeCollection: ThemeCollection,
-            Homepage: Homepage,
-            HomepageCollection: HomepageCollection
+            ShortcutCollection: ShortcutCollection
         }
     } ();
 
@@ -975,6 +863,89 @@ var LuckyConsole = function ($, _) {
                 return response.data.list;
             }
         });
+        var MissedVips = Backbone.Model.extend({
+            defaults: {
+                uid: '',
+                nick_name: '',
+                phone: '',
+                chn: '',
+                active_days: 0,
+                created_time: '',
+                updated_time: '',
+                lost_days: 3,
+                rank: 1,
+                recharge_amount: 0,
+                pay_count: 0,
+                win_count: 0,
+                win_amount: 0,
+                status: '',
+                type: 1,
+                back_recharge: 0,
+                used_coupon: 0,
+                created_at: '',
+                updated_at: ''
+            },
+            urlRoot: "/admin/stats/missed_vips/",
+            parse: function (response) {
+                if (response.data) {
+                    return response.data;
+                }
+                return response;
+            }
+        });
+        var MissedVipsCollection = Backbone.Collection.extend({
+            model: MissedVips,
+            url: "/admin/stats/missed_vips/",
+            total: 0,
+            overview: {},
+            parse: function (response) {
+                if (!response.data) {
+                    return [];
+                }
+                this.total = response.data.total_count;
+                this.overview = response.data.overview;
+                return response.data.list;
+            }
+        });
+        var BackVips = Backbone.Model.extend({
+            defaults: {
+                call_at: '',
+                calc_at: '',
+                lost_days: 3,
+                total_count: 0,
+                back_count: 0,
+                back_rate: 0,
+                recharge_count: 0,
+                recharge_amount: 0,
+                recharge_rate: 0,
+                recharge_arpu: 0,
+                win_count: 0,
+                win_amount: 0,
+                win_rate: 0,
+                coupon_amount: 0,
+                pay_count: 0
+            },
+            urlRoot: "/admin/stats/back_vips/",
+            parse: function (response) {
+                if (response.data) {
+                    return response.data;
+                }
+                return response;
+            }
+        });
+        var BackVipsCollection = Backbone.Collection.extend({
+            model: MissedVips,
+            url: "/admin/stats/back_vips/",
+            total: 0,
+            overview: {},
+            parse: function (response) {
+                if (!response.data) {
+                    return [];
+                }
+                this.total = response.data.total_count;
+                return response.data.list;
+            }
+        });
         var Uninstall = Backbone.Model.extend({
             defaults: {
                 _id: '',
@@ -1014,139 +985,13 @@ var LuckyConsole = function ($, _) {
             PayCollection: PayCollection,
             AccountTransaction: AccountTransaction,
             AccountTransactionCollection: AccountTransactionCollection,
-            Uninstall: Uninstall,
-            UninstallCollection: UninstallCollection
-        };
-    } ();
-
-    var vipsModelCls = function () {
-        var MissedVips = Backbone.Model.extend({
-            defaults: {
-                uid: '',
-                nick_name: '',
-                phone: '',
-                chn: '',
-                active_days: 0,
-                created_time: '',
-                updated_time: '',
-                lost_days: 3,
-                rank: 1,
-                recharge_amount: 0,
-                pay_count: 0,
-                win_count: 0,
-                win_amount: 0,
-                status: '',
-                type: 1,
-                user_type: 0,
-                back_recharge: 0,
-                used_coupon: 0,
-                created_at: '',
-                updated_at: ''
-            },
-            urlRoot: "/admin/stats/vips/missed/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var MissedVipsCollection = Backbone.Collection.extend({
-            model: MissedVips,
-            url: "/admin/stats/vips/missed/",
-            total: 0,
-            overview: {},
-            parse: function (response) {
-                if (!response.data) {
-                    return [];
-                }
-                this.total = response.data.total_count;
-                this.overview = response.data.overview;
-                return response.data.list;
-            }
-        });
-        var BackVips = Backbone.Model.extend({
-            defaults: {
-                call_at: '',
-                calc_at: '',
-                lost_days: 3,
-                total_count: 0,
-                back_count: 0,
-                back_rate: 0,
-                recharge_count: 0,
-                recharge_amount: 0,
-                recharge_rate: 0,
-                recharge_arpu: 0,
-                win_count: 0,
-                win_amount: 0,
-                win_rate: 0,
-                coupon_amount: 0,
-                pay_count: 0
-            },
-            urlRoot: "/admin/stats/vips/back/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var BackVipsCollection = Backbone.Collection.extend({
-            model: MissedVips,
-            url: "/admin/stats/vips/back/",
-            total: 0,
-            overview: {},
-            parse: function (response) {
-                if (!response.data) {
-                    return [];
-                }
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-        var ActiveVips = Backbone.Model.extend({
-            defaults: {
-                uid: '',
-                type: '',
-                pay_amount: 3,
-                win_count: 0,
-                win_amount: 0,
-                created_at: '',
-                updated_at: '',
-                nick_name: 0,
-                phone: '',
-                created_time: '',
-                visit_time: 0,
-                add_time: 0,
-            },
-            urlRoot: "/admin/stats/vips/active/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var ActiveVipsCollection = Backbone.Collection.extend({
-            model: ActiveVips,
-            url: "/admin/stats/vips/active/",
-            total: 0,
-            parse: function (response) {
-                if (!response.data) {
-                    return [];
-                }
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-        return {
             MissedVips: MissedVips,
             MissedVipsCollection: MissedVipsCollection,
             BackVips: BackVips,
             BackVipsCollection: BackVipsCollection,
-            ActiveVips: ActiveVips,
-            ActiveVipsCollection: ActiveVipsCollection,
-        }
+            Uninstall: Uninstall,
+            UninstallCollection: UninstallCollection
+        };
     } ();
 
     var reportModelCls = function () {
@@ -1194,125 +1039,14 @@ var LuckyConsole = function ($, _) {
                 return this.defaults;
             }
         });
-        var DailyReport = Backbone.Model.extend({
-            defaults: {
-            },
-            url: "/admin/report/daily/",
-            list: [],
-            parse: function (response) {
-                if (response.data) {
-                    this.list = response.data.list;
-                }
-                return response.data;
-            }
-        });
-        var RechargeReport = Backbone.Model.extend({
-            defaults: {
-            },
-            url: "/admin/report/daily/recharge/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-            }
-        });
-        var TacticsReport = Backbone.Model.extend({
-            defaults: {
-            },
-            total: {},
-            list: [],
-            url: "/admin/report/daily/tactics/",
-            parse: function (response) {
-                if (response.data) {
-                    this.total = response.data.total;
-                    this.list = response.data.list;
-                    return response.data;
-                }
-                return this.defaults;
-            }
-        });
-        var CoinReport = Backbone.Model.extend({
-            defaults: {
-            },
-            url: "/admin/report/daily/resource/coin/",
-            parse: function (response) {
-                if (response.data) {
-                    this.list = response.data.list;
-                    this.gen_dist = response.data.gen_dist;
-                    this.cost_dist = response.data.cost_dist;
-                    return response.data;
-                }
-                return this.defaults;
-            }
-        });
-        var CreditReport = Backbone.Model.extend({
-            defaults: {
-            },
-            url: "/admin/report/daily/resource/credit/",
-            parse: function (response) {
-                if (response.data) {
-                    this.list = response.data.list;
-                    this.gen_dist = response.data.gen_dist;
-                    this.cost_dist = response.data.cost_dist;
-                    return response.data;
-                }
-                return this.defaults;
-            }
-        });
-        var CouponReport = Backbone.Model.extend({
-            defaults: {
-            },
-            url: "/admin/report/daily/resource/coupon/",
-            parse: function (response) {
-                if (response.data) {
-                    this.list = response.data.list;
-                    this.gen_dist = response.data.gen_dist;
-                    this.cost_dist = response.data.cost_dist;
-                    return response.data;
-                }
-                return this.defaults;
-            }
-        });
-        var ShippingReport = Backbone.Model.extend({
-            default: {},
-            url: "/admin/report/daily/shipping/",
-            parse: function (response) {
-                if (response.data) {
-                    this.list = response.data.list;
-                    this.info = response.data.info;
-                    return response.data;
-                }
-                return this.defaults;
-            }
-        });
-        var Top100List = Backbone.Model.extend({
-            defaults: {
-            },
-            list: [],
-            url: "/admin/report/top100/",
-            parse: function (response) {
-                if (response.data) {
-                    this.list = response.data.list;
-                    return response.data;
-                }
-                return this.defaults;
-            }
-        });
 
         return {
             UserOverview: UserOverview,
             ActivityOverview: ActivityOverview,
             CostOverview: CostOverview,
-            DailyReport: DailyReport,
-            RechargeReport: RechargeReport,
-            TacticsReport: TacticsReport,
-            CoinReport: CoinReport,
-            CreditReport: CreditReport,
-            CouponReport: CouponReport,
-            Top100List: Top100List,
-            ShippingReport: ShippingReport,
         };
     } ();
+
 
     var consoleModelCls = function () {
         var User = Backbone.Model.extend({
@@ -1366,169 +1100,13 @@ var LuckyConsole = function ($, _) {
                 return response.data.list;
             }
         });
-        var Record = Backbone.Model.extend({
-            defaults: {
-                "resource": "",
-                "resource_id": "",
-                "action": 0,
-                "content": "",
-                "created_at": 1,
-            },
-            urlRoot: "/admin/record/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var RecordCollection = Backbone.Collection.extend({
-            model: Record,
-            url: "/admin/record/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
 
         return {
             User: User,
             UserCollection: UserCollection,
             Permission: Permission,
-            PermissionCollection: PermissionCollection,
-            Record: Record,
-            RecordCollection: RecordCollection
+            PermissionCollection: PermissionCollection
         };
-    } ();
-
-    var goodsModelCls = function () {
-        var Goods = Backbone.Model.extend({
-            defaults: {
-                name: '',
-                price: 0.00,
-                unit: 0,
-                sold: 0,
-                total: 100,
-                num: 1,
-                source: '',
-                extend: '',
-                shipping_type: '',
-                source_name: '',
-                source_type: null,
-                category_id: '',
-                category_name: [],
-                category_path: [],
-                brand_id: '',
-                brand_name: ''
-            },
-            urlRoot: "/admin/goods/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var GoodsCollection = Backbone.Collection.extend({
-            model: Goods,
-            url: "/admin/goods/",
-            total: 0,
-            stock: [],
-            parse: function (response) {
-                this.total = response.data.total_count;
-                this.stock = response.data.stock;
-                return response.data.list;
-            }
-        });
-
-        var Category = Backbone.Model.extend({
-            defaults: {
-                name: '',
-                parent_id: null,
-                created_at: '',
-                updated_at: ''
-            },
-            urlRoot: "/admin/goods/category/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var CategoryCollection = Backbone.Collection.extend({
-            model: Category,
-            url: "/admin/goods/category/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-
-        var Source = Backbone.Model.extend({
-            defaults: {
-                name: '',
-                parent_id: null,
-                created_at: '',
-                updated_at: ''
-            },
-            urlRoot: "/admin/goods/source/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var SourceCollection = Backbone.Collection.extend({
-            model: Source,
-            url: "/admin/goods/source/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-
-        var Brand = Backbone.Model.extend({
-            defaults: {
-                name: '',
-                parent_id: null,
-                created_at: '',
-                updated_at: ''
-            },
-            urlRoot: "/admin/goods/brand/",
-            parse: function (response) {
-                if (response.data) {
-                    return response.data;
-                }
-                return response;
-            }
-        });
-        var BrandCollection = Backbone.Collection.extend({
-            model: Brand,
-            url: "/admin/goods/brand/",
-            total: 0,
-            parse: function (response) {
-                this.total = response.data.total_count;
-                return response.data.list;
-            }
-        });
-        return {
-            Goods: Goods,
-            GoodsCollection: GoodsCollection,
-
-            Category: Category,
-            CategoryCollection: CategoryCollection,
-
-            Source: Source,
-            SourceCollection: SourceCollection,
-
-            Brand: Brand,
-            BrandCollection: BrandCollection
-        }
     } ();
 
     var _deleteItem = function (e, collection) {
@@ -1753,7 +1331,7 @@ var LuckyConsole = function ($, _) {
                     image: {
                         verticalFit: true,
                         titleSrc: function (item) {
-                            return '<a href="#preset/shortcut/' + item.el.data('id') +
+                            return '<a href="#shortcut/' + item.el.data('id') +
                                 '/" target="_blank">编辑项目</a>';
                         }
                     }
@@ -1852,7 +1430,7 @@ var LuckyConsole = function ($, _) {
                     image: {
                         verticalFit: true,
                         titleSrc: function (item) {
-                            return '<a href="#preset/banner/' + item.el.data('id') +
+                            return '<a href="#banner/' + item.el.data('id') +
                                 '/" target="_blank">编辑项目</a>';
                         }
                     }
@@ -2050,110 +1628,11 @@ var LuckyConsole = function ($, _) {
                     image: {
                         verticalFit: true,
                         titleSrc: function (item) {
-                            return '<a href="#preset/loading/' + item.el.data('id') +
+                            return '<a href="#loading/' + item.el.data('id') +
                                 '/" target="_blank">编辑项目</a>';
                         }
                     }
                 })});
-                this.$el.find('.sortable').each(function (i, e) {
-                    $(e).sortable();
-                });
-                $('.dd').nestable('destroy').nestable();
-                return this;
-            }
-        });
-        var HomepagePanel = Backbone.View.extend({
-            tagName: 'li',
-            className: 'dd-item',
-            template: 'preset/HomepagePanel.html',
-            events: {
-                'click .delete-homepage': 'deleteHomepage'
-            },
-            initialize: function (options) {
-                // options is homepageIds
-                this.homepages = new presetModelCls.HomepageCollection();
-                this.homepageIds = options;
-                this.collection = new presetModelCls.HomepageCollection();
-                this.collection.bind('change reset', this.renderWithData, this);
-            },
-            load: function () {
-                var that = this;
-                this.homepages.fetch({
-                    reset: true,
-                    data: {
-                        $size: -1,
-                        $orderby: 'name'
-                    },
-                    success: function () {
-                        var models = [],
-                            m = null;
-                        _.each(that.homepageIds, function (id) {
-                            m = that.homepages.get(id);
-                            if (m) models.push(m);
-                        });
-                        that.collection.reset(models);
-                    }
-                });
-            },
-            render: function () {
-                this.$el.html(this.template({
-                    homepages: this.collection.toJSON(),
-                    allHomepages: this.homepages.toJSON(),
-                }));
-                return this;
-            },
-            deleteHomepage: function (e) {
-                e.preventDefault();
-                var id = parseInt($(e.target).data('id'));
-                this.collection.remove(id);
-                this.renderWithData();
-                return false;
-            },
-            renderWithData: function (e) {
-                this.$el.html(this.template({
-                    homepages: this.collection.toJSON(),
-                    allHomepages: this.homepages.toJSON()
-                }));
-                var that = this;
-                $('#inputHomepage').multiselect({
-                    enableFiltering: true,
-                    enableCaseInsensitiveFiltering: true,
-                    maxHeight: 200
-                });
-                $('#addHomepage').magnificPopup({
-                    items: {
-                        src: '#addHomepagePanel',
-                        type: 'inline'
-                    },
-                    midClick: true,
-                    closeOnBgClick: true,
-                    callbacks: {
-                        beforeOpen: function () {
-                            $('#submitAddHomepage').off('click').click(function () {
-                                var selected = $('#inputHomepage').val();
-                                $.magnificPopup.close();
-                                _.each(selected, function (s) {
-                                    that.collection.add(that.homepages.get(s));
-                                });
-                                that.renderWithData();
-                            });
-                        },
-                    }
-                });
-                this.$el.find('.image-popup').each(function (i,e){
-                    $(e).magnificPopup({
-                        type: 'image',
-                        closeOnContentClick: true,
-                        mainClass: 'mfp-img-mobile',
-                        image: {
-                            verticalFit: true,
-                            titleSrc: function (item) {
-                                return '<a href="#preset/homepage/' + item.el.data('id') + 
-                                    '/" target="_blank">编辑项目</a>';
-                            }
-                        }
-                    });
-                });
                 this.$el.find('.sortable').each(function (i, e) {
                     $(e).sortable();
                 });
@@ -2168,38 +1647,13 @@ var LuckyConsole = function ($, _) {
             template: "preset/PannelWrapper.html",
             initialize: function (options) {
                 this.info = options.preset;
-                this.theme_config = this.getThemeConfig();
-                this.homepage_contacts = {
-                    "qq#share#service": "一键加群 &nbsp; 分享夺宝 &nbsp; 我的客服",
-                    "qq#service#share": "一键加群 &nbsp; 我的客服 &nbsp; 分享夺宝",
-                    "share#qq#service": "分享夺宝 &nbsp; 一键加群 &nbsp; 我的客服",
-                    "share#service#qq": "分享夺宝 &nbsp; 我的客服 &nbsp; 一键加群",
-                    "service#qq#share": "我的客服 &nbsp; 一键加群 &nbsp; 分享夺宝",
-                    "service#share#qq": "我的客服 &nbsp; 分享夺宝 &nbsp; 一键加群",
-                    "": "隐藏"
-                };   
             },
             render: function () {
                 this.$el.html(this.template({
                     info: this.info,
-                    theme_config: this.theme_config,
-                    homepage_contacts: this.homepage_contacts
                 }));
                 return this;
             },
-            getThemeConfig: function () {
-                // 获取所有theme配置
-                var theme_config = null;
-                $.ajax({
-                    type: 'get',
-                    async: false,
-                    url: '/admin/preset/theme/?$size=100',
-                    success: function (data) {
-                        theme_config = data.data.list; 
-                    }
-                });
-                return theme_config;
-         },
             checkIOS: function (e) {
                 var val;
                 if (e) {
@@ -2264,6 +1718,7 @@ var LuckyConsole = function ($, _) {
                             var v = ADQ.utils.getInput(elem);
                             if (v == $this.data('useless')) return data;
                             if (!$this.is('.placeholder') && !ADQ.utils.validElement(elem)) {
+                                console.log(elem);
                                 $this.removeClass("state-success").addClass("state-error");
                                 isAllRight = false;
                             }
@@ -2282,7 +1737,6 @@ var LuckyConsole = function ($, _) {
                 };
                 var attrs = ADQ.utils.getAllInput('#commAttr');
                 attrs.device_type = ADQ.utils.calcDeviceType(attrs.device_type);
-                if (!attrs.max_version) attrs.max_version = null;
                 attrs.content = {};
                 _composeJson(attrs.content, '#root');
                 if (!isAllRight) {
@@ -2291,11 +1745,7 @@ var LuckyConsole = function ($, _) {
                 if (!ADQ.utils.isIOS(attrs.device_type)) {
                     delete attrs.content.ipay;
                 }
-                try{
-                    attrs.content.theme = parseInt(attrs.content.theme);
-                } catch (e) {
-                    console.log(e.message);
-                }
+                attrs.content.region = SERVER_REGION[$('#inputRegion').val()];
                 return attrs;
             },
             toSaveOrCreate: function (e) {
@@ -2314,17 +1764,6 @@ var LuckyConsole = function ($, _) {
                 //FIXME: model randomly rollback for some reason to debug
                 var href = location.href.split('/');
                 this.model.set('id', parseInt(href[href.length - 2]));
-                attrs.content.homepage_contact = attrs.homepage_contact;
-                attrs.content.view_config = {
-                    'zero_fresh': parseInt($('#ViewConfigZeroFresh').val() || 0),
-                    'banner': parseInt($('#ViewConfigBanner').val() || 0),
-                    'shortcut': parseInt($('#ViewConfigShortcut').val() || 0),
-                    'scrolling': parseInt($('#ViewConfigScrolling').val() || 0),
-                    'revealed': parseInt($('#ViewConfigRevealed').val() || 0),
-                    'boldline': parseInt($('#ViewConfigBoldline').val() || 0),
-                };
-                delete attrs.content.theme_config;
-                delete attrs.homepage_contact;
                 this.model.save(attrs, {
                     patch: true,
                     success: function (model) {
@@ -2372,9 +1811,6 @@ var LuckyConsole = function ($, _) {
                 var loading = new LoadingPanel(info.content.pages || []);
                 $('#root').append(loading.render().el);
                 loading.load();
-                var homepage = new HomepagePanel(info.content.homepage || []);
-                $('#root').append(homepage.render().el);
-                homepage.load();
                 $('.multiselect').multiselect();
                 return this;
             },
@@ -2431,7 +1867,7 @@ var LuckyConsole = function ($, _) {
                     options.start_ts = { "$gt": now };
                 }
                 ADQ.utils.saveSearched('banner', searched);
-                app.navigate(ADQ.utils.composeQueryString('#preset/banner/', options), {
+                app.navigate(ADQ.utils.composeQueryString('#banner/', options), {
                     trigger: true
                 });
             },
@@ -2446,13 +1882,13 @@ var LuckyConsole = function ($, _) {
                     sortCallback: function (field) {
                         that.options.$orderby = field;
                         that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#preset/banner/', that.options);
+                        var newUrl = ADQ.utils.composeQueryString('#banner/', that.options);
                         app.navigate(newUrl, {
                             trigger: true
                         });
                     }
                 });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#preset/banner/');
+                ADQ.utils.getPaginator(this.options, this.collection.total, '#banner/');
                 return this;
             },
             load: function () {
@@ -2621,7 +2057,7 @@ var LuckyConsole = function ($, _) {
                     options.start_ts = { "$gt": now };
                 }
                 ADQ.utils.saveSearched('discovery', searched);
-                app.navigate(ADQ.utils.composeQueryString('#preset/discovery/', options), {
+                app.navigate(ADQ.utils.composeQueryString('#discovery/', options), {
                     trigger: true
                 });
             },
@@ -2636,13 +2072,13 @@ var LuckyConsole = function ($, _) {
                     sortCallback: function (field) {
                         that.options.$orderby = field;
                         that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#preset/discovery/', that.options);
+                        var newUrl = ADQ.utils.composeQueryString('#discovery/', that.options);
                         app.navigate(newUrl, {
                             trigger: true
                         });
                     }
                 });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#preset/discovery/');
+                ADQ.utils.getPaginator(this.options, this.collection.total, '#discovery/');
                 return this;
             },
             load: function () {
@@ -2811,7 +2247,7 @@ var LuckyConsole = function ($, _) {
                     options.start_date = { "$gt": now };
                 }
                 ADQ.utils.saveSearched('loading', searched);
-                app.navigate(ADQ.utils.composeQueryString('#preset/loading/', options), {
+                app.navigate(ADQ.utils.composeQueryString('#loading/', options), {
                     trigger: true
                 });
             },
@@ -2826,13 +2262,13 @@ var LuckyConsole = function ($, _) {
                     sortCallback: function (field) {
                         that.options.$orderby = field;
                         that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#preset/loading/', that.options);
+                        var newUrl = ADQ.utils.composeQueryString('#loading/', that.options);
                         app.navigate(newUrl, {
                             trigger: true
                         });
                     }
                 });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#preset/loading/');
+                ADQ.utils.getPaginator(this.options, this.collection.total, '#loading/');
                 return this;
             },
             load: function () {
@@ -2999,7 +2435,7 @@ var LuckyConsole = function ($, _) {
                     options.start_date = { "$gt": now };
                 }
                 ADQ.utils.saveSearched('shortcut', searched);
-                app.navigate(ADQ.utils.composeQueryString('#preset/shortcut/', options), {
+                app.navigate(ADQ.utils.composeQueryString('#shortcut/', options), {
                     trigger: true
                 });
             },
@@ -3014,13 +2450,13 @@ var LuckyConsole = function ($, _) {
                     sortCallback: function (field) {
                         that.options.$orderby = field;
                         that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#preset/shortcut/', that.options);
+                        var newUrl = ADQ.utils.composeQueryString('#shortcut/', that.options);
                         app.navigate(newUrl, {
                             trigger: true
                         });
                     }
                 });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#preset/shortcut/');
+                ADQ.utils.getPaginator(this.options, this.collection.total, '#shortcut/');
                 return this;
             },
             load: function () {
@@ -3148,441 +2584,12 @@ var LuckyConsole = function ($, _) {
                 return this;
             }
         });
-        var ThemeListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                'click a.onClickDelete': 'toDelete',
-                'click .clone': 'cloneNew',
-                'click #search': 'doSearch'
-            },
 
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new presetModelCls.ThemeCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            toDelete: function (e) {
-                _deleteItem(e, this.collection);
-            },
-            cloneNew: function (e) {
-                return _createOrClone(event, '/admin/preset/theme/',
-                $(e.currentTarget).closest('tr').data('id'));  
-            },
-            doSearch: function () {
-                var searched = {},
-                    options = {},
-                    now = moment().format('YYYY-MM-DD');
-                searched.status = parseInt($('#searchStatus').val());
-                searched.title = $('#searchTitle').val();
-                if (searched.title) {
-                    options.title = { $like: searched.title };
-                }
-                if (searched.status == 1) { // 过期
-                    options.end_ts = { "$lt": now};
-                } else if (searched.status == 2) { // 生效中
-                    options.start_ts = { "$lte": now};
-                    options.end_ts = { "$gt": now};
-                } else if (searched.status == 3) {  // 待生效
-                    options.start_ts = { "$gt": now};
-                }
-                ADQ.utils.saveSearched('theme', searched);
-                app.navigate(ADQ.utils.composeQueryString('#preset/theme/', options),{
-                    trigger: true
-                })
-            },
-            renderWithData: function () {
-               this.$el.html(this.template({
-                   themes: this.collection.toJSON(),
-                   searched: JSON.parse(localStorage.theme_searched || '{}')
-               }));
-               var that = this;
-               ADQ.utils.renderTable('main-list', {
-                   $orderby: that.options.$orderby || 'id',
-                   sortCallback: function (field) {
-                       that.options.$orderby = field;
-                       that.options.$pate = 1;
-                       var newUrl = ADQ.utils.composeQueryString('#preset/theme/', that.options);
-                       app.navigate(newUrl, {
-                           trigger: true
-                       });
-                   }
-               });
-               ADQ.utils.getPaginator(this.options, this.collection.total, '#preset/theme/');
-               return this;
-           },
-           load: function () {
-               this.collection.fetch({
-                   reset: true,
-                   data: this.options,
-                   error: function (c, r, o) {
-                       ADQ.notify.notifyResp(r);
-                       $('#content').append('<h4 class="text-muted">无数据</h4>');
-                   },
-               });
-           }
-        });
-        var ThemeListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "preset/ThemeList.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new ThemeListView(this.options);
-                view.template = this.template;
-
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-        var ThemeDetailView = Backbone.View.extend({
-            tagName: "div",
-            className: "panel-body pn",
-            events: {
-                'click #save': 'toSaveOrCreate',
-            },
-            initialize: function (options) {
-                this.model = new presetModelCls.Theme();
-                if (options.themeId) {
-                    this.model.set('id', options.themeId);
-                }
-                this.abtests = new opModelCls.ABTestCollection();
-                this.model.bind('change reset', this.renderWithData, this);
-                this.abtests.bind('reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            toSaveOrCreate: function (e) {
-                e.preventDefault();
-                var isAllRight = ADQ.utils.simpleCheck();
-                if (!isAllRight) {
-                    ADQ.notify.error('错误', '输入错误,请检验');
-                    return;
-                }
-                var attrs = ADQ.utils.getAllInput('#content')
-                attrs.start_ts = moment(attrs.start_ts).unix();
-                attrs.end_ts = moment(attrs.end_ts).unix();
-                if (attrs.abtest == -1) attrs.abtest = null;
-                var theme_color = {
-                    global_theme_color: attrs.global_theme_color,
-                    global_theme_text_color: attrs.global_theme_text_color,
-                    title_bar_bg_color: attrs.title_bar_bg_color,
-                    title_bar_text_color: attrs.title_bar_text_color,
-                    global_text_blue_color: attrs.global_text_blue_color,
-                    user_center_top_bg_color: attrs.user_center_top_bg_color,
-                    my_profile_top_bg_color: attrs.my_profile_top_bg_color,
-                    progress_bar_light_color: attrs.progress_bar_light_color,
-                    revealed_count_down_text_color: attrs.revealed_count_down_text_color,
-                    zero_fresh_count_down_text_color: attrs.zero_fresh_count_down_text_color,
-                    hight_light_button_bg_color: attrs.hight_light_button_bg_color,
-                    hight_light_button_text_color: attrs.hight_light_button_text_color,
-                };
-                var theme_icon = {
-                    main_title_category_icon: attrs.main_title_category_icon,
-                    main_title_search_icon: attrs.main_title_search_icon,
-                    check_box_check_icon: attrs.check_box_check_icon,
-                    check_box_uncheck_icon: attrs.check_box_uncheck_icon,
-                    title_bar_back_icon: attrs.title_bar_back_icon,
-                    title_bar_tips_icon: attrs.title_bar_tips_icon,
-                    title_bar_share_icon: attrs.title_bar_share_icon
-                };
-                var main_tab = {
-                    text_normal_color: attrs.text_normal_color,
-                    text_select_color: attrs.text_select_color,
-                    item_icon:{
-                        main: {
-                            normal: attrs['main-normal'],
-                            press: attrs['main-press']
-                        },
-                        draw: {
-                            normal: attrs['draw-normal'],
-                            press: attrs['draw-press']
-                        },
-                        discover: {
-                            normal: attrs['discover-normal'],
-                            press: attrs['discover-press']
-                        },
-                        cart: {
-                            normal: attrs['cart-normal'],
-                            press: attrs['cart-press']
-                        },
-                        my: {
-                            normal: attrs['my-normal'],
-                            press: attrs['my-press']
-                        }
-                    }
-                };
-                attrs.content =JSON.stringify({
-                    theme_color: theme_color,
-                    theme_icon: theme_icon,
-                    main_tab: main_tab
-                });
-                this.model.save(attrs, {
-                    patch: true,
-                    success: function (model, response) {
-                        ADQ.notify.success('提示', '保存成功!');
-                        setTimeout(function () {
-                            history.back();
-                        },500);
-                    },
-                    error: function (model, response) {
-                        ADQ.notify.notifyResp(response);
-                    }
-                });
-                return false;
-            },
-            renderWithData: function () {
-                try {
-                    this.$el.html(this.template({
-                        info: this.model.toJSON(),
-                        abtests: this.abtests.toJSON(),
-                    }));
-                } catch (error) {
-                    console.log(error.message);
-                }
-                var that = this;
-                $('.multiselect').multiselect();
-                $('.date-box').datetimepicker({
-                    format: 'YYYY-MM-DD'
-                });
-                $('.image-popup').magnificPopup({
-                    type: 'image',
-                    closeOnContentClick: true,
-                    mainClass: 'mfp-img-mobile',
-                    image: {
-                        verticalFit: true,
-                        titleSrc: function (item) {
-                            return '<a href="' + item.el.attr('href') +
-                                '" target="_blank">查看原图</a>';
-                        }
-                    }
-                });
-                for(var i=1;i<18;i++){
-                    ADQ.utils.getSingleUploader('uploadImg' + i);
-                }
-            },
-            load: function () {
-                if (this.model.id) {
-                    this.model.fetch({
-                        reset: true
-                    });
-                } else {
-                    this.renderWithData();
-                }
-                this.abtests.fetch({
-                    reset: true,
-                    $size: -1
-                });
-            }
-        });
-        var ThemeDetailPage = Backbone.View.extend({
-            el: '#content_wrapper',
-            template: "preset/ThemeDetail.html",
-            initialize: function (themeId) {
-                this.themeId = themeId;
-            },
-            render: function () {
-                var view = new ThemeDetailView(this.themeId);
-                view.template = this.template;
-
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-        var HomepageListView = Backbone.View.extend({
-            tagName: 'div',
-            events: {
-                'click a.onClickDelete': 'toDelete',
-                'click #search': 'doSearch'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new presetModelCls.HomepageCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html('');
-                $(window).scrollTop(0);
-                return this;
-            },
-            toDelete: function (e) {
-                _deleteItem(e, this.collection);
-            },
-            doSearch: function () {
-                var searched = {},
-                    options = {};
-                searched.title = $('#searchTitle').val();
-                if(searched.title) {
-                    options.title = { $like: searched.title };
-                }
-                ADQ.utils.saveSearched('homepage', searched);
-                app.navigate(ADQ.utils.composeQueryString('#preset/homepage/',options), {
-                    trigger: true
-                });
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    homepages: this.collection.toJSON(),
-                    searched: JSON.parse(localStorage.homepage_searched || '{}')
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#preset/homepage', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#preset/homepage/');
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                        $('#content').append('<h4 class="text-muted">无数据</h4>');
-                    }
-                });
-            }
-
-        });
-        var HomepageListPage = Backbone.View.extend({
-            el: '#content_wrapper',
-            template: 'preset/HomepageList.html',
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new HomepageListView(this.options);
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-        var HomepageDetailView = Backbone.View.extend({
-            tagName: 'div',
-            className: 'panel-body pn',
-            events: {
-                'click #save': 'toSaveOrCreate',
-            },
-            initialize: function (options) {
-                this.model = new presetModelCls.Homepage();
-                this.abtests = new opModelCls.ABTestCollection();
-                this.types = {'0': '无', '1': '小圆点', '2': '左边文字', '3': '右边文字', '4': '有背景色'};
-                if (options.homepageId) {
-                    this.model.set('id', options.homepageId);
-                 }
-                this.model.bind('change reset', this.renderWithData, this);
-                this.abtests.bind('reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html('');
-                $(window).scrollTop(0);
-                return this;
-            },
-            toSaveOrCreate: function (e) {
-                e.preventDefault();
-                var isAllRight = ADQ.utils.simpleCheck();
-                if (!isAllRight) {
-                    ADQ.notify.error('错误', '输入错误,请检验');
-                    return;
-                }
-                var attrs = ADQ.utils.getAllInput('#content');
-                if (attrs.abtest == -1) attrs.abtest = null;
-                this.model.save(attrs, {
-                    patch: true,
-                    success: function (model, response) {
-                        ADQ.notify.success('提示', '保存成功！');
-                        setTimeout(function () {
-                            history.back();
-                        },  500);
-                    },
-                    error: function (model, response) {
-                        ADQ.notify.notifyResp(response);
-                    }
-                });
-                return false;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    info: this.model.toJSON(),
-                    abtests: this.abtests.toJSON(),
-                    types: this.types
-                }));
-                $('.multiselect').multiselect();
-                $('.image-popup').magnificPopup({
-                    type: 'iamge',
-                    closeOnContentClick: true,
-                    mainClass: 'mfp-img-mobile',
-                    image: {
-                        verticalFit: true,
-                        titleSrc: function (item) {
-                            return '<a href="' + item.el.attr('href') + 
-                            '"target="_blank">查看原图</a>';
-                        }
-                    }
-                });
-                ADQ.utils.getSingleUploader('uploadImage');
-            },
-            load: function () {
-                if (this.model.id) {
-                    this.model.fetch({
-                        reset: true
-                    });
-                } else {
-                    this.renderWithData();
-                }
-                this.abtests.fetch({
-                    reset: true,
-                    $size: -1
-                });
-            }
-        });
-        var HomepageDetailPage = Backbone.View.extend({
-            el: '#content_wrapper',
-            template: 'preset/HomepageDetail.html',
-            initialize: function (homepageId) {
-                this.homepageId = homepageId;
-            },
-            render: function () {
-                var view = new HomepageDetailView(this.homepageId);
-                view.template = this.template;
-
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
         return {
             ShortcutPanel: ShortcutPanel,
             BannerPanel: BannerPanel,
             DiscoveryPanel: DiscoveryPanel,
             LoadingPanel: LoadingPanel,
-            HomepagePanel: HomepagePanel,
             PannelWrapper: PannelWrapper,
             PresetListPage: PresetListPage,
             PresetDetailPage: PresetDetailPage,
@@ -3598,792 +2605,6 @@ var LuckyConsole = function ($, _) {
 
             ShortcutListPage: ShortcutListPage,
             ShortcutDetailPage: ShortcutDetailPage,
-
-            ThemeListPage: ThemeListPage,
-            ThemeDetailPage: ThemeDetailPage,
-
-            HomepageListPage: HomepageListPage,
-            HomepageDetailPage: HomepageDetailPage
-        }
-    } ();
-
-    var goodsViewCls = function () {
-        var GoodsListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                'click a.onClickDelete': 'toDelete',
-                'click #search': 'doSearch',
-            },
-
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new goodsModelCls.GoodsCollection();
-                this.sourceType = new goodsModelCls.SourceCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-                this.sourceType.bind('reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                return this;
-            },
-            doSearch: function () {
-                var options = {},
-                    searched = {};
-                searched.idOrName = $('#searchIdOrName').val();
-                searched.shipping_type = parseInt($('#searchShippingType').val());
-                searched.source_type = parseInt($('#searchSourceType').val());
-                var id = Number(searched.idOrName);
-                if (isNaN(id)) {
-                    options.name = {
-                        '$like': searched.idOrName
-                    };
-                } else if (id) {
-                    options.id = id;
-                }
-                if (searched.shipping_type != -1) {
-                    options.shipping_type = searched.shipping_type;
-                }
-                if (searched.source_type != -1) {
-                    options.source_type = searched.source_type;
-                }
-                ADQ.utils.saveSearched('goods', searched);
-                app.navigate(ADQ.utils.composeQueryString('#goods/', options), {
-                    trigger: true
-                });
-            },
-            toDelete: function (e) {
-                _deleteItem(e, this.collection);
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    stock: this.collection.stock,
-                    sourceCollection: this.sourceType,
-                    searched: JSON.parse(localStorage.goods_searched || '{}'),
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#goods/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                ADQ.utils.getPaginator(that.options, this.collection.total, '#goods/');
-
-                $(window).scrollTop(0);
-                return this;
-            },
-            load: function () {
-                this.sourceType.fetch({
-                    reset: true,
-                    $size: -1
-                })
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                        $('#content').append('<h4 class="text-muted">无数据</h4>');
-                    },
-                });
-            }
-        });
-        var GoodsListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "goods/GoodsList.html",
-
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new GoodsListView(this.options);
-                view.template = this.template;
-
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-        var GoodsDetailView = Backbone.View.extend({
-            tagName: "div",
-            className: "panel-body pn",
-            events: {
-                'click #goodsSave': 'toSaveOrCreate',
-                'change select': 'calcCost',
-                'blur #inputPrice': 'calcCost'
-            },
-            initialize: function (options) {
-                this.model = new goodsModelCls.Goods();
-                if (options.id) {
-                    this.model.set('id', options.id);
-                }
-                this.counter = 0;
-                this.brands = new goodsModelCls.BrandCollection();
-                this.sourceTypes = new goodsModelCls.SourceCollection();
-                this.model.bind('change reset', this.renderWithData, this);
-                this.brands.bind('reset', this.renderWithData, this);
-                this.sourceTypes.bind('reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            calcCost: function(){
-                var price = parseFloat($('#inputPrice').val()),
-                    source_type = parseInt($('#inputSourceType').val()),
-                    shipping_type = parseInt($('#inputShippingType').val()),
-                    freight = 0,
-                    tax = 0;
-                if (shipping_type != 0) {
-                    $('#inputTax').html('0%');
-                    $('#inputFreight').html(0);
-                    $('#inputCost').html(price);
-                } else {
-                    if (source_type == 1 || source_type == 6) {
-                        $('#inputTax').html('0%');
-                        freight = price < 99 ? 10 : 0;
-                        $('#inputFreight').html(freight);
-                        $('#inputCost').html(price + freight);
-                    } else {
-                        $('#inputTax').html('6%');
-                        $('#inputFreight').html(10);
-                        $('#inputCost').html((price * (1 + 0.06) + 10).toFixed(2));
-                    }
-                }
-            },
-            toSaveOrCreate: function (e) {
-                e.preventDefault();
-                if (!ADQ.utils.simpleCheck('#goods-form')) {
-                    ADQ.notify.error('错误', "输入错误，请检验");
-                    return;
-                }
-                var data = ADQ.utils.getAllInput('#goods-form'),
-                    category_path = _getCategoryPath(),
-                    origin_id = this.model.get('category_id');
-                if (!category_path) {
-                    data.category_id = null;
-                    data.category_path = [];
-                }else if (origin_id == null || origin_id != category_path[category_path.length - 1]) {
-                    data.category_id = category_path.length > 0 ? category_path[category_path.length - 1] : null;
-                    data.category_path = category_path;
-                }
-                this.model.save(data, {
-                    patch: true,
-                    success: function (model, response) {
-                        ADQ.notify.success('提示', '保存成功！');
-                        setTimeout(function () {
-                            history.back();
-                        }, 500);
-                    },
-                    error: function (model, response) {
-                        ADQ.notify.notifyResp(response);
-                    }
-                });
-
-                return false;
-            },
-            renderAfterLoad: function () {
-                var param = this.model.get('id') ? { 'category_path': this.model.get('category_path') } : {};
-                param.hide_goods = true;
-                this.chooserView = new ChooserWidgetView(param);
-                $('#goods-form').prepend(this.chooserView.render().el);
-                this.chooserView.load();
-                this.calcCost();
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    info: this.model.toJSON(),
-                    sourceTypes: this.sourceTypes.toJSON(),
-                    brands: this.brands.toJSON()
-                }));
-                this.counter += 1;
-                if (this.counter >= 3) {
-                    this.renderAfterLoad();
-                }
-                return this;
-            },
-            load: function () {
-                this.sourceTypes.fetch({
-                    reset: true,
-                    $size: -1
-                });
-                this.brands.fetch({
-                    reset: true,
-                    $size: -1
-                });
-                if (this.model.id) {
-                    this.model.fetch({
-                        reset: true
-                    });
-                } else {
-                    this.renderWithData();
-                }
-            }
-        });
-        var GoodsDetailPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "goods/GoodsDetail.html",
-
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new GoodsDetailView(this.options);
-                view.template = this.template;
-
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-
-        var ChooserWidgetView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                'change .category-select': 'changeCategory',
-                'change #inputGoods': 'changeGoods'
-            },
-            template: "goods/ChooserWidget.html",
-            initialize: function (options) {
-                this.options = options;
-                this.category_path = options.category_path || [];
-                this.hide_goods = options.hide_goods;
-                this.tree = [];
-                var that = this;
-                _.each(this.category_path, function () {
-                    that.tree.push(new goodsModelCls.CategoryCollection());
-                });
-                if (this.tree.length == 0) {
-                    this.tree.push(new goodsModelCls.CategoryCollection());
-                }
-                _.each(this.tree, function (c) {
-                    c.bind('change reset', that.renderWithData, that);
-                });
-                if (!this.hide_goods) {
-                    this.goods_id = options.goods_id;
-                    this.goodsList = new goodsModelCls.GoodsCollection();
-                    this.goodsList.bind('change reset', this.renderWithData, this);
-                }
-            },
-            render: function () {
-                this.$el.html("");
-                return this;
-            },
-            changeGoods: function () {
-                this.goods_id = $('#inputGoods').val();
-            },
-            reloadGoods: function () {
-                var category_id = $('.category-select:last').val();
-                this.goodsList.fetch({
-                    reset: true,
-                    data: { category_id: parseInt(category_id), $size: -1 },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            },
-            changeCategory: function (e) {
-                var parent_id = parseInt($(e.target).val()),
-                    level = parseInt($(e.target).data('level')),
-                    c = new goodsModelCls.CategoryCollection(),
-                    that = this;
-                this.category_path[level] = parent_id;
-                this.category_path = this.category_path.slice(0, level + 1);
-                this.goods_id = null;
-                for (var i = level + 1; i < this.tree.length; ++i){
-                    this.tree[i].off();
-                }
-                this.tree = this.tree.slice(0, level + 1);
-                this.tree.push(c);
-                c.bind('change reset', this.renderWithData, this);
-                c.fetch({
-                    data: { parent_id: parent_id, $size: -1},
-                    reset: true,
-                    success: function (c, r, o) {
-                        if (c.length == 0 && !that.hide_goods) {
-                            that.reloadGoods();
-                        }
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    tree: this.tree,
-                    goods_id: this.goods_id,
-                    goodsModels: this.hide_goods ? [] : this.goodsList.models,
-                    category: this.category_path
-                }));
-                $('.search-select').multiselect({
-                    enableFiltering: true,
-                    enableCaseInsensitiveFiltering: true,
-                    maxHeight: 200,
-                });
-                if (this.hide_goods) {
-                    $('#goodsChooser').hide();
-                }
-                if (this.renderCallback) {
-                    this.renderCallback();
-                }
-                return this;
-            },
-            load: function (callback) {
-                var that = this;
-                _.each(this.tree, function (c, index) {
-                    var parent_id = index ? that.category_path[index - 1] : '$null';
-                    c.fetch({
-                        data: { parent_id: parent_id, $size: -1 },
-                        reset: true,
-                        error: function (c, r, o) {
-                            ADQ.notify.notifyResp(r);
-                        },
-                    })
-                });
-                if (this.goodsList && this.category_path.length > 0) {
-                    this.goodsList.fetch({
-                        data: { category_id: this.category_path[this.category_path.length - 1] },
-                        reset: true,
-                        error: function (c, r, o) {
-                            ADQ.notify.notifyResp(r);
-                        },
-                    })
-                }
-                if (callback) that.renderCallback=callback;
-            }
-        });
-        var _getCategoryPath = function () {
-            var path = [];
-            $('.category-select').each(function () {
-                var val = parseInt($(this).val());
-                if (!isNaN(val)) {
-                    path[$(this).data('level')] = val;
-                } else {
-                    return path;
-                }
-            })
-            return path;
-        };
-
-        var CategoryListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                "click .delete-item": "deleteItem",
-            },
-            initialize: function (options) {;
-                this.options = options;
-                this.collection = new goodsModelCls.CategoryCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-                this.parent = new goodsModelCls.Category();
-                if (this.options.parent_id != '$null') {
-                    this.parent.set('id', this.options.parent_id);
-                    this.parent.fetch({ reset: true });
-                }
-                this.parent.bind('reset', this.renderWithData);
-            },
-            render: function () {
-                this.$el.html('');
-                $(window).scrollTop(0);
-                return this;
-            },
-            deleteItem: function (e) {
-                _deleteItem(e, this.collection);
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    parent: this.parent.toJSON()
-                }));
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    },
-                });
-            }
-        });
-        var CategoryListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "goods/CategoryList.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new CategoryListView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-        var CategoryDetailView = Backbone.View.extend({
-            tagName: "div",
-            className: "panel-body pn",
-            events: {
-                'click #save': "save"
-            },
-            initialize: function (options) {
-                this.model = new goodsModelCls.Category();
-                if (options.id) {
-                    this.model.set('id', options.id);
-                }
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            load: function () {
-                if (this.model.get('id')) {
-                    this.model.fetch({
-                        reset: true
-                    })
-                } else {
-                    this.renderWithData();
-                }
-            },
-            save: function () {
-                if (!ADQ.utils.simpleCheck()) {
-                    ADQ.notify.failed('错误', '请检测输入...');
-                    return;
-                }
-                var data = ADQ.utils.getAllInput(),
-                    category_path = _getCategoryPath(),
-                    origin_id = this.model.get('parent_id');
-                if (origin_id == 0 || origin_id != category_path[category_path.length - 1]) {
-                    data.parent_id = category_path[category_path.length - 1];
-                }
-                data.category_path = category_path;
-                this.model.save(data, {
-                    patch: true,
-                    success: function (m, r, o) {
-                        ADQ.notify.success();
-                        setTimeout(function() {
-                            history.back();
-                        }, 500);
-                    },
-                    error: function (m, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    info: this.model.toJSON(),
-                }));
-                var param = this.model.get('id') ? { 'category_path': this.model.get('category_path') } : {};
-                param.hide_goods = true;
-                this.chooserView = new ChooserWidgetView(param);
-                $('#category-form').prepend(this.chooserView.render().el);
-                this.chooserView.load(function () {
-                    $('#categoryChooser').html('父分类:');
-                });
-                ADQ.utils.getSingleUploader('uploadIcon');
-                return this;
-            }
-        });
-        var CategoryDetailPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: 'goods/CategoryDetail.html',
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new CategoryDetailView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var BrandListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                "click .delete-item": "deleteItem"
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new goodsModelCls.BrandCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html('');
-                $(window).scrollTop(0);
-                return this;
-            },
-            deleteItem: function (e) {
-                _deleteItem(e, this.collection);
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || '-updated_at',
-                    sortCallback: function(field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#goods/brand/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#goods/brand/');
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    },
-                });
-            }
-        });
-        var BrandListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "goods/BrandList.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new BrandListView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-        var BrandDetailView = Backbone.View.extend({
-            tagName: "div",
-            className: "panel-body pn",
-            events: {
-                'click #save': "save"
-            },
-            initialize: function (options) {
-                this.model = new goodsModelCls.Brand();
-                if (options.id) {
-                    this.model.set('id', options.id);
-                }
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            load: function () {
-                if (this.model.get('id')) {
-                    this.model.fetch({
-                        reset: true
-                    })
-                } else {
-                    this.renderWithData();
-                }
-            },
-            save: function () {
-                if (!ADQ.utils.simpleCheck()) {
-                    ADQ.notify.failed('错误', '请检测输入...');
-                    return;
-                }
-                var data = ADQ.utils.getAllInput('#form');
-                this.model.save(data, {
-                    patch: true,
-                    success: function (m, r, o) {
-                        ADQ.notify.success();
-                        setTimeout(function() {
-                            history.back();
-                        }, 500);
-                    },
-                    error: function (m, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    info: this.model.toJSON(),
-                }));
-                return this;
-            }
-        });
-        var BrandDetailPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: 'goods/BrandDetail.html',
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new BrandDetailView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var SourceListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                "click .delete-item": "deleteItem"
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new goodsModelCls.SourceCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html('');
-                $(window).scrollTop(0);
-                return this;
-            },
-            deleteItem: function (e) {
-                _deleteItem(e, this.collection);
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || '-updated_at',
-                    sortCallback: function(field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#goods/source/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#goods/source/');
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    },
-                });
-            }
-        });
-        var SourceListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "goods/SourceList.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new SourceListView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-        var SourceDetailView = Backbone.View.extend({
-            tagName: "div",
-            className: "panel-body pn",
-            events: {
-                'click #save': "save"
-            },
-            initialize: function (options) {
-                this.model = new goodsModelCls.Source();
-                if (options.id) {
-                    this.model.set('id', options.id);
-                }
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            load: function () {
-                if (this.model.get('id')) {
-                    this.model.fetch({
-                        reset: true
-                    })
-                } else {
-                    this.renderWithData();
-                }
-            },
-            save: function () {
-                if (!ADQ.utils.simpleCheck()) {
-                    ADQ.notify.failed('错误', '请检测输入...');
-                    return;
-                }
-                var data = ADQ.utils.getAllInput('#form');
-                this.model.save(data, {
-                    patch: true,
-                    success: function (m, r, o) {
-                        ADQ.notify.success();
-                        setTimeout(function() {
-                            history.back();
-                        }, 500);
-                    },
-                    error: function (m, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    info: this.model.toJSON(),
-                }));
-                return this;
-            }
-        });
-        var SourceDetailPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: 'goods/SourceDetail.html',
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new SourceDetailView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        return {
-            GoodsListPage: GoodsListPage,
-            GoodsDetailPage: GoodsDetailPage,
-            ChooserWidgetView: ChooserWidgetView,
-
-            CategoryListPage: CategoryListPage,
-            CategoryDetailPage: CategoryDetailPage,
-
-            BrandListPage: BrandListPage,
-            BrandDetailPage: BrandDetailPage,
-
-            SourceListPage: SourceListPage,
-            SourceDetailPage: SourceDetailPage
         }
     } ();
 
@@ -4517,7 +2738,7 @@ var LuckyConsole = function ($, _) {
 
             initialize: function (options) {
                 this.templateID = options.templateID;
-                this.goodsList = new goodsModelCls.GoodsCollection();
+                this.goodsList = new opModelCls.GoodsCollection();
                 this.categorys = new opModelCls.CategoryCollection();
                 this.deletedImages = [];
                 this.cachedImages = [];
@@ -4872,6 +3093,214 @@ var LuckyConsole = function ($, _) {
             }
         });
 
+        var GoodsListView = Backbone.View.extend({
+            tagName: "div",
+            events: {
+                'click a.onClickDelete': 'toDelete',
+                'click #search': 'doSearch',
+            },
+
+            initialize: function (options) {
+                this.options = options;
+                this.collection = new opModelCls.GoodsCollection();
+                this.collection.bind('change reset remove', this.renderWithData, this);
+            },
+            render: function () {
+                this.$el.html("");
+                return this;
+            },
+            doSearch: function () {
+                var options = {},
+                    searched = {};
+                searched.idOrName = $('#searchIdOrName').val();
+                searched.shipping_type = parseInt($('#searchShippingType').val());
+                searched.source_type = parseInt($('#searchSourceType').val());
+                var id = Number(searched.idOrName);
+                if (isNaN(id)) {
+                    options.name = {
+                        '$like': searched.idOrName
+                    };
+                } else if (id) {
+                    options.id = id;
+                }
+                if (searched.shipping_type != -1) {
+                    options.shipping_type = searched.shipping_type;
+                }
+                if (searched.source_type != -1) {
+                    options.source_type = searched.source_type;
+                }
+                ADQ.utils.saveSearched('goods', searched);
+                app.navigate(ADQ.utils.composeQueryString('#goods/', options), {
+                    trigger: true
+                });
+            },
+            toDelete: function (e) {
+                _deleteItem(e, this.collection);
+            },
+            renderWithData: function () {
+                this.$el.html(this.template({
+                    models: this.collection.models,
+                    goods_unit: PRICE_UNITS,
+                    searched: JSON.parse(localStorage.goods_searched || '{}'),
+                }));
+                var that = this;
+                ADQ.utils.renderTable('goods-list', {
+                    $orderby: that.options.$orderby || 'id',
+                    sortCallback: function (field) {
+                        that.options.$orderby = field;
+                        that.options.$page = 1;
+                        var newUrl = ADQ.utils.composeQueryString('#goods/', that.options);
+                        app.navigate(newUrl, {
+                            trigger: true
+                        });
+                    }
+                });
+                ADQ.utils.getPaginator(that.options, this.collection.total, '#goods/');
+
+                $(window).scrollTop(0);
+                return this;
+            },
+            load: function () {
+                this.collection.fetch({
+                    reset: true,
+                    data: this.options,
+                    error: function (c, r, o) {
+                        ADQ.notify.notifyResp(r);
+                        $('#content').append('<h4 class="text-muted">无数据</h4>');
+                    },
+                });
+            }
+        });
+        var GoodsListPage = Backbone.View.extend({
+            el: "#content_wrapper",
+            template: "op/GoodsList.html",
+
+            initialize: function (options) {
+                this.options = options;
+            },
+            render: function () {
+                var view = new GoodsListView(this.options);
+                view.template = this.template;
+
+                this.$el.empty();
+                this.$el.append(view.render().el);
+                view.load();
+
+                return this;
+            }
+        });
+        var GoodsDetailView = Backbone.View.extend({
+            tagName: "div",
+            className: "panel-body pn",
+            events: {
+                'click #goodsSave': 'toSaveOrCreate',
+                'change select': 'calcCost',
+                'blur #inputPrice': 'calcCost'
+            },
+            initialize: function (options) {
+                this.model = new opModelCls.Goods();
+                if (options.goodsID) {
+                    this.model.set('id', options.goodsID);
+                }
+                this.model.bind('change reset', this.renderWithData, this);
+            },
+            render: function () {
+                this.$el.html("");
+                $(window).scrollTop(0);
+                return this;
+            },
+            calcCost: function(){
+                var price = parseFloat($('#inputPrice').val()),
+                    source_type = parseInt($('#inputSourceType').val()),
+                    shipping_type = parseInt($('#inputShippingType').val()),
+                    freight = 0,
+                    tax = 0;
+                if (shipping_type != 0) {
+                    $('#inputTax').html('0%');
+                    $('#inputFreight').html(0);
+                    $('#inputCost').html(price);
+                } else {
+                    if (source_type == 1) {
+                        $('#inputTax').html('0%');
+                        freight = price < 99 ? 10 : 0;
+                        $('#inputFreight').html(freight);
+                        $('#inputCost').html(price + freight);
+                    } else {
+                        $('#inputTax').html('6%');
+                        $('#inputFreight').html(10);
+                        $('#inputCost').html((price * (1 + 0.06) + 10).toFixed(2));
+                    }
+                }
+            },
+            toSaveOrCreate: function (e) {
+                e.preventDefault();
+                if (!$('#goods-form').valid()) {
+                    ADQ.notify.error('错误', "输入错误，请检验");
+                    return;
+                }
+                var attrs = {
+                    'name': $('#inputName').val(),
+                    'source': $('#inputSource').val(),
+                    'price': parseFloat($('#inputPrice').val()),
+                    'unit': 0,
+                    'num': parseInt($('#inputNum').val()),
+                    'total': parseInt($('#inputTotal').val()),
+                    'source_name': $('#inputSourceName').val(),
+                    'shipping_type': parseInt($('#inputShippingType').val()),
+                    'source_type': parseInt($('#inputSourceType').val())
+                };
+                this.model.save(attrs, {
+                    patch: true,
+                    success: function (model, response) {
+                        ADQ.notify.success('提示', '保存成功！');
+                        setTimeout(function () {
+                            history.back();
+                        }, 500);
+                    },
+                    error: function (model, response) {
+                        ADQ.notify.notifyResp(response);
+                    }
+                });
+
+                return false;
+            },
+            renderWithData: function () {
+                this.$el.html(this.template({
+                    info: this.model.toJSON()
+                }));
+                ADQ.utils.getValidator('#goods-form');
+                this.calcCost();
+                return this;
+            },
+            load: function () {
+                if (this.model.id) {
+                    this.model.fetch({
+                        reset: true
+                    });
+                } else {
+                    this.renderWithData();
+                }
+            }
+        });
+        var GoodsDetailPage = Backbone.View.extend({
+            el: "#content_wrapper",
+            template: "op/GoodsDetail.html",
+
+            initialize: function (options) {
+                this.options = options;
+            },
+            render: function () {
+                var view = new GoodsDetailView(this.options);
+                view.template = this.template;
+
+                this.$el.empty();
+                this.$el.append(view.render().el);
+                view.load();
+
+                return this;
+            }
+        });
+
         var OrderListView = Backbone.View.extend({
             tagName: "div",
             events: {
@@ -4879,83 +3308,75 @@ var LuckyConsole = function ($, _) {
                 'click #search': 'doSearch',
                 'click #export': 'export',
                 'click #autoShip': 'autoShip',
-                'click .shortcut': 'changeSearchId',
-                'click #switchSearchTime': 'changeSearchTime',
+                'change #searchStatus': 'toggleSearchShip',
             },
 
             initialize: function (options) {
                 this.options = options;
                 this.collection = new opModelCls.OrderCollection();
-                this.sources = new goodsModelCls.SourceCollection();
-                this.brands = new goodsModelCls.BrandCollection();
                 this.collection.bind('change reset remove', this.renderWithData, this);
-                this.sources.bind('reset', this.renderWithData, this);
-                this.brands.bind('reset', this.renderWithData, this);
             },
             render: function () {
                 this.$el.html("");
                 $(window).scrollTop(0);
                 return this;
             },
-            changeSearchId: function (e) {
-                e.preventDefault();
-                var $item = $(e.target),
-                    key = $item.data('aria'),
-                    tips = $item.html();
-                $('#searchId').data('field', key).attr('placeholder', tips).val('');
-                $('[data-toggle="dropdown"]').parent().removeClass('open');
-                return false;
-            },
-            changeSearchTime: function () {
-                var $item = $('#switchSearchTime');
-                if ($item.html() == '领奖时间(点击切换)') {
-                    $item.html('发货时间(点击切换)');
-                    $('#searchSendTime').show();
-                    $('#searchAwardTime').hide().find('input').each(function () { $(this).val(''); });
-                } else {
-                    $item.html('领奖时间(点击切换)');
-                    $('#searchAwardTime').show();
-                    $('#searchSendTime').hide().find('input').each(function () { $(this).val(''); });
-                }
+            toggleSearchShip: function () {
+                var val = $("#searchStatus").val();
+                if ( val == 5 ) $('#shipSearcher').show();
+                else $('#shipSearcher').hide();
             },
             autoShip: function () {
                 var ids = this.collection.pluck('id');
                 if (ids.length == 0) return;
                 ADQ.notify.warning('警告', '发货中，请等待...');
-                $.post(this.collection.url, JSON.stringify({ order_ids: ids })).done(function (resp) {
-                    var data = resp.data;
-                    $.confirm({
-                        title: '自动发货结果',
-                        content: '本次发货成功'+data.succ+'条, 失败'+data.fail+'条',
-                        confirmButton: '确认',
-                        cancelButton: false,
-                        icon: 'fa fa-info',
-                        theme: 'bootstrap',
-                        backgroundDismiss: false,
-                        keyboardEnabled: true,
-                        confirmButtonClass: 'btn-info',
-                        confirm: function () {
-                            window.location.reload();
-                        },
-                    });
+                $.post(this.collection.url, JSON.stringify({ order_ids: ids })).done(function () {
+                    ADQ.notify.success('提示', '发货成功');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 500);
                 }).fail(function (data) {
                     ADQ.notify.notifyResp(data);
                 });
             },
             _getSearchOption: function () {
-                var options = ADQ.utils.getAllInput('#sidebar_right'),
-                    searched = ADQ.utils.getAllInput('#sidebar_right');
-                searched.id_field = $('#searchId').data('field');
-                if (searched.award_time) searched.time_field = 'award_time';
-                else if(searched.send_time) searched.time_field = 'send_time';
+                var options = {},
+                    searched = {};
+                searched.id = $('#searchId').val();
+                searched.express_num = $('#searchExpressNum').val();
+                searched.status = parseInt($('#searchStatus').val());
+                searched.buyer = parseInt($('#searchBuyer').val());
+                searched.activity_name = $('#searchActivityName').val();
+                searched.updated_at_lower = $('#searchUpdatedAtLower').val();
+                searched.updated_at_upper = $('#searchUpdatedAtUpper').val();
+                searched.ship_status = parseInt($('#searchShipStatus').val());
+                if (searched.id) {
+                    options.id = searched.id;
+                }
+                if (searched.express_num) {
+                    options.extend = {'$like': searched.express_num}
+                }
+                if (!isNaN(searched.buyer)) {
+                    options.buyer = searched.buyer;
+                }
+                if (searched.status != -1) {
+                    options.status = searched.status;
+                }
+                if (searched.ship_status != -1 && searched.status == 5) {
+                    options.ship_status = searched.ship_status;
+                }
+                if (searched.activity_name) {
+                    options.activity_name = searched.activity_name;
+                }
+                if (searched.updated_at_lower || searched.updated_at_upper) {
+                    options.updated_at = {};
+                    if (searched.updated_at_lower) options.updated_at.$gte = searched.updated_at_lower;
+                    if (searched.updated_at_upper) options.updated_at.$lt = searched.updated_at_upper;
+                }
                 ADQ.utils.saveSearched('order', searched);
                 return options;
             },
             export: function () {
-                if ($('#searchStatus').val() < 4) {
-                    ADQ.notify.error('错误', '仅能导出中奖订单');
-                    return;
-                }
                 ADQ.notify.warning('警告', '导出中，请等待...');
                 var options = this._getSearchOption();
                 ADQ.exportData(this.collection.url, options);
@@ -4972,28 +3393,11 @@ var LuckyConsole = function ($, _) {
             },
             renderWithData: function () {
                 this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    sources: this.sources.toJSON(),
-                    brands: this.brands.toJSON(),
+                    models: this.collection.models,
                     searched: JSON.parse(localStorage.order_searched || '{}')
                 }));
                 var that = this;
-                ADQ.utils.getFileUploader('/admin/order/', null, function (data) {
-                    $.confirm({
-                        title: '导入结果',
-                        content: '本次导入成功'+data.data.succ+'条, 失败'+data.data.fail+'条',
-                        confirmButton: '确认',
-                        cancelButton: false,
-                        icon: 'fa fa-info',
-                        theme: 'bootstrap',
-                        backgroundDismiss: false,
-                        keyboardEnabled: true,
-                        confirmButtonClass: 'btn-info',
-                        confirm: function () {
-                            window.location.reload();
-                        },
-                    });
-                });
+                ADQ.utils.getFileUploader('/admin/order/');
                 ADQ.utils.renderTable('order-list', {
                     $orderby: that.options.$orderby || 'id',
                     sortCallback: function (field) {
@@ -5006,27 +3410,13 @@ var LuckyConsole = function ($, _) {
                     }
                 });
                 ADQ.utils.getPaginator(that.options, this.collection.total, '#order/');
-                $('.datetime-input').datetimepicker({
+                $('[data-type="date"]').datetimepicker({
                     format: 'YYYY-MM-DD HH:mm:ss',
                 });
-                $('.date-input').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                });
+                this.toggleSearchShip();
                 return this;
             },
             load: function () {
-                this.sources.fetch({
-                    reset: true,
-                    data: {
-                        $size: -1
-                    },
-                });
-                this.brands.fetch({
-                    reset: true,
-                    data: {
-                        $size: -1
-                    }
-                })
                 this.collection.fetch({
                     reset: true,
                     data: this.options,
@@ -5058,8 +3448,7 @@ var LuckyConsole = function ($, _) {
             tagName: "div",
             className: "panel-body pn",
             events: {
-                'click #orderSave': 'toSave',
-                'click #refreshStatus': 'refreshStatus'
+                'click #orderSave': 'toSave'
             },
             initialize: function (options) {
                 this.model = new opModelCls.Order();
@@ -5071,15 +3460,6 @@ var LuckyConsole = function ($, _) {
                 $(window).scrollTop(0);
                 return this;
             },
-            refreshStatus: function (e) {
-                e.preventDefault();
-                $.get('/admin/order/status/' + this.model.get('id')).then(function () {
-                    window.location.reload();
-                }).fail(function (data) {
-                    ADQ.notify.notifyResp(data);
-                    });
-                return false;
-            },
             toSave: function (e) {
                 e.preventDefault();
                 var extend = {
@@ -5087,21 +3467,12 @@ var LuckyConsole = function ($, _) {
                     express_num: $('#inputExpressNum').val(),
                     buy_price: parseFloat($('#inputBuyPrice').val()),
                     buy_from: $('#inputBuyFrom').val(),
-                    remark: $('#inputRemark').val(),
-                    internal_remark: $('#inputInternalRemark').val(),
-                },
-                    status = parseInt($('#inputStatus').val());
-                if(this.model.get('status') >= 4){
-                    extend.send_time = $('#inputSendTime').val() || moment().format('YYYY-MM-DD');
-                }
+                };
                 extend = JSON.stringify(extend);
                 var attrs = {
-                    'status': status,
+                    'status': parseInt($('#inputStatus').val()),
                     'extend': extend,
                 };
-                if (this.model.get('ship_status') != $('#inputShipStatus').val()) {
-                    attrs.ship_status = parseInt($('#inputShipStatus').val());
-                }
                 this.model.save(attrs, {
                     patch: true,
                     success: function (model, response) {
@@ -5130,20 +3501,10 @@ var LuckyConsole = function ($, _) {
                 data.receipt_address = receipt_address;
                 data.extend = JSON.parse(data.extend || '{}');
                 data.status_dict = ORDER_STATUS;
-                if (!this.card && data.status >= 5 && data.activity_name &&
-                    data.activity_name.indexOf('充值卡') != -1) {
-                    this.card = new opModelCls.ChargeCard();
-                    this.card.bind('change reset', this.renderWithData, this);
-                    this.card.set('id', data.id);
-                    this.card.fetch({
-                        reset: true
-                    });
-                }
                 this.$el.html(this.template({
-                    info: data,
-                    card: (this.card ? this.card.get('card_info') : []) || []
+                    info: data
                 }));
-                $('.multiselect').multiselect();
+                $('#inputStatus').multiselect();
                 return this;
             },
             load: function () {
@@ -5160,91 +3521,6 @@ var LuckyConsole = function ($, _) {
             },
             render: function () {
                 var view = new OrderDetailView(this.options);
-                view.template = this.template;
-
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-
-        var RedEnvelopeListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                'click #search': 'doSearch',
-                'click #export': 'export',
-            },
-
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new opModelCls.RedEnvelopeCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            _getSearchOption: function () {
-                var searched = ADQ.utils.getAllInput('#sidebar_right');
-                ADQ.utils.saveSearched('redenvelope', searched);
-                return searched;
-            },
-            export: function () {
-                ADQ.notify.warning('警告', '导出中，请等待...');
-                var options = this._getSearchOption();
-                ADQ.exportData(this.collection.url, options);
-                return false;
-            },
-            doSearch: function () {
-                var options = this._getSearchOption();
-                app.navigate(ADQ.utils.composeQueryString('#redenvelope/', options), {
-                    trigger: true
-                });
-                ADQ.utils.saveSearched('redenvelope', options);
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    searched: JSON.parse(localStorage.redenvelope_searched || '{}')
-                }));
-                var that = this;
-                ADQ.utils.getFileUploader('/admin/order/red_envelope/');
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#redenvelope/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                ADQ.utils.getPaginator(that.options, this.collection.total, '#redenvelope/');
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                        $('#content').append('<h4 class="text-muted">无数据</h4>');
-                    },
-                });
-            }
-        });
-        var RedEnvelopeListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "op/RedEnvelopeList.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new RedEnvelopeListView(this.options);
                 view.template = this.template;
 
                 this.$el.empty();
@@ -5882,7 +4158,6 @@ var LuckyConsole = function ($, _) {
                 searched.nick_name = $('#searchNickName').val();
                 searched.type = parseInt($('#searchType').val());
                 searched.status = parseInt($('#searchStatus').val());
-                searched.user_id = $('#searchUserId').val();
                 var id = Number(searched.idOrName);
                 if (searched.nick_name) {
                     options.nick_name = searched.nick_name;
@@ -5893,7 +4168,6 @@ var LuckyConsole = function ($, _) {
                 if (searched.status != -1) {
                     options.avatar_id = searched.status ? "$!null" : "$null";
                 }
-                if (searched.user_id) options.user_id = searched.user_id;
                 ADQ.utils.saveSearched('virtual', searched);
                 app.navigate(ADQ.utils.composeQueryString('#virtual/', options), {
                     trigger: true
@@ -5996,7 +4270,6 @@ var LuckyConsole = function ($, _) {
             },
             render: function () {
                 this.$el.html("");
-                $(window).scrollTop(0);
                 return this;
             },
             toSaveOrCreate: function (e) {
@@ -6040,7 +4313,8 @@ var LuckyConsole = function ($, _) {
                     info: this.model.toJSON()
                 }));
                 ADQ.utils.getValidator('#virtual-form');
-                ADQ.utils.getSingleUploader('uploadAvatar', false, null, true);
+                ADQ.utils.getSingleUploader('uploadAvatar', null, false, true);
+                $(window).scrollTop(0);
                 return this;
             },
             load: function () {
@@ -6172,21 +4446,18 @@ var LuckyConsole = function ($, _) {
             },
             initialize: function (options) {
                 this.model = new opModelCls.CouponTemplate();
-                this.allCategories = new opModelCls.CategoryCollection();
                 if (options.couponTemplateId) {
                     this.model.set('id', options.couponTemplateId);
                 }
                 this.model.bind('change reset', this.renderWithData, this);
-                this.allCategories.bind('reset', this.renderWithData, this);
             },
             render: function () {
                 this.$el.html("");
-                $(window).scrollTop(0);
                 return this;
             },
             toSaveOrCreate: function (e) {
                 e.preventDefault();
-                if (!ADQ.utils.simpleCheck("#coupon-template-form")) {
+                if (!$('#coupon-template-form').valid()) {
                     ADQ.notify.error('错误', "输入错误，请检验");
                     return;
                 }
@@ -6195,13 +4466,8 @@ var LuckyConsole = function ($, _) {
                     'desc': $("#inputDesc").val(),
                     'coupon_type': parseInt($('#inputCouponType').val()),
                     'price': parseFloat($('#inputPrice').val()),
-                    'valid_ts': parseInt($('#inputValidTs').val(), 10),
-                    'activity_tids': $('#inputActivities').val().replace(/\D/g, ',').replace(/,{2,}/g, ','),
-                    'scope_all': parseInt($('#inputScopeAll').val()),
-                    'cmd': $('#inputCmd').val(),
-                    'remark': $('#inputRemark').val()
+                    'valid_ts': parseInt($('#inputValidTs').val(), 10)
                 };
-                attrs.activity_categories = (ADQ.utils.getAllInput().activity_categories || []).join(',');
                 if(attrs.coupon_type == 2){
                     attrs.condition_price = parseInt(
                         $('#inputConditionPrice').val());
@@ -6223,10 +4489,7 @@ var LuckyConsole = function ($, _) {
                 return false;
             },
             renderWithData: function () {
-                var data = this.model.toJSON();
-                data['allCategories'] = this.allCategories.toJSON();
-                this.$el.html(this.template(data));
-                $('.multiselect').multiselect();
+                this.$el.html(this.template(this.model.toJSON()));
                 ADQ.utils.getValidator('#coupon-template-form');
                 $(window).scrollTop(0);
                 return this;
@@ -6239,9 +4502,6 @@ var LuckyConsole = function ($, _) {
                 } else {
                     this.renderWithData();
                 }
-                this.allCategories.fetch({
-                    reset: true
-                });
             }
         });
         var CouponTemplateDetailPage = Backbone.View.extend({
@@ -6283,7 +4543,7 @@ var LuckyConsole = function ($, _) {
             },
             renderWithData: function () {
                 this.$el.html(this.template({
-                    items: this.collection.toJSON(),
+                    models: this.collection.models,
                 }));
                 var that = this;
                 ADQ.utils.renderTable('main-list', {
@@ -6334,9 +4594,7 @@ var LuckyConsole = function ($, _) {
             tagName: "div",
             className: "panel-body pn",
             events: {
-                'click #save': 'toSaveOrCreate',
-                'click .switch-key': 'switchKey',
-                'click .shortcut': 'quickAdd'
+                'click #save': 'toSaveOrCreate'
             },
             initialize: function (options) {
                 this.model = new opModelCls.ABTest();
@@ -6347,54 +4605,18 @@ var LuckyConsole = function ($, _) {
             },
             render: function () {
                 this.$el.html("");
-                $(window).scrollTop(0);
                 return this;
-            },
-            switchKey: function (e) {
-                var $this = $(e.target);
-                if ($this.data('key') == 'include') {
-                    $this.data('key', 'exclude').html('排除渠道');
-                } else {
-                    $this.data('key', 'include').html('包含渠道');
-                }
-                return false;
-            },
-            quickAdd: function (e) {
-                e.preventDefault();
-                var $this = $(e.target),
-                    aria = $this.data('aria'),
-                    $pel = $this.closest('.input-group'),
-                    $key = $('#inputKey'),
-                    $el = $('#inputChannel');
-                switch (aria) {
-                    case 'allAndroid':
-                        $key.data('key', 'exclude').html('排除渠道');
-                        $el.val(NOT_ANDROID_CHN.join(','));
-                        break;
-                    case 'allIOS':
-                        $key.data('key', 'include').html('包含渠道');
-                        $el.val(IOS_CHN.join(','));
-                        break;
-                    case 'allQG':
-                        $key.data('key', 'include').html('包含渠道');
-                        $el.val(IOS_QG_CHN.join(','));
-                        break;
-                }
-                $pel.find('[data-toggle="dropdown"]').parent().removeClass('open');
-                return false;
             },
             toSaveOrCreate: function (e) {
                 e.preventDefault();
+
                 var attrs = {
                     user_id: [$('#inputUserIdLower').val(), $('#inputUserIdUpper').val()],
-                },
-                    chn = $('#inputChannel').val();
-                if (chn.length > 0) {
-                    attrs.chn = {}
-                    var key = $('#inputKey').data('key');
-                    attrs.chn[key] = chn.split(',');
+                    channel: $('#inputChannel').val()
+                };
+                if (attrs.channel.indexOf('-1') >= 0) {
+                    delete attrs.channel;
                 }
-
                 var saveData = {
                     content: JSON.stringify(attrs),
                     name: $('#inputName').val()
@@ -6418,6 +4640,8 @@ var LuckyConsole = function ($, _) {
                 this.$el.html(this.template({
                     info: this.model.toJSON()
                 }));
+                $(window).scrollTop(0);
+                $('#inputChannel').multiselect();
                 return this;
             },
             load: function () {
@@ -6550,7 +4774,6 @@ var LuckyConsole = function ($, _) {
             },
             render: function () {
                 this.$el.html("");
-                $(window).scrollTop(0);
                 return this;
             },
             toggleAlert: function () {
@@ -6571,10 +4794,6 @@ var LuckyConsole = function ($, _) {
                 if (!$('#inputAlert').is(':checked') && attrs.extend) {
                     delete attrs.extend.alert;
                 }
-                if (attrs.extend && attrs.extend.alert && attrs.extend.alert.type == "") {
-                    delete attrs.extend.alert.type;
-                }
-                attrs.expire_ts = moment(attrs.expire_ts).unix();
                 $('#filter-form .filter').each(function () {
                     var data = ADQ.utils.getAllInput(this),
                         key = $(this).find('.switch-key:first').data('key');
@@ -6587,7 +4806,7 @@ var LuckyConsole = function ($, _) {
                 if (filter_list.length > 0) {
                     attrs.extend.filter_list = filter_list;
                 }
-                attrs.extend = attrs.extend ? JSON.stringify(attrs.extend) : null;
+                attrs.extend = JSON.stringify(attrs.extend);
                 attrs.content = JSON.stringify(attrs.content);
                 this.model.save(attrs, {
                     patch: true,
@@ -6650,10 +4869,8 @@ var LuckyConsole = function ($, _) {
                 this.$el.html(this.template({
                     info: this.model.toJSON()
                 }));
+                $(window).scrollTop(0);
                 ADQ.utils.getSingleUploader('uploadImage');
-                $('#inputExpireTs').datetimepicker({
-                    format: 'YYYY-MM-DD'
-                });
                 return this;
             },
             load: function () {
@@ -6689,9 +4906,11 @@ var LuckyConsole = function ($, _) {
             TemplateListPage: TemplateListPage,
             TemplateDetailPage: TemplateDetailPage,
 
+            GoodsListPage: GoodsListPage,
+            GoodsDetailPage: GoodsDetailPage,
+
             OrderListPage: OrderListPage,
             OrderDetailPage: OrderDetailPage,
-            RedEnvelopeListPage: RedEnvelopeListPage,
 
             ShowListPage: ShowListPage,
             ShowDetailPage: ShowDetailPage,
@@ -7168,6 +5387,7 @@ var LuckyConsole = function ($, _) {
             renderWithData: function () {
                 this.$el.html(this.template({
                     models: this.collection.models,
+                    status: ACTIVITY_STATUS,
                     searched: JSON.parse(localStorage.stats_order_searched || '{}'),
                     overview: this.collection.overview,
                 }));
@@ -7361,7 +5581,6 @@ var LuckyConsole = function ($, _) {
             doSearch: function () {
                 var options = {},
                     searched = {};
-                searched.id = $('#searchId').val();
                 searched.user_id = parseInt($("#searchUserId").val());
                 searched.created_at_lower = $("#searchCreatedAtLower").val();
                 searched.created_at_upper = $('#searchCreatedAtUpper').val();
@@ -7371,9 +5590,6 @@ var LuckyConsole = function ($, _) {
 
                 if (!isNaN(searched.user_id)) {
                     options.user_id = searched.user_id;
-                }
-                if (searched.id) {
-                    options.id = searched.id;
                 }
                 if (searched.created_at_lower || searched.created_at_upper) {
                     options.created_at = {};
@@ -7397,7 +5613,9 @@ var LuckyConsole = function ($, _) {
             renderWithData: function () {
                 this.$el.html(this.template({
                     models: this.collection.models,
+                    utype: USER_TYPE,
                     searched: JSON.parse(localStorage.stats_pay_searched || '{}'),
+                    ptype: PAY_TYPE,
                     overview: this.collection.overview,
                 }));
                 var that = this;
@@ -7447,11 +5665,326 @@ var LuckyConsole = function ($, _) {
                 return this;
             }
         });
-        var UninstallListView = Backbone.View.extend({
+        var MissedVipsListView = Backbone.View.extend({
             events: {
                 'click #search': 'doSearch',
-                'click #exportData': 'exportData',
+                'change #selectAll': 'selectAll',
+                'change .check-row': 'checkRow',
+                'click #export': 'exportData',
             },
+
+            initialize: function (options) {
+                this.options = options;
+                this.collection = new statsModelCls.MissedVipsCollection();
+                this.coupons = new opModelCls.CouponTemplateCollection();
+                this.checkedUids = [];
+                this.checkedIds = [];
+                this.collection.bind('change remove reset', this.renderWithData, this);
+                this.coupons.bind('reset', this.renderWithData, this);
+            },
+            render: function () {
+                this.$el.html("");
+                $(window).scrollTop(0);
+                return this;
+            },
+            exportData: function () {
+                ADQ.notify.warning('警告', '导出中，请等待');
+                ADQ.exportData(this.collection.url, this._getSearchOption());
+            },
+            selectAll: function (e) {
+                var checked = $(e.target).is(':checked');
+                $('.check-row').prop('checked', checked);
+                if (!checked) {
+                    this.checkedUids = [];
+                    this.checkedIds = [];
+                }
+                else {
+                    this.checkedUids = this.collection.pluck('uid');
+                    this.checkedIds = this.collection.pluck('id');
+                }
+                $('#selectTips').html('已选中' + this.checkedIds.length + '个');
+            },
+            checkRow: function (e) {
+                var tr = $(e.target).closest('tr'),
+                    uid = tr.data('uid'),
+                    id = tr.data('id');
+                if ($(e.target).is(':checked')) {
+                    this.checkedUids.push(uid);
+                    this.checkedIds.push(id);
+                } else {
+                    this.checkedUids = _.without(this.checkedUids, uid);
+                    this.checkedIds = _.without(this.checkedIds, id);
+                }
+                $('#selectTips').html('已选中' + this.checkedIds.length + '个');
+            },
+            _getSearchOption: function () {
+                var options = {},
+                    searched = {};
+                searched.created_at = $('#searchCreatedAt').val();
+                searched.status = parseInt($('#searchStatus').val());
+                searched.coupon_level = parseInt($('#searchCouponLevel').val());
+                searched.type = parseInt($('#searchType').val());
+                if (searched.status != -1) {
+                    options.status = searched.status;
+                }
+                if (searched.type != -1) {
+                    options.type = searched.type;
+                }
+                if (searched.coupon_level != -1) options.coupon_level = searched.coupon_level;
+                if (searched.created_at) {
+                    options.created_at = searched.created_at;
+                }
+                options.$size = -1;
+                ADQ.utils.saveSearched('stats_missed_vips', searched);
+                return options;
+            },
+            doSearch: function () {
+                var options = this._getSearchOption();
+                app.navigate(ADQ.utils.composeQueryString('#stats/missed_vips/', options), {
+                    trigger: true
+                });
+            },
+            renderWithData: function () {
+                this.$el.html(this.template({
+                    models: this.collection.models,
+                    searched: JSON.parse(localStorage.stats_missed_vips_searched || '{}'),
+                    overview: this.collection.overview,
+                    coupons: this.coupons.models
+                }));
+                var that = this;
+                ADQ.utils.renderTable('main-list', {
+                    $orderby: that.options.$orderby || 'id',
+                    sortCallback: function (field) {
+                        that.options.$orderby = field;
+                        that.options.$page = 1;
+                        var newUrl = ADQ.utils.composeQueryString('#stats/missed_vips/', that.options);
+                        app.navigate(newUrl, {
+                            trigger: true
+                        });
+                    }
+                });
+                $('#searchCreatedAt').datetimepicker({
+                    defaultDate: ADQ.utils.yesterday('YYYY-MM-DD'),
+                    format: 'YYYY-MM-DD'
+                });
+                $('#inputStatus').multiselect();
+                $('#sendCoupon').magnificPopup({
+                    items: {
+                        src: '#addCouponPanel',
+                        type: 'inline'
+                    },
+                    midClick: true,
+                    closeOnBgClick: false,
+                    disableOn: function () {
+                        return that.checkedUids.length > 0;
+                    },
+                    callbacks: {
+                        beforeOpen: function () {
+                            var coupons = {};
+                            $('#addCoupon').off('click').click(function () {
+                                var template_id = parseInt($('#inputCoupon').val()),
+                                    count = parseInt($('#inputCount').val()),
+                                    coupon = that.coupons.get(template_id);
+                                if (coupons[template_id] == undefined) coupons[template_id] = 0;
+                                coupons[template_id] += count;
+                                $('#chosenCoupon').append('<tr><td>' + coupon.get('desc') + '</td><td>' + count + '</td></tr>');
+                            });
+                            $('#submitAddCoupon').off('click').click(function () {
+                                $.magnificPopup.close();
+                                $.post('admin/coupon/add/', JSON.stringify({
+                                    uids: that.checkedUids,
+                                    coupons: coupons
+                                })).fail(function (data) {
+                                    ADQ.notify.notifyResp(data);
+                                }).then(function (data) {
+                                    ADQ.notify.success();
+                                    $.post('admin/stats/missed_vips/', JSON.stringify({ ids: that.checkedIds, status: 4 })).then(function () {
+                                        that.collection.fetch({
+                                            reset: true,
+                                            data: that.options
+                                        })
+                                    })
+                                }
+                                    );
+                            });
+                        },
+
+                    }
+                });
+                $('#updateStatus').magnificPopup({
+                    items: {
+                        src: '#updateStatusPannel',
+                        type: 'inline'
+                    },
+                    midClick: true,
+                    closeOnBgClick: false,
+                    disableOn: function () {
+                        return that.checkedUids.length > 0;
+                    },
+                    callbacks: {
+                        beforeOpen: function () {
+                            $('#submitUpdateStatus').off('click').click(function () {
+                                $.magnificPopup.close();
+                                var status = $('#inputStatus').val(),
+                                    final = 0;
+                                _.each(status, function (s) {
+                                    final |= s;
+                                })
+                                $.post(that.collection.url, JSON.stringify({
+                                    ids: that.checkedIds,
+                                    status: final
+                                })).fail(function (data) {
+                                    ADQ.notify.notifyResp(data);
+                                }).then(function (data) {
+                                    ADQ.notify.success();
+                                    that.collection.fetch({
+                                        reset: true,
+                                        data: that.options
+                                    })
+                                }
+                                    );
+                            });
+                        },
+
+                    }
+                });
+                $('#inputCoupon').multiselect({
+                    enableFiltering: true,
+                    enableCaseInsensitiveFiltering: true,
+                    maxHeight: 250,
+                })
+                return this;
+            },
+            load: function () {
+                this.coupons.fetch({
+                    reset: true,
+                    data: {
+                        $size: -1,
+                        title: JSON.stringify({ '$like': "心跳" })
+                    }
+                })
+                this.collection.fetch({
+                    reset: true,
+                    data: this.options,
+                    error: function (c, r, o) {
+                        ADQ.notify.notifyResp(r);
+                        $('#content').append('<h4 class="text-muted">无数据</h4>');
+                    },
+                });
+            }
+        });
+        var MissedVipsListPage = Backbone.View.extend({
+            el: "#content_wrapper",
+            template: "stats/MissedVips.html",
+            initialize: function (options) {
+                this.options = options;
+            },
+            render: function () {
+                var view = new MissedVipsListView(this.options);
+                view.template = this.template;
+                this.$el.empty();
+                this.$el.append(view.render().el);
+                view.load();
+
+                return this;
+            }
+        });
+        var BackVipsListView = Backbone.View.extend({
+            events: {
+                'click #search': 'doSearch',
+                'click #export': 'exportData',
+            },
+
+            initialize: function (options) {
+                this.options = options;
+                this.collection = new statsModelCls.BackVipsCollection();
+                this.collection.bind('change remove reset', this.renderWithData, this);
+            },
+            render: function () {
+                this.$el.html("");
+                $(window).scrollTop(0);
+                return this;
+            },
+            exportData: function () {
+                ADQ.notify.warning('警告', '导出中，请等待');
+                ADQ.exportData(this.collection.url, this.options);
+            },
+            _getSearchOption: function(){
+
+            },
+            doSearch: function () {
+                var options = {},
+                    searched = {};
+                searched.calc_at_lower = $('#searchCalcAtLower').val();
+                searched.calc_at_upper = $('#searchCalcAtUpper').val();
+                searched.call_at_lower = $('#searchCallAtLower').val();
+                searched.call_at_upper = $('#searchCallAtUpper').val();
+                if (searched.calc_at_lower || searched.calc_at_upper) {
+                    options.calc_at = {};
+                    if (searched.calc_at_lower) options.calc_at.$gte = searched.calc_at_lower;
+                    if (searched.calc_at_upper) options.calc_at.$lt = searched.calc_at_upper;
+                }
+                if (searched.call_at_lower || searched.call_at_upper) {
+                    options.call_at = {};
+                    if (searched.call_at_lower) options.call_at.$gte = searched.call_at_lower;
+                    if (searched.call_at_upper) options.call_at.$lt = searched.call_at_upper;
+                }
+                ADQ.utils.saveSearched('stats_back_vips', searched);
+                app.navigate(ADQ.utils.composeQueryString('#stats/back_vips/', options), {
+                    trigger: true
+                });
+            },
+            renderWithData: function () {
+                this.$el.html(this.template({
+                    models: this.collection.models,
+                    searched: JSON.parse(localStorage.stats_back_vips_searched || '{}'),
+                }));
+                var that = this;
+                ADQ.utils.renderTable('main-list', {
+                    $orderby: that.options.$orderby || 'id',
+                    sortCallback: function (field) {
+                        that.options.$orderby = field;
+                        that.options.$page = 1;
+                        var newUrl = ADQ.utils.composeQueryString('#stats/back_vips/', that.options);
+                        app.navigate(newUrl, {
+                            trigger: true
+                        });
+                    }
+                });
+                $('.date-box').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+                ADQ.utils.getPaginator(that.options, this.collection.total, '#stats/back_vips/');
+                return this;
+            },
+            load: function () {
+                this.collection.fetch({
+                    reset: true,
+                    data: this.options,
+                    error: function (c, r, o) {
+                        ADQ.notify.notifyResp(r);
+                        $('#content').append('<h4 class="text-muted">无数据</h4>');
+                    },
+                });
+            }
+        });
+        var BackVipsListPage = Backbone.View.extend({
+            el: "#content_wrapper",
+            template: "stats/BackVips.html",
+            initialize: function (options) {
+                this.options = options;
+            },
+            render: function () {
+                var view = new BackVipsListView(this.options);
+                view.template = this.template;
+                this.$el.empty();
+                this.$el.append(view.render().el);
+                view.load();
+
+                return this;
+            }
+        });
+        var UninstallListView = Backbone.View.extend({
             initialize: function (options) {
                 this.options = options;
                 this.collection = new statsModelCls.UninstallCollection();
@@ -7462,38 +5995,10 @@ var LuckyConsole = function ($, _) {
                 $(window).scrollTop(0);
                 return this;
             },
-            exportData: function (e) {
-                e.preventDefault();
-                if (this.collection.total == 0) {
-                    return;
-                }
-                if (this.collection.total > 1000) {
-                    ADQ.notify.warning('警告', '数据量较大，请耐心等待');
-                }
-                ADQ.exportData(this.collection.url, this.options);
-                return false;
-            },
-            doSearch: function () {
-                var options = {},
-                    searched = {};
-
-                searched.remove_at_lower = $("#searchRemoveAtLower").val();
-                searched.remove_at_upper = $('#searchRemoveAtUpper').val();
-                if (searched.remove_at_lower || searched.remove_at_upper) {
-                    options.remove_at = {};
-                    if (searched.remove_at_lower) options.remove_at.$gte = searched.remove_at_lower;
-                    if (searched.remove_at_upper) options.remove_at.$lt = searched.remove_at_upper;
-                }
-                ADQ.utils.saveSearched('stats_uninstall', searched);
-                app.navigate(ADQ.utils.composeQueryString('#stats/uninstall/', options), {
-                    trigger: true
-                });
-            },
             renderWithData: function () {
                 this.$el.html(this.template({
                     models: this.collection.models,
-                    overview: this.collection.overview,
-                    searched: JSON.parse(localStorage.stats_uninstall_searched || '{}'),
+                    overview: this.collection.overview
                 }));
                 var that = this;
                 ADQ.utils.renderTable('main-list', {
@@ -7506,9 +6011,6 @@ var LuckyConsole = function ($, _) {
                             trigger: true
                         });
                     }
-                });
-                $('.date-input').datetimepicker({
-                    format: 'YYYY-MM-DD'
                 });
                 if (this.collection.overview.questionare) {
                     var options = ADQ.utils.getHighChartPieOptions(),
@@ -7560,526 +6062,13 @@ var LuckyConsole = function ($, _) {
             OrderListPage: OrderListPage,
             CouponListPage: CouponListPage,
             PayListPage: PayListPage,
+            MissedVipsListPage: MissedVipsListPage,
+            BackVipsListPage: BackVipsListPage,
             UninstallListPage: UninstallListPage
         };
     } ();
 
-    var vipsViewCls = function () {
-        var MissedVipsListView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch',
-                'change #selectAll': 'selectAll',
-                'change .check-row': 'checkRow',
-                'click #export': 'exportData',
-            },
-
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new vipsModelCls.MissedVipsCollection();
-                this.coupons = new opModelCls.CouponTemplateCollection();
-                this.checkedUids = [];
-                this.checkedIds = [];
-                this.collection.bind('change remove reset', this.renderWithData, this);
-                this.coupons.bind('reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            exportData: function () {
-                ADQ.notify.warning('警告', '导出中，请等待');
-                ADQ.exportData(this.collection.url, this._getSearchOption());
-            },
-            selectAll: function (e) {
-                var checked = $(e.target).is(':checked');
-                $('.check-row').prop('checked', checked);
-                if (!checked) {
-                    this.checkedUids = [];
-                    this.checkedIds = [];
-                }
-                else {
-                    this.checkedUids = this.collection.pluck('uid');
-                    this.checkedIds = this.collection.pluck('id');
-                }
-                $('#selectTips').html('已选中' + this.checkedIds.length + '个');
-            },
-            checkRow: function (e) {
-                var tr = $(e.target).closest('tr'),
-                    uid = tr.data('uid'),
-                    id = tr.data('id');
-                if ($(e.target).is(':checked')) {
-                    this.checkedUids.push(uid);
-                    this.checkedIds.push(id);
-                } else {
-                    this.checkedUids = _.without(this.checkedUids, uid);
-                    this.checkedIds = _.without(this.checkedIds, id);
-                }
-                $('#selectTips').html('已选中' + this.checkedIds.length + '个');
-            },
-            _getSearchOption: function () {
-                var options = {},
-                    searched = {};
-                searched.user_type = parseInt($('#searchUserType').val());
-                searched.created_at = $('#searchCreatedAt').val();
-                searched.lost_days = $('#searchLostDays').val();
-                searched.status = parseInt($('#searchStatus').val());
-                searched.coupon_level = parseInt($('#searchCouponLevel').val());
-                searched.type = parseInt($('#searchType').val());
-                _.each(['status', 'type', 'user_type', 'coupon_level'], function (k) {
-                    if (searched[k] != -1) options[k] = searched[k];
-                })
-                if (searched.created_at) {
-                    options.created_at = searched.created_at;
-                }
-                if (searched.lost_days) {
-                    options.lost_days = parseInt(searched.lost_days);
-                }
-                ADQ.utils.saveSearched('stats_missed_vips', searched);
-                return options;
-            },
-            doSearch: function () {
-                var options = this._getSearchOption();
-                options.$page = 1;
-                options.$size = 300;
-                app.navigate(ADQ.utils.composeQueryString('#stats/vips/missed/', options), {
-                    trigger: true
-                });
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    searched: JSON.parse(localStorage.stats_missed_vips_searched || '{}'),
-                    overview: this.collection.overview,
-                    coupons: this.coupons.toJSON()
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#stats/vips/missed/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                $('#searchCreatedAt').datetimepicker({
-                    defaultDate: ADQ.utils.yesterday('YYYY-MM-DD'),
-                    format: 'YYYY-MM-DD'
-                });
-                $('#inputStatus').multiselect();
-                $('#sendCoupon').magnificPopup({
-                    items: {
-                        src: '#addCouponPanel',
-                        type: 'inline'
-                    },
-                    midClick: true,
-                    closeOnBgClick: false,
-                    disableOn: function () {
-                        return that.checkedUids.length > 0;
-                    },
-                    callbacks: {
-                        beforeOpen: function () {
-                            var coupons = {};
-                            $('#addCoupon').off('click').click(function () {
-                                var template_id = parseInt($('#inputCoupon').val()),
-                                    count = parseInt($('#inputCount').val()),
-                                    coupon = that.coupons.get(template_id);
-                                if (coupons[template_id] == undefined) coupons[template_id] = 0;
-                                coupons[template_id] += count;
-                                $('#chosenCoupon').append('<tr><td>' + coupon.get('desc') + '</td><td>' + count + '</td></tr>');
-                            });
-                            $('#submitAddCoupon').off('click').click(function () {
-                                $.magnificPopup.close();
-                                $.post('admin/coupon/add/', JSON.stringify({
-                                    uids: that.checkedUids,
-                                    coupons: coupons
-                                })).fail(function (data) {
-                                    ADQ.notify.notifyResp(data);
-                                }).then(function (data) {
-                                    ADQ.notify.success();
-                                    $.post('/admin/stats/vips/missed/', JSON.stringify({ ids: that.checkedIds, status: 4 })).then(function () {
-                                        that.collection.fetch({
-                                            reset: true,
-                                            data: that.options
-                                        })
-                                    })
-                                }
-                                    );
-                            });
-                        },
-
-                    }
-                });
-                $('#updateStatus').magnificPopup({
-                    items: {
-                        src: '#updateStatusPannel',
-                        type: 'inline'
-                    },
-                    midClick: true,
-                    closeOnBgClick: false,
-                    disableOn: function () {
-                        return that.checkedUids.length > 0;
-                    },
-                    callbacks: {
-                        beforeOpen: function () {
-                            $('#submitUpdateStatus').off('click').click(function () {
-                                $.magnificPopup.close();
-                                var status = $('#inputStatus').val(),
-                                    final = 0;
-                                _.each(status, function (s) {
-                                    final |= s;
-                                })
-                                $.post(that.collection.url, JSON.stringify({
-                                    ids: that.checkedIds,
-                                    status: final
-                                })).fail(function (data) {
-                                    ADQ.notify.notifyResp(data);
-                                }).then(function (data) {
-                                    ADQ.notify.success();
-                                    that.collection.fetch({
-                                        reset: true,
-                                        data: that.options
-                                    })
-                                    that.checkedIds = [];
-                                    that.checkedUids = [];
-                                });
-                            });
-                        },
-
-                    }
-                });
-                $('#inputCoupon').multiselect({
-                    enableFiltering: true,
-                    enableCaseInsensitiveFiltering: true,
-                    maxHeight: 250,
-                })
-                ADQ.utils.getPaginator(that.options, this.collection.total, '#stats/vips/missed/');
-                return this;
-            },
-            load: function () {
-                this.coupons.fetch({
-                    reset: true,
-                    data: {
-                        $size: -1,
-                        title: JSON.stringify({ '$like': "心跳" })
-                    }
-                })
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                        $('#content').append('<h4 class="text-muted">无数据</h4>');
-                    },
-                });
-            }
-        });
-        var MissedVipsListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "vips/MissedVips.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new MissedVipsListView(this.options);
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-        var BackVipsListView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch',
-                'click #export': 'exportData',
-            },
-
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new vipsModelCls.BackVipsCollection();
-                this.collection.bind('change remove reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            exportData: function () {
-                ADQ.notify.warning('警告', '导出中，请等待');
-                ADQ.exportData(this.collection.url, this.options);
-            },
-            _getSearchOption: function(){
-
-            },
-            doSearch: function () {
-                var options = {},
-                    searched = {};
-                searched.calc_at_lower = $('#searchCalcAtLower').val();
-                searched.calc_at_upper = $('#searchCalcAtUpper').val();
-                searched.call_at_lower = $('#searchCallAtLower').val();
-                searched.call_at_upper = $('#searchCallAtUpper').val();
-                if (searched.calc_at_lower || searched.calc_at_upper) {
-                    options.calc_at = {};
-                    if (searched.calc_at_lower) options.calc_at.$gte = searched.calc_at_lower;
-                    if (searched.calc_at_upper) options.calc_at.$lt = searched.calc_at_upper;
-                }
-                if (searched.call_at_lower || searched.call_at_upper) {
-                    options.call_at = {};
-                    if (searched.call_at_lower) options.call_at.$gte = searched.call_at_lower;
-                    if (searched.call_at_upper) options.call_at.$lt = searched.call_at_upper;
-                }
-                ADQ.utils.saveSearched('stats_back_vips', searched);
-                app.navigate(ADQ.utils.composeQueryString('#stats/vips/back/', options), {
-                    trigger: true
-                });
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    searched: JSON.parse(localStorage.stats_back_vips_searched || '{}'),
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#stats/vips/back/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                $('.date-box').datetimepicker({
-                    format: 'YYYY-MM-DD'
-                });
-                ADQ.utils.getPaginator(that.options, this.collection.total, '#stats/vips/back/');
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                        $('#content').append('<h4 class="text-muted">无数据</h4>');
-                    },
-                });
-            }
-        });
-        var BackVipsListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "vips/BackVips.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new BackVipsListView(this.options);
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-        var ActiveVipsListView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch',
-                'change #selectAll': 'selectAll',
-                'change .check-row': 'checkRow',
-                'click #export': 'exportData',
-            },
-
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new vipsModelCls.ActiveVipsCollection();
-                this.checkedUids = [];
-                this.collection.bind('change remove reset', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            exportData: function () {
-                ADQ.notify.warning('警告', '导出中，请等待');
-                ADQ.exportData(this.collection.url, this._getSearchOption());
-            },
-            selectAll: function (e) {
-                var checked = $(e.target).is(':checked');
-                $('.check-row').prop('checked', checked);
-                if (!checked) {
-                    this.checkedUids = [];
-                }
-                else {
-                    this.checkedUids = this.collection.pluck('uid');
-                }
-                $('#selectTips').html('已选中' + this.checkedIds.length + '个');
-            },
-            checkRow: function (e) {
-                var tr = $(e.target).closest('tr'),
-                    uid = tr.data('uid');
-                if ($(e.target).is(':checked')) {
-                    this.checkedUids.push(uid);
-                } else {
-                    this.checkedUids = _.without(this.checkedUids, uid);
-                }
-                $('#selectTips').html('已选中' + this.checkedUids.length + '个');
-            },
-            _getSearchOption: function () {
-                var options = ADQ.utils.getAllInput('#sidebar_right'),
-                    searched = ADQ.utils.getAllInput('#sidebar_right');
-                searched.visit_status =parseInt($('#searchVisitStatus').val());
-                searched.add_status = parseInt($('#searchAddStatus').val());
-                if (searched.visit_status != -1 || searched.add_status != -1) {
-                    options.status = 0;
-                    if (searched.visit_status != -1) options.status |= searched.visit_status;
-                    if (searched.add_status != -1) options.status |= searched.add_status;
-                }
-                options.$size = -1;
-                ADQ.utils.saveSearched('stats_active_vips', searched);
-                return options;
-            },
-            doSearch: function () {
-                var options = this._getSearchOption();
-                app.navigate(ADQ.utils.composeQueryString('#stats/vips/active/', options), {
-                    trigger: true
-                });
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    searched: JSON.parse(localStorage.stats_active_vips_searched || '{}'),
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#stats/vips/active/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                $('.date-input').datetimepicker({
-                    format: 'YYYY-MM-DD'
-                });
-                $('#inputStatus').multiselect();
-                $('#updateStatus').magnificPopup({
-                    items: {
-                        src: '#updateStatusPannel',
-                        type: 'inline'
-                    },
-                    midClick: true,
-                    closeOnBgClick: false,
-                    disableOn: function () {
-                        return that.checkedUids.length > 0;
-                    },
-                    callbacks: {
-                        beforeOpen: function () {
-                            $('#submitUpdateStatus').off('click').click(function () {
-                                $.magnificPopup.close();
-                                var status = $('#inputStatus').val(),
-                                    final = 0;
-                                _.each(status, function (s) {
-                                    final |= s;
-                                })
-                                $.post(that.collection.url, JSON.stringify({
-                                    ids: that.checkedUids,
-                                    status: final
-                                })).fail(function (data) {
-                                    ADQ.notify.notifyResp(data);
-                                }).then(function (data) {
-                                    ADQ.notify.success();
-                                    that.collection.fetch({
-                                        reset: true,
-                                        data: that.options
-                                    })
-                                    that.checkedUids = [];
-                                }
-                                    );
-                            });
-                        },
-
-                    }
-                });
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                        $('#content').append('<h4 class="text-muted">无数据</h4>');
-                    },
-                });
-            }
-        });
-        var ActiveVipsListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "vips/ActiveVips.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new ActiveVipsListView(this.options);
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-
-                return this;
-            }
-        });
-        return {
-            MissedVipsListPage: MissedVipsListPage,
-            BackVipsListPage: BackVipsListPage,
-            ActiveVipsListPage: ActiveVipsListPage
-        };
-    } ();
-
     var reportViewCls = function () {
-        var _loadDatePicker = function(options) {
-            $('#dateFilter').daterangepicker({
-                autoApply: true,
-                alwaysShowCalendars: true,
-                locale: {
-                    format: 'YYYY-MM-DD',
-                    separator: ' ~ '
-                },
-                startDate: ADQ.utils.fromDate(options.dateRange[0], "YYYY-MM-DD"),
-                endDate: ADQ.utils.fromDate(options.dateRange[1], "YYYY-MM-DD"),
-                opens: "center",
-                ranges: {
-                    'today': [moment(), moment()],
-                    'yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'last 7 days': [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
-                    'last 30 days': [moment().subtract(30, 'days'), moment().subtract(1, 'days')],
-                    'last 90 days': [moment().subtract(90, 'days'), moment().subtract(1, 'days')],
-                },
-                minDate: '2016-08-13',
-                maxDate: moment(),
-            }, function(start, end, label) {
-                if (options.callback) options.callback(start, end, label);
-            });
-        };
-        var _getDateRange = function () {
-            var value = $('#dateFilter').val(),
-                t = value.split('~');
-            for (var i = 0; i < t.length; ++i){
-                t[i] = t[i].trim();
-            }
-            return t;
-        };
         var Overview = Backbone.View.extend({
             tagName: "div",
             initialize: function (options) {
@@ -8145,565 +6134,10 @@ var LuckyConsole = function ($, _) {
             }
         });
 
-        var DailyReportView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.model = new reportModelCls.DailyReport();
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.model.list,
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                return this;
-            },
-            load: function () {
-                this.model.fetch({
-                    reset: true,
-                    data: {
-                        date_range: this.options.dateRange.join(','),
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var DailyReportPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/DailyReport.html",
-            render: function () {
-                var today = moment().format('YYYY-MM-DD'),
-                    dateRange = [today, today],
-                    view = new DailyReportView({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
 
-        var ShippingView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.model = new reportModelCls.ShippingReport();
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.model.list,
-                    info: this.model.info,
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                return this;
-            },
-            load: function () {
-                this.model.fetch({
-                    reset: true,
-                    data: {
-                        date_range: this.options.dateRange.join(','),
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var ShippingPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/Shipping.html",
-            render: function () {
-                var yesterday = ADQ.utils.yesterday('YYYY-MM-DD'),
-                    dateRange = [yesterday, yesterday],
-                    view = new ShippingView({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var ProfitView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.model = new reportModelCls.DailyReport();
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.model.list,
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                var x = _.pluck(this.model.list, '_id'),
-                    profit = _.pluck(this.model.list, 'real_profit'),
-                    profitRate = _.pluck(this.model.list, 'real_profit_rate');
-                $('#chart').highcharts({
-                    chart: {
-                        zoomType: 'xy'
-                    },
-                    title: {
-                        text: '利润走势曲线'
-                    },
-                    xAxis: [{
-                        categories: x,
-                        crosshair: true
-                    }],
-                    yAxis: [{   //利润值
-                        labels: {
-                            style: {
-                                color: 'blue',
-                            }
-                        },
-                        title: {
-                            text: '金额',
-                            style: {
-                                color: 'blue'
-                            }
-                        },
-                    }, {    //比例
-                            title: {
-                                text: '利润率',
-                            },
-
-                        opposite: true
-                    }],
-                    tooltip: {
-                        shared: true
-                    },
-                    series: [{
-                        name: '金额',
-                        type: 'spline',
-                        data: profit,
-                        tooltip: {
-                            pointFormat: '{series.name}: <b>{point.y: .2f}</b>'
-                        }
-                    }, {
-                            name: '利润率',
-                            type: 'spline',
-                            data: profitRate,
-                            yAxis: 1,
-                            tooltip: {
-                                pointFormat: '<br/>{series.name}: <b>{point.y: .2f}</b>'
-                            },
-                    }]
-                });
-                return this;
-            },
-            load: function () {
-                this.model.fetch({
-                    reset: true,
-                    data: {
-                        date_range: this.options.dateRange.join(','),
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var ProfitPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/Profit.html",
-            render: function () {
-                var today = moment().format('YYYY-MM-DD'),
-                    dateRange = [today, today],
-                    view = new ProfitView({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var RechargeView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.model = new reportModelCls.RechargeReport();
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                this.options.userType = parseInt($('#userType').val());
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    item: this.model.toJSON(),
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                return this;
-            },
-            load: function () {
-                this.model.fetch({
-                    reset: true,
-                    data: {
-                        date_range: this.options.dateRange.join(','),
-                        user_type: this.options.userType
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var RechargePage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/Recharge.html",
-            render: function () {
-                var today = moment().format('YYYY-MM-DD'),
-                    dateRange = [today, today],
-                    view = new RechargeView({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var TacticsView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch',
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.model = new reportModelCls.TacticsReport();
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                var rechargeLower = parseInt($('#rechargeLower').val()) || 0,
-                    rechargeUpper = parseInt($('#rechargeUpper').val()) || 0;
-                if (rechargeLower || rechargeUpper) {
-                    this.options.rechargeRange = [rechargeLower];
-                    if (rechargeUpper) {
-                        this.options.push(rechargeUpper);
-                    }
-                }
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.model.list,
-                    total: this.model.total,
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                var countOptions = ADQ.utils.getHighChartPieOptions(),
-                    amountOptions = ADQ.utils.getHighChartPieOptions(),
-                    countSeries = countOptions.series[0].data,
-                    amountSeries = amountOptions.series[0].data;
-                countOptions.title.text = '人数占比';
-                amountOptions.title.text = '金额占比';
-                _.each(this.model.list, function (item) {
-                    countSeries.push({
-                        name: item.id,
-                        y: item.count
-                    });
-                    amountSeries.push({
-                        name: item.id,
-                        y: item.amount
-                    })
-                });
-                $('#countPie').highcharts(countOptions);
-                $('#amountPie').highcharts(amountOptions);
-
-                return this;
-            },
-            load: function () {
-                var data = {
-                    date_range: this.options.dateRange.join(','),
-                };
-                if (this.options.rechargeRange) {
-                    data.recharge_range = this.options.rechargeRange.join(',')
-                }
-                this.model.fetch({
-                    reset: true,
-                    data: data,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var TacticsPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/Tactics.html",
-            render: function () {
-                var today = moment().format('YYYY-MM-DD'),
-                    dateRange = [today, today],
-                    view = new TacticsView({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var ResourceView = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch',
-                'shown.bs.tab a.chart-tab': "onSelectTab"
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.modelDct = {
-                    'coin': new reportModelCls.CoinReport(),
-                    'coupon': new reportModelCls.CouponReport(),
-                    'credit': new reportModelCls.CreditReport()
-                }
-                var that = this;
-                _.each(this.modelDct, function (v, k){
-                    v.bind('change reset', that.renderWithData, that);
-                });
-            },
-            onSelectTab: function (e) {
-                e.preventDefault();
-                var ref = $(e.target).attr('href');
-                $(ref).highcharts().reflow();
-                return this;
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                this.options.resourceType = $('#resourceType').val();
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                var model = this.modelDct[this.options.resourceType || 'coin'];
-                this.$el.html(this.template({
-                    item: model.toJSON(),
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                //走势曲线，产生与消耗 || 留存 || 消费玩家
-                var ccc = ADQ.utils.getHighChartLineOptions(),
-                    bc = ADQ.utils.getHighChartLineOptions(),
-                    cuc = ADQ.utils.getHighChartLineOptions();
-                _.each([ccc, ccc, bc, cuc], function (t) {
-                    t.series.push({name:'', data: []});
-                })
-                ccc.series[0].name = '产生';
-                ccc.series[1].name = '消耗';
-                bc.series[0].name = '余额';
-                cuc.series[0].name = '消耗用户数';
-                ccc.xAxis
-                _.each(model.list, function (item) {
-                    ccc.xAxis.categories.push(item._id);
-                    bc.xAxis.categories.push(item._id);
-                    cuc.xAxis.categories.push(item._id);
-                    ccc.series[0].data.push(item.gen_amount);
-                    ccc.series[1].data.push(item.cost_amount);
-                    bc.series[0].data.push(item.balance);
-                    cuc.series[0].data.push(item.cost_user);
-                });
-                $('#create_cost').highcharts(ccc);
-                $('#balance').highcharts(bc);
-                $('#cost_user').highcharts(cuc);
-
-                //产生与消耗渠道的饼图
-                var createPie = ADQ.utils.getHighChartPieOptions(),
-                    costPie = ADQ.utils.getHighChartPieOptions(),
-                    that = this;
-                _.each(model.gen_dist, function (item) {
-                    createPie.series[0].data.push({
-                        name: item.type,
-                        y: item.amount
-                    });
-                });
-                _.each(model.cost_dist, function (item) {
-                    costPie.series[0].data.push({
-                        name: item.type,
-                        y: item.amount
-                    });
-                });
-                $('#create_channel').highcharts(createPie);
-                $('#cost_channel').highcharts(costPie);
-                return this;
-            },
-            load: function () {
-                var model = this.modelDct[this.options.resourceType || 'coin'];
-                model.fetch({
-                    reset: true,
-                    data: {
-                        date_range: this.options.dateRange.join(','),
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var ResourcePage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/Resource.html",
-            render: function () {
-                var today = moment().format('YYYY-MM-DD'),
-                    dateRange = [today, today],
-                    view = new ResourceView({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-        var Top100View = Backbone.View.extend({
-            events: {
-                'click #search': 'doSearch'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.model = new reportModelCls.Top100List();
-                this.model.bind('change reset', this.renderWithData, this);
-            },
-            doSearch: function () {
-                this.options.dateRange = _getDateRange();
-                this.load();
-            },
-            render: function () {
-                this.$el.html("");
-                $(window).scrollTop(0);
-                return this;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.model.list,
-                    options: this.options
-                }));
-                _loadDatePicker(this.options);
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: this.options.$orderby || 'rank',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        var desc = false;
-                        if (field[0] == '-') {
-                            desc = true;
-                            field = field.substr(1);
-                        }
-                        that.model.list =  _.sortBy(that.model.list, function (o) {
-                            if (desc) return 0 - o[field];
-                            return o[field];
-                        });
-                        that.renderWithData();
-                    }
-                });
-                return this;
-            },
-            load: function () {
-                this.model.fetch({
-                    reset: true,
-                    data: {
-                        date_range: this.options.dateRange.join(','),
-                    },
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    }
-                })
-            }
-        });
-        var Top100Page = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "report/Top100.html",
-            render: function () {
-                var today = moment().format('YYYY-MM-DD'),
-                    dateRange = [today, today],
-                    view = new Top100View({
-                        dateRange: dateRange
-                    });
-                view.template = this.template;
-                this.$el.empty();
-                this.$el.append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
 
         return {
-            OverviewPage: OverviewPage,
-            DailyReportPage: DailyReportPage,
-            ProfitPage: ProfitPage,
-            RechargePage: RechargePage,
-            TacticsPage: TacticsPage,
-            ResourcePage: ResourcePage,
-            ShippingPage: ShippingPage,
-            Top100Page: Top100Page
+            OverviewPage: OverviewPage
         };
     } ();
 
@@ -8979,104 +6413,11 @@ var LuckyConsole = function ($, _) {
             }
         });
 
-        var RecordListView = Backbone.View.extend({
-            tagName: "div",
-            events: {
-                'click #search': 'doSearch',
-                'click .show-info': 'showInfo'
-            },
-            initialize: function (options) {
-                this.options = options;
-                this.collection = new consoleModelCls.RecordCollection();
-                this.collection.bind('change reset remove', this.renderWithData, this);
-            },
-            render: function () {
-                this.$el.html('');
-                $(window).scrollTop(0);
-                return this;
-            },
-            doSearch: function () {
-                var options = ADQ.utils.getAllInput('#sidebar_right');
-                ADQ.utils.saveSearched('record', options);
-                app.navigate(ADQ.utils.composeQueryString('#console/record/', options), {
-                    trigger: true
-                });
-            },
-            showInfo: function (e) {
-                e.preventDefault();
-                var content = $(e.target).data('content'),
-                    rows = content.split(', '),
-                    $gen_html = $('<ul></ul>');
-                _.each(rows, function (row) {
-                    if (row.length > 100) {
-                        var rs = row.split(','),
-                        row = rs.join('<br/>')
-                    }
-                    $gen_html.append($('<li></li>').append(row));
-                });
-                $.dialog({
-                    'title': '内容详情',
-                    'content': $gen_html.html(),
-                    'backgroundDismiss': true,
-                    'theme': 'bootstrap',
-                })
-                return false;
-            },
-            renderWithData: function () {
-                this.$el.html(this.template({
-                    items: this.collection.toJSON(),
-                    searched: JSON.parse(localStorage.record_searched || '{}'),
-                }));
-                var that = this;
-                ADQ.utils.renderTable('main-list', {
-                    $orderby: that.options.$orderby || 'id',
-                    sortCallback: function (field) {
-                        that.options.$orderby = field;
-                        that.options.$page = 1;
-                        var newUrl = ADQ.utils.composeQueryString('#console/record/', that.options);
-                        app.navigate(newUrl, {
-                            trigger: true
-                        });
-                    }
-                });
-                ADQ.utils.getPaginator(this.options, this.collection.total, '#console/record/');
-                $('.date-input').datetimepicker({
-                    format: 'YYYY-MM-DD HH:mm:ss',
-                });
-                return this;
-            },
-            load: function () {
-                this.collection.fetch({
-                    reset: true,
-                    data: this.options,
-                    error: function (c, r, o) {
-                        ADQ.notify.notifyResp(r);
-                    },
-                });
-            }
-        });
-        var RecordListPage = Backbone.View.extend({
-            el: "#content_wrapper",
-            template: "console/RecordList.html",
-            initialize: function (options) {
-                this.options = options;
-            },
-            render: function () {
-                var view = new RecordListView(this.options);
-                view.template = this.template;
-                this.$el.empty().append(view.render().el);
-                view.load();
-                return this;
-            }
-        });
-
-
         return {
             UserListPage: UserListPage,
             UserDetailPage: UserDetailPage,
             PermListPage: PermListPage,
-            PermDetailPage: PermDetailPage,
-            RecordListPage: RecordListPage
+            PermDetailPage: PermDetailPage
         };
     } ();
 
@@ -9086,9 +6427,10 @@ var LuckyConsole = function ($, _) {
             "template/(?*queryString)": "luckyTemplateList",
             "template/:id/": "luckyTemplateDetail",
             "feedback/(?*queryString)": "luckyFeedbackList",
+            "goods/(?*queryString)": "luckyGoodsList",
+            "goods/:id/": "luckyGoodsDetail",
             "order/(?*queryString)": "luckyOrderList",
             "order/:id/(?*queryString)": "luckyOrderDetail",
-            "redenvelope/(?*queryString)": "luckyRedEnvelopeList",
             "show/(?*queryString)": "luckyShowList",
             "show/:id/(?*queryString)": "luckyShowDetail",
             "bigshow/(?*queryString)": "luckyBigShowList",
@@ -9103,55 +6445,31 @@ var LuckyConsole = function ($, _) {
             "notification/(?*queryString)": "luckyNotificationList",
             "notification/:id/": "luckyNotificationDetail",
 
-            "preset/banner/(?*queryString)": "presetBannerList",
-            "preset/banner/:id/": "presetBannerDetail",
-            "preset/discovery/(?*queryString)": "presetDiscoveryList",
-            "preset/discovery/:id/": "presetDiscoveryDetail",
-            "preset/loading/(?*queryString)": "presetLoadingList",
-            "preset/loading/:id/": "presetLoadingDetail",
-            "preset/shortcut/(?*queryString)": "presetShortcutList",
-            "preset/shortcut/:id/": "presetShortcutDetail",
-            "preset/theme/(?*queryString)": "presetThemeList",
-            "preset/theme/:id/": "presetThemeDetail",
-            "preset/homepage/(?*queryString)": "presetHomepageList",
-            "preset/homepage/:id/": "presetHomepageDetail",
             "preset/(?*queryString)": "presetList",
             "preset/:id/": "presetDetail",
+            "banner/(?*queryString)": "presetBannerList",
+            "banner/:id/": "presetBannerDetail",
+            "discovery/(?*queryString)": "presetDiscoveryList",
+            "discovery/:id/": "presetDiscoveryDetail",
+            "loading/(?*queryString)": "presetLoadingList",
+            "loading/:id/": "presetLoadingDetail",
+            "shortcut/(?*queryString)": "presetShortcutList",
+            "shortcut/:id/": "presetShortcutDetail",
 
             "stats/account/(?*queryString)": "statsAccountDetail",
             "stats/activity/(?*queryString)": "statsActivityList",
             "stats/order/(?*queryString)": "statsOrderList",
             "stats/coupon/(?*queryString)": "statsCouponList",
             "stats/pay/(?*queryString)": "statsPayList",
+            "stats/missed_vips/(?*queryString)": "statsMissedVipsList",
+            "stats/back_vips/(?*queryString)": "statsBackVipsList",
             "stats/uninstall/(?*queryString)": "statsUninstallList",
-
-            "stats/vips/missed/(?*queryString)": "statsMissedVipsList",
-            "stats/vips/back/(?*queryString)": "statsBackVipsList",
-            "stats/vips/active/(?queryString)": "statsActiveVipsList",
-
-            "stats/report/daily/(?queryString)": "statsDailyReport",
             "stats/report/overview/": "statsReportOverview",
-            "stats/report/profit/(?queryString)": "statsProfitReport",
-            "stats/report/recharge/(?queryString)": "statsRechargeReport",
-            "stats/report/resource/(?queryString)": "statsResourceReport",
-            "stats/report/tactics/(?queryString)": "statsTacticsReport",
-            "stats/report/shipping/(?queryString)": "statsShippingReport",
-            "stats/report/top100/(?queryString)": "statsTop100List",
-
-            "goods/source/(?*queryString)": "goodsSourceList",
-            "goods/source/:id/": "goodsSourceDetail",
-            "goods/brand/(?*queryString)": "goodsBrandList",
-            "goods/brand/:id/": "goodsBrandDetail",
-            "goods/category/(?*queryString)": "goodsCategoryList",
-            "goods/category/:id/": "goodsCategoryDetail",
-            "goods/(?*queryString)": "goodsList",
-            "goods/:id/": "goodsDetail",
 
             "console/user/(?*queryString)": "consoleUserList",
             "console/user/:id/": "consoleUserDetail",
             "console/perm/(?*queryString)": "consolePermList",
             "console/perm/:id/": "consolePermDetail",
-            "console/record/(?*queryString)": "consoleRecordList",
         },
         before: function () {
             var key = $('#sidebar_right').data('key') || ADQ.utils.getCurrentKey(),
@@ -9220,22 +6538,26 @@ var LuckyConsole = function ($, _) {
             var page = new opViewCls.FeedbackListPage(params);
             page.render();
         },
+        luckyGoodsList: function (queryString) {
+            var params = ADQ.utils.parseQueryString(queryString);
+            this.prepareSearch('goods', params._reflush);
+            delete params._reflush;
+            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
+            params.$size = PAGE_SIZE;
+            if (!params.$orderby) {
+                params.$orderby = '-updated_at';
+            }
+            var page = new opViewCls.GoodsListPage(params);
+            page.render();
+        },
         luckyOrderList: function (queryString) {
             var params = ADQ.utils.parseQueryString(queryString);
             this.prepareSearch('order', params._reflush);
             delete params._reflush;
             params.$page = params.$page ? parseInt(params.$page, 10) : 1;
             params.$size = PAGE_SIZE;
-            if (!params.$orderby) params.$orderby = 'updated_at';
+            if(!params.$orderby)params.$orderby = '-updated_at';
             var page = new opViewCls.OrderListPage(params);
-            page.render();
-        },
-        luckyRedEnvelopeList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
-            params.$size = PAGE_SIZE;
-            if (!params.$orderby) params.$orderby = '-updated_at';
-            var page = new opViewCls.RedEnvelopeListPage(params);
             page.render();
         },
         luckyShowList: function (queryString) {
@@ -9316,6 +6638,17 @@ var LuckyConsole = function ($, _) {
                 });
             }
             luckyTemplateDetailPage.render();
+        },
+        luckyGoodsDetail: function (goodsID) {
+            var page = null;
+            if (goodsID == "add") {
+                page = new opViewCls.GoodsDetailPage({});
+            } else {
+                page = new opViewCls.GoodsDetailPage({
+                    goodsID: goodsID
+                });
+            }
+            page.render();
         },
         luckyOrderDetail: function (orderID) {
             var page = null;
@@ -9428,20 +6761,6 @@ var LuckyConsole = function ($, _) {
             var page = new presetViewCls.ShortcutListPage(params);
             page.render();
         },
-        presetThemeList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
-            params.$size = PAGE_SIZE;
-            var page = new presetViewCls.ThemeListPage(params);
-            page.render();
-        },
-        presetHomepageList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(parmas.$page, 10) : 1;
-            params.$size = PAGE_SIZE;
-            var page = new presetViewCls.HomepageListPage(params);
-            page.render();
-        },
         presetDetail: function (presetId) {
             var page = null;
             if (presetId == "add") {
@@ -9493,28 +6812,6 @@ var LuckyConsole = function ($, _) {
             } else {
                 page = new presetViewCls.ShortcutDetailPage({
                     shortcutId: shortcutId
-                });
-            }
-            page.render();
-        },
-        presetThemeDetail: function (themeId) {
-            var page = null;
-            if (themeId == 'add') {
-                page = new presetViewCls.ThemeDetailPage({});
-            } else {
-                page = new presetViewCls.ThemeDetailPage({
-                    themeId: themeId
-                });
-            }
-            page.render();
-        },
-        presetHomepageDetail: function (homepageId) {
-            var page = null;
-            if (homepageId == 'add') {
-                page = new presetViewCls.HomepageDetailPage({});
-            } else {
-                page = new presetViewCls.HomepageDetailPage({
-                    homepageId: homepageId
                 });
             }
             page.render();
@@ -9572,6 +6869,24 @@ var LuckyConsole = function ($, _) {
             var page = new statsViewCls.PayListPage(params);
             page.render();
         },
+        statsMissedVipsList: function (queryString) {
+            var params = ADQ.utils.parseQueryString(queryString);
+            params.$page = params.$page ? parseInt(params.$page) : 1;
+            params.$size = -1;
+            if (!params.created_at) params.created_at = ADQ.utils.now('YYYY-MM-DD');
+            if (!params.$orderby) {
+                params.$orderby = 'id';
+            }
+            var page = new statsViewCls.MissedVipsListPage(params);
+            page.render();
+        },
+        statsBackVipsList: function (queryString) {
+            var params = ADQ.utils.parseQueryString(queryString);
+            params.$page = params.$page ? parseInt(params.$page) : 1;
+            if (!params.calc_at) params.calc_at = ADQ.utils.now('YYYY-MM-DD');
+            var page = new statsViewCls.BackVipsListPage(params);
+            page.render();
+        },
         statsUninstallList: function (queryString) {
             var params = ADQ.utils.parseQueryString(queryString);
             params.$page = params.$page ? parseInt(params.$page) : 1;
@@ -9581,69 +6896,9 @@ var LuckyConsole = function ($, _) {
             var page = new statsViewCls.UninstallListPage(params);
             page.render();
         },
-        statsMissedVipsList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page) : 1;
-            params.$size = 300;
-            if (!params.created_at) params.created_at = ADQ.utils.now('YYYY-MM-DD');
-            if (!params.$orderby) {
-                params.$orderby = 'id';
-            }
-            var page = new vipsViewCls.MissedVipsListPage(params);
-            page.render();
-        },
-        statsBackVipsList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page) : 1;
-            if (!params.calc_at) params.calc_at = ADQ.utils.now('YYYY-MM-DD');
-            var page = new vipsViewCls.BackVipsListPage(params);
-            page.render();
-        },
-        statsActiveVipsList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page) : 1;
-            if (!params.created_at) params.created_at = ADQ.utils.now('YYYY-MM-DD');
-            var page = new vipsViewCls.ActiveVipsListPage(params);
-            page.render();
-        },
-        statsDailyReport: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.DailyReportPage(params);
-            page.render();
-        },
         statsReportOverview: function (queryString) {
             var params = ADQ.utils.parseQueryString(queryString);
             var page = new reportViewCls.OverviewPage(params);
-            page.render();
-        },
-        statsProfitReport: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.ProfitPage(params);
-            page.render();
-        },
-        statsRechargeReport: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.RechargePage(params);
-            page.render();
-        },
-        statsResourceReport: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.ResourcePage(params);
-            page.render();
-        },
-        statsTacticsReport: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.TacticsPage(params);
-            page.render();
-        },
-        statsShippingReport: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.ShippingPage(params);
-            page.render();
-        },
-        statsTop100List: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            var page = new reportViewCls.Top100Page(params);
             page.render();
         },
         consoleUserList: function (queryString) {
@@ -9680,103 +6935,12 @@ var LuckyConsole = function ($, _) {
             }
             page.render();
         },
-        consoleRecordList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page) : 1;
-            params.$size = PAGE_SIZE;
-            var page = new consoleViewCls.RecordListPage(params);
-            page.render();
-        },
-        goodsList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
-            params.$size = PAGE_SIZE;
-            if (!params.$orderby) {
-                params.$orderby = '-updated_at';
-            }
-            var page = new goodsViewCls.GoodsListPage(params);
-            page.render();
-        },
-        goodsDetail: function (id) {
-            var page = null;
-            if (id == "add") {
-                page = new goodsViewCls.GoodsDetailPage({});
-            } else {
-                page = new goodsViewCls.GoodsDetailPage({
-                    id: id
-                });
-            }
-            page.render();
-        },
-        goodsSourceList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
-            params.$size = PAGE_SIZE;
-            if (!params.$orderby) {
-                params.$orderby = '-updated_at';
-            }
-            var page = new goodsViewCls.SourceListPage(params);
-            page.render();
-        },
-        goodsSourceDetail: function (id) {
-            var page = null;
-            if (id == "add") {
-                page = new goodsViewCls.SourceDetailPage({});
-            } else {
-                page = new goodsViewCls.SourceDetailPage({
-                    id: id
-                });
-            }
-            page.render();
-        },
-        goodsBrandList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
-            params.$size = PAGE_SIZE;
-            if (!params.$orderby) {
-                params.$orderby = '-updated_at';
-            }
-            var page = new goodsViewCls.BrandListPage(params);
-            page.render();
-        },
-        goodsBrandDetail: function (id) {
-            var page = null;
-            if (id == "add") {
-                page = new goodsViewCls.BrandDetailPage({});
-            } else {
-                page = new goodsViewCls.BrandDetailPage({
-                    id: id
-                });
-            }
-            page.render();
-        },
-        goodsCategoryList: function (queryString) {
-            var params = ADQ.utils.parseQueryString(queryString);
-            params.$page = params.$page ? parseInt(params.$page, 10) : 1;
-            params.$size = -1;
-            if (!params.$orderby) params.$orderby = '-updated_at';
-            if (!params.parent_id) params.parent_id = '$null';
-
-            var page = new goodsViewCls.CategoryListPage(params);
-            page.render();
-        },
-        goodsCategoryDetail: function (id) {
-            var page = null;
-            if (id == "add") {
-                page = new goodsViewCls.CategoryDetailPage({});
-            } else {
-                page = new goodsViewCls.CategoryDetailPage({
-                    id: id
-                });
-            }
-            page.render();
-        },
     });
 
     return {
         init: function () {
             ADQ.fullscreen();
-            ADQ.utils.loadTemplate([opViewCls, statsViewCls, reportViewCls, consoleViewCls, presetViewCls, goodsViewCls, vipsViewCls], function () {
+            ADQ.utils.loadTemplate([opViewCls, statsViewCls, reportViewCls, consoleViewCls, presetViewCls], function () {
                 app = new AppRouter();
                 Backbone.history.start();
             });

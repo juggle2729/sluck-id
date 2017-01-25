@@ -4,7 +4,7 @@
 <head>
     <!-- Meta, title, CSS, favicons, etc. -->
     <meta charset="utf-8">
-    <title>一元购控制台</title>
+    <title class="indexTitle text"></title>
     <meta name="keywords" content="" />
     <meta name="description" content="">
     <meta name="author" content="">
@@ -25,7 +25,6 @@
     <link rel="stylesheet" type="text/css" href="assets/admin-tools/admin-plugins/admin-modal/adminmodal.css">
     <!-- datetime picker -->
     <link rel="stylesheet" type="text/css" href="vendor/plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" type="text/css" href="vendor/plugins/daterangepicker/daterangepicker.css">
     <!--confirm-->
     <link rel="stylesheet" type="text/css" href="vendor/plugins/confirm/jquery-confirm.min.css">
     <!-- Favicon -->
@@ -43,7 +42,7 @@
         <!-- Start: Header -->
         <header class="navbar navbar-fixed-top bg-light">
             <div class="navbar-branding">
-                <a class="navbar-brand" href="/"> <b>一元购</b>控制台
+                <a class="navbar-brand indexTitle" href="/">
                 </a>
                 <span id="toggle_sidemenu_l" class="glyphicons glyphicons-show_lines"></span>
                 <ul class="nav navbar-nav pull-right hidden">
@@ -101,36 +100,15 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="accordion-toggle" id="goodsMenu">
+                                <a href="#goods/">
                                     <span class="glyphicons glyphicons-shopping_cart"></span>
-                                    商品相关
-                                    <span class="caret"></span>
+                                    商品管理
                                 </a>
-                                <ul class="nav sub-nav">
-                                    <li>
-                                        <a href="#goods/"> 商品管理 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#goods/source/"> 货源管理 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#goods/brand/"> 供货商管理 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#goods/category/"> 分类管理 </a>
-                                    </li>
-                                </ul>
                             </li>
                             <li>
-                                <a href='#order/?status=5&ship_status={"$lt": 98}&_reflush=1'>
+                                <a href="#order/?status=5&_reflush=1">
                                     <span class="glyphicons glyphicons-coins"></span>
                                     订单管理
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#redenvelope/">
-                                    <span class="glyphicons glyphicons-coins"></span>
-                                    卡密类订单管理
                                 </a>
                             </li>
                             <li>
@@ -165,22 +143,16 @@
                                 </a>
                                 <ul class="nav sub-nav">
                                     <li>
-                                        <a href="#preset/banner/"> Banner </a>
+                                        <a href="#banner/"> Banner </a>
                                     </li>
                                     <li>
-                                        <a href="#preset/discovery/"> Discovery </a>
+                                        <a href="#discovery/"> Discovery </a>
                                     </li>
                                     <li>
-                                        <a href="#preset/loading/"> Loading </a>
+                                        <a href="#loading/"> Loading </a>
                                     </li>
                                     <li>
-                                        <a href="#preset/shortcut/"> Shortcut </a>
-                                    </li>
-                                    <li>
-                                        <a href="#preset/theme/"> Theme </a>
-                                    </li>
-                                    <li>
-                                        <a href="#preset/homepage/">Homepage</a>
+                                        <a href="#shortcut/"> Shortcut </a>
                                     </li>
                                     <li>
                                         <a href="#preset/"> 版本配置 </a>
@@ -227,22 +199,16 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="accordion-toggle" id="vipsMenu">
+                                <a href="#stats/missed_vips/">
                                     <span class="glyphicons glyphicons-old_man"></span>
-                                    大客户信息
-                                    <span class="caret"></span>
+                                    流失大客户信息
                                 </a>
-                                <ul class="nav sub-nav">
-                                    <li>
-                                        <a href="#stats/vips/missed/"> 流失信息 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/vips/back/"> 召回信息 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/vips/active/"> 活跃榜单 </a>
-                                    </li>
-                                </ul>
+                            </li>
+                            <li>
+                                <a href="#stats/back_vips/">
+                                    <span class="glyphicons glyphicons-old_man"></span>
+                                    大客户召回信息
+                                </a>
                             </li>
                             <li>
                                 <a href="#" data-key="activity">
@@ -284,27 +250,6 @@
                                     <li>
                                         <a href="#stats/report/overview/"> 整体分析 </a>
                                     </li>
-                                    <li>
-                                        <a href="#stats/report/daily/"> 每日用户分析 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/report/profit/"> 每日利润分析 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/report/recharge/"> 每日付费分析 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/report/tactics/"> 每日策略分析 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/report/resource/"> 每日资源分析 </a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/report/shipping/">每日发货统计</a>
-                                    </li>
-                                    <li>
-                                        <a href="#stats/report/top100/"> TOP100 </a>
-                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -326,12 +271,6 @@
                                 <a href="#console/perm/">
                                     <span class="glyphicons glyphicons-warning_sign"></span>
                                     权限管理
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#console/record/">
-                                    <span class="glyphicons glyphicons-notes"></span>
-                                    操作记录
                                 </a>
                             </li>
                         </ul>
@@ -403,7 +342,6 @@
     <script type="text/javascript" src="vendor/plugins/moment/moment.min.js"></script>
     <!-- datetimepicker -->
     <script type="text/javascript" src="vendor/plugins/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="vendor/plugins/daterangepicker/daterangepicker.js"></script>
     <!-- Page Plugins -->
     <script type="text/javascript" src="vendor/plugins/magnific/jquery.magnific-popup.js"></script>
     <!-- validator -->
@@ -412,8 +350,8 @@
     <!-- paginator -->
     <script type="text/javascript" src="vendor/plugins/pagination/bootstrap-paginator.min.js"></script>
     <!-- Qiniu -->
-     <!--<script type="text/javascript" src="vendor/plugins/plupload/js/moxie.js"></script>-->
-     <!--<script type="text/javascript" src="vendor/plugins/plupload/js/plupload.dev.js"></script>-->
+    <!-- <script type="text/javascript" src="vendor/plugins/plupload/js/moxie.js"></script> -->
+    <!-- <script type="text/javascript" src="vendor/plugins/plupload/js/plupload.dev.js"></script> -->
     <script type="text/javascript" src="vendor/plugins/plupload/js/plupload.full.min.js"></script>
     <script type="text/javascript" src="vendor/plugins/qiniu/qiniu.min.js"></script>
     <script type="text/javascript" src="vendor/plugins/qiniu/ui.js"></script>
@@ -422,8 +360,8 @@
     <!-- nestable -->
     <script type="text/javascript" src="vendor/plugins/nestable/jquery.nestable.js"></script>
     <!-- backbone -->
-    <!--<script type="text/javascript" src="vendor/underscore/underscore-min.js"></script>-->
-    <script type="text/javascript" src="vendor/underscore/underscore.js"></script>
+    <script type="text/javascript" src="vendor/underscore/underscore-min.js"></script>
+    <!--<script type="text/javascript" src="vendor/underscore/underscore.js"></script>-->
     <script type="text/javascript" src="vendor/backbone/backbone-min.js"></script>
     <!-- nanoscroller -->
     <script type="text/javascript" src="vendor/plugins/nanoscroller/jquery.nanoscroller.min.js"></script>
@@ -495,32 +433,28 @@
                 },
             }
         });
-
+        $('.indexTitle').not('.text').html(window.PAGE_TITLE || '<b>一元购本地</b>控制台');
+        $('.indexTitle.text').html($(window.PAGE_TITLE).text() || '一元购本地控制台');
         var today = moment().format('YYYY-MM-DD'),
             today_ts = moment(today, 'YYYY-MM-DD').unix(),
             qs = 'created_at={"$gt":"' + today +'"}&_reflush=1',
-            qs_ts = 'start_ts={"$gt":' + today_ts + '}&_reflush=1',
-            href = window.location.href;
+            qs_ts = 'start_ts={"$gt":' + today_ts + '}&_reflush=1';
         $('[data-key]').each(function(){
             var qstr = $(this).hasClass("ts") ? qs_ts : qs;
             $(this).attr("href", "#stats/" + $(this).data('key') + '/?' + qstr);
         });
-        if(href.indexOf('#stats') != -1){
+        if(window.location.href.indexOf('#stats') != -1){
             $('#statsMenu').addClass('menu-open');
-            if(href.indexOf('vips/') != -1){
-                $('#vipsMenu').addClass("menu-open");
-            }else if (href.indexOf('report/') != -1){
-                $('#reportMenu').addClass("menu-open");
-            }
-        }else if(href.indexOf('#console') != -1){
+        }else if(window.location.href.indexOf('#console') != -1){
             $('#consoleMenu').addClass("menu-open");
         }else{
             $('#opMenu').addClass('menu-open');
-            if(location.href.indexOf('#goods') != -1){
-                $('#goodsMenu').addClass('menu-open');
-            }else if(location.href.indexOf('#preset') != -1){
-                        $('#presetMenu').addClass('menu-open');
-            }
+            var presets = ['#banner', '#shortcut', '#discovery', '#loading', '#preset'];
+            _.each(presets, function(p){
+                if(window.location.href.indexOf(p) != -1){
+                    $('#presetMenu').addClass('menu-open');
+                }
+            })
         }
     });
     </script>

@@ -2,7 +2,7 @@
     <div class="topbar-left">
         <ol class="breadcrumb">
             <li class="crumb-active">
-                <a href="#stats/vips/back/">召回信息</a>
+                <a href="#stats/back_vips/">大客户召回信息</a>
             </li>
         </ol>
     </div>
@@ -21,7 +21,6 @@
                 <tr class="bg-light">
                     <th>召回日期</th>
                     <th>统计日期</th>
-                    <th>流失类型</th>
                     <th>流失天数</th>
                     <th>召回人数/总人数</th>
                     <th>召回率</th>
@@ -35,21 +34,22 @@
                 </tr>
             </thead>
             <tbody class="admin-form">
-                <% _.each(items, function(item){ %>
-                    <tr data-id="<%= item.id %>">
-                        <td><%= item.call_at %></td>
-                        <td><%= item.calc_at %></td>
-                        <td><%= MISSED_TYPE[item.user_type] %></td>
-                        <td><%= item.lost_days %></td>
-                        <td><%= item.back_count %>/<%= item.total_count %></td>
-                        <td><%= item.total_count ? (item.back_rate * 100).toFixed(2) + '%' : '-' %></td>
-                        <td><%= item.recharge_count %>/<%= item.recharge_amount %></td>
-                        <td><%= item.total_count ? (item.recharge_rate * 100).toFixed(2) + '%' : '-' %></td>
-                        <td><%= item.recharge_arpu %></td>
-                        <td><%= item.win_count %>/<%= item.win_amount %></td>
-                        <td><%= item.total_count ? (item.win_rate * 100).toFixed(2) + '%' : '-' %></td>
-                        <td><%= item.pay_count %></td>
-                        <td><%= item.coupon_amount %></td>
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
+                %>
+                    <tr data-id="<%= attrs.id %>">
+                        <td><%= attrs.call_at %></td>
+                        <td><%= attrs.calc_at %></td>
+                        <td><%= attrs.lost_days %></td>
+                        <td><%= attrs.back_count %>/<%= attrs.total_count %></td>
+                        <td><%= attrs.total_count ? (attrs.back_rate * 100).toFixed(2) + '%' : '-' %></td>
+                        <td><%= attrs.recharge_count %>/<%= attrs.recharge_amount %></td>
+                        <td><%= attrs.total_count ? (attrs.recharge_rate * 100).toFixed(2) + '%' : '-' %></td>
+                        <td><%= attrs.recharge_arpu %></td>
+                        <td><%= attrs.win_count %>/<%= attrs.win_amount %></td>
+                        <td><%= attrs.total_count ? (attrs.win_rate * 100).toFixed(2) + '%' : '-' %></td>
+                        <td><%= attrs.pay_count %></td>
+                        <td><%= attrs.coupon_amount %></td>
                     </tr>
                 <%
                 }) %>

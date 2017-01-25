@@ -2,12 +2,12 @@
     <div class="topbar-left">
         <ol class="breadcrumb">
             <li class="crumb-active">
-                <a href="#preset/loading/">Loading数据管理</a>
+                <a href="#loading/">Loading数据管理</a>
             </li>
         </ol>
     </div>
     <div class="topbar-right">
-        <a href="#preset/loading/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Loading数据</a>
+        <a href="#loading/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Loading数据</a>
         <div class="ml15 ib va-m" id="toggle_sidemenu_r">
             <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
             </a>
@@ -36,7 +36,7 @@
             <tbody class="admin-form">
                 <% _.each(loadings, function(loading){ %>
                     <tr data-id="<%= loading.id %>" >
-                        <td><a href="#preset/loading/<%= loading.id %>/" ><%= loading.id %></a></td>
+                        <td><a href="#loading/<%= loading.id %>/" ><%= loading.id %></a></td>
                         <td><%= loading.title %></td>
                         <td>
                             <img src="<%= loading.imageUrl %>" height="30" max-width="30" />
@@ -49,7 +49,7 @@
                         <td><%= loading.abtest || '-'%></td>
                         <td><%= loading.updated_at %></td>
                         <td class="text-left">
-                            <a class="glyphicons glyphicons-pencil" href="#preset/loading/<%= loading.id %>/"></a>
+                            <a class="glyphicons glyphicons-pencil" href="#loading/<%= loading.id %>/"></a>
                             <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
                         </td>
                     </tr>

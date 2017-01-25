@@ -50,13 +50,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="inputExpireTs" class="col-md-1 control-label">过期时间：</label>
-                    <div class="col-md-1">
-                        <input type="text" class="form-control" data-field="expire_ts"
-                         value="<%= info.expire_ts ? moment.unix(info.expire_ts).format('YYYY-MM-DD') : '' %>" id="inputExpireTs" required>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="inputAlert" class="col-md-1 control-label">弹窗提示:</label>
                     <div class="col-md-2">
                         <div class="switch switch-info switch-inline switch-xs mt10">
@@ -67,15 +60,6 @@
                 </div>
                 <div id="alertContent" <%= info.extend.alert ? "" : "hidden" %>>
                     <% var alert = info.extend.alert || {}; %>
-                    <div class="form-group">
-                        <label class="control-label col-md-1">弹窗类型：</label>
-                        <div class="col-md-1">
-                            <select class="form-control" data-field="extend.alert.type">
-                                <option value="">普通</option>
-                                <option value="update" <%= alert.type == 'update' ? 'selected' : '' %>>升级</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="uploadImage" class="col-md-1 control-label">弹窗图像：</label>
                         <div class="col-md-1" id="container">

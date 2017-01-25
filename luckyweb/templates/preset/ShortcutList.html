@@ -2,12 +2,12 @@
     <div class="topbar-left">
         <ol class="breadcrumb">
             <li class="crumb-active">
-                <a href="#preset/shortcut/">Shortcut数据管理</a>
+                <a href="#shortcut/">Shortcut数据管理</a>
             </li>
         </ol>
     </div>
     <div class="topbar-right">
-        <a href="#preset/shortcut/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Shortcut数据</a>
+        <a href="#shortcut/add/" class="btn btn-default btn-sm light fw600 ml10"><span class="fa fa-plus pr5"></span>新增Shortcut数据</a>
         <!--<div class="ml15 ib va-m" id="toggle_sidemenu_r">
             <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
             </a>
@@ -32,7 +32,7 @@
             <tbody class="admin-form">
                 <% _.each(shortcuts, function(shortcut){ %>
                     <tr data-id="<%= shortcut.id %>" >
-                        <td><a href="#preset/shortcut/<%= shortcut.id %>/" ><%= shortcut.id %></a></td>
+                        <td><a href="#shortcut/<%= shortcut.id %>/" ><%= shortcut.id %></a></td>
                         <td><%= shortcut.title %></td>
                         <td>
                             <img src="<%= shortcut.icon %>" height="30" max-width="30" />
@@ -41,7 +41,7 @@
                         <td><%= shortcut.abtest || '-'%></td>
                         <td><%= shortcut.updated_at %></td>
                         <td class="text-left">
-                            <a class="glyphicons glyphicons-pencil" href="#preset/shortcut/<%= shortcut.id %>/"></a>
+                            <a class="glyphicons glyphicons-pencil" href="#shortcut/<%= shortcut.id %>/"></a>
                             <a class="glyphicons glyphicons-remove_2 onClickDelete" href="javascript:;"></a>
                         </td>
                     </tr>

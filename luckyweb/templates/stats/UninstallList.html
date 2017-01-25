@@ -7,7 +7,6 @@
         </ol>
     </div>
     <div class="topbar-right">
-        <a href="#" class="btn btn-default btn-sm light fw600 ml10" id="exportData"><span class="glyphicon glyphicon-cloud-download pr5"></span>导出数据</a>
         <div class="ml15 ib va-m" id="toggle_sidemenu_r">
             <a href="#" class="pl5"> <i class="fa fa-sign-in fs22 text-primary"></i>
             </a>
@@ -25,9 +24,7 @@
                     <th>运行次数</th>
                     <th class="sortable" data-field="created_at">首次运行时间</th>
                     <th class="sortable" data-field="remove_at">卸载时间</th>
-                    <th>安装天数</th>
                     <th class="sortable" data-field="total_pay">消费金额</th>
-                    <th>卸载原因</th>
                 </tr>
             </thead>
             <tbody class="admin-form">
@@ -40,9 +37,7 @@
                         <td><%= attrs.run_count || 0 %></td>
                         <td><%= attrs.created_at %></td>
                         <td><%= attrs.remove_at %></td>
-                        <td><%= attrs.install_days %></td>
                         <td><%= attrs.total_pay || 0 %></td>
-                        <td><%= attrs.reason || '-' %></td>
                     </tr>
                 <%
                 }) %>
@@ -61,25 +56,15 @@
         <h5 class="title-divider text-muted mb20">卸载总人数<span class="pull-right"> <%= overview.uninstall.total_count %> </span> </h5>
         <h5 class="title-divider text-muted mb20"> 平均打开次数 <span class="pull-right"> <%= Math.round(overview.uninstall.run_count / overview.uninstall.total_count) %> </span> </h5>
         <h5 class="title-divider text-muted mb20"> 参与消费人数 <span class="pull-right"> <%= overview.uninstall.pay_count %> </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 今日卸载人数 <span class="pull-right"> <%= overview.uninstall.today_count %> </span> </h5>
         <hr class="short">
 
         <h6 class="fw400">答案分布</h6>
         <div class="section row" id="reasonDist">
 
         </div>
-        <h4 class="mt5 text-muted fw500">过滤条件：</h4>
-        <h6 class="fw400">卸载时间</h6>
-        <div class="section row">
-            <div class="col-md-6">
-                <input type="text" id="searchRemoveAtLower" class="gui-input date-input" placeholder=">=" value="<%= searched.remove_at_lower %>">
-            </div>
-            <div class="col-md-6">
-                <input type="text" id="searchRemoveAtUpper" class="gui-input date-input" placeholder="<=" value="<%= searched.remove_at_upper %>">
-            </div>
-        </div>
-        <hr class="short">
 
-        <button class="btn btn-default btn-block" type="button" id="search">搜索</button>
+
     </div>
 </aside>
 <!-- End: Right Sidebar -->

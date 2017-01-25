@@ -25,23 +25,17 @@
                 </tr>
             </thead>
             <tbody class="admin-form">
-                <% _.each(items, function(item){
-                    var chn = item.chn || {};
-                    if(chn.include){
-                        chn = '包含' + chn.include.join(',');
-                    }else if(chn.exclude){
-                        chn = '排除' + chn.exclude.join(',');
-                    }
-                chn = Object.keys(chn).length > 0 ? chn : '全部渠道';
+                <% _.each(models, function(model){
+                    var attrs = model.attributes;
                 %>
-                    <tr data-id="<%= item.id %>" >
-                        <td><a href="#abtest/<%= item.id %>/" ><%= item.id %></a></td>
-                        <td><%= item.name %></td>
-                        <td><%= item.user_id %></td>
-                        <td><%= chn  %></td>
-                        <td><%= item.updated_at %></td>
+                    <tr data-id="<%= attrs.id %>" >
+                        <td><a href="#abtest/<%= attrs.id %>/" ><%= attrs.id %></a></td>
+                        <td><%= attrs.name %></td>
+                        <td><%= attrs.user_id %></td>
+                        <td><%= attrs.channel || "所有渠道" %></td>
+                        <td><%= attrs.updated_at %></td>
                         <td class="text-left">
-                            <a class="glyphicons glyphicons-pencil" href="#abtest/<%= item.id %>/"></a>
+                            <a class="glyphicons glyphicons-pencil" href="#abtest/<%= attrs.id %>/"></a>
                         </td>
                     </tr>
                 <%

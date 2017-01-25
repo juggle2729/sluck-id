@@ -43,7 +43,7 @@
                         <td class=""><a href="#stats/account/?id=<%= attrs.buyer %>"><%= attrs.is_virtual ? '*' : '' %><%= attrs.buyer %><a></td>
                         <td class=""><%= attrs.activity_id%></td>
                         <td class=""><%= attrs.activity_name %>(第<%= attrs.term_number %>期)</td>
-                        <td class=""><%= ACTIVITY_STATUS[attrs.activity_status] %></td>
+                        <td class=""><%= status[attrs.activity_status] %></td>
                         <td class=""><%= attrs.activity_type %>元购</td>
                         <td><%= attrs.total_price %></td>
                         <td><%= attrs.addr || '-' %></td>
@@ -66,10 +66,11 @@
     <div class="p20 admin-form">
         <h4 class="mt5 text-muted fw500">总体数据：</h4>
         <hr class="short">
-        <h5 class="title-divider text-muted mb20"> 渠道用户参与人数(人次) <span class="pull-right"> <%= overview.pay_user %>(<%= overview.pay_price %>) </span> </h5>
-        <h5 class="title-divider text-muted mb20"> 渠道用户夺宝币余额 <span class="pull-right"> <%= overview.balance.toFixed(2) %> </span> </h5>
-        <h5 class="title-divider text-muted mb20"> 今日已开奖金额 <span class="pull-right"><%= overview.announced_price.toFixed(2) %></span> </h5>
-        <h5 class="title-divider text-muted mb20"> 今日已开奖抽水 <span class="pull-right"><%= overview.real_profit.toFixed(2) %> </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 今日参与人数(人次) <span class="pull-right"> <%= overview.total_count %>(<%= overview.total_price %>) </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 已购买金额(进行中/待开奖) <span class="pull-right"> <%= overview.ongoing_price %>/<%= overview.announce_ready_price %> </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 夺宝币余额 <span class="pull-right"> <%= overview.total_balance.toFixed(2) %> </span> </h5>
+        <h5 class="title-divider text-muted mb20"> 今日已开奖金额/成本 <span class="pull-right"><%= overview.announced_price.toFixed(2) %>/<%= overview.announced_buy_cost.toFixed(2) %></span> </h5>
+        <h5 class="title-divider text-muted mb20"> 今日已开奖抽水 <span class="pull-right"><%= overview.announced_earn.toFixed(2) %> </span> </h5>
         <h4 class="mt5 text-muted fw500">过滤条件：</h4>
         <hr class="short">
         <div class="section mb15">
