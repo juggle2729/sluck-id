@@ -5,7 +5,7 @@
     "need_confirm": false
   },
   "dependency": {
-    "sluck": [
+    "luckyservice-id": [
       {
         "apt-get install -y": [
           "supervisor",
@@ -35,7 +35,7 @@
     "luckyweb": []
   },
   "env": {
-    "sluck": {
+    "luckyservice-id": {
       "121.40.29.144": {
         "bash": [
           "rm -rf luckyweb"

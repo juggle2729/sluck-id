@@ -19,7 +19,7 @@ PROJECT_ROOT = path.dirname(CUR_DIR)
 SETTINGS = {}
 # DIR name should endswith '/'
 REMOTE_PROJECT_DIR = '/home/ubuntu/af-env/'
-REMOTE_PROJECT_NAME = {'sluck': 'luckyservice'}
+REMOTE_PROJECT_NAME = {'luckyservice-id': 'luckyservice'}
 REMOTE_VIRENV = '/home/ubuntu/af-env/'
 REMOTE_USER = 'ubuntu'
 LOG_PATH = '/var/log/lucky/'
@@ -44,7 +44,7 @@ def dep(name='aliyun'):
 
 
 @task
-def pro(name='sluck'):
+def pro(name='luckyservice-id'):
     """choose project name, for example: luckyservice
     """
     if not SETTINGS:
@@ -124,7 +124,7 @@ def deploy(is_restart=True):
     sudo('rm -r %s' % r_temp_folder)
     local('rm -rf %s' % temp_folder)
     # restart(env.project_name, is_restart)
-    if env.project_name == 'sluck':
+    if env.project_name == 'luckyservice-id':
         sudo("killall uwsgi")
     print green('deploy %s@%s done' % (env.project_name, env.host))
 

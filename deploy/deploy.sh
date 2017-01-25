@@ -6,7 +6,7 @@ popd > /dev/null
 
 ACTION=deploy
 RESTART=1
-ENVR=sluck
+ENVR=luckyservice-id
 HOST=test
 DEBUG=0
 
@@ -22,7 +22,7 @@ while getopts :bdfprh: OPTION
 do
     case $OPTION in
         b)
-            ENVR=sluck
+            ENVR=luckyservice-id
             ;;
         d)
             DEBUG=1
