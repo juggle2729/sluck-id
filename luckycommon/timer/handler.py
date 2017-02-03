@@ -165,7 +165,8 @@ class ActivityAnnounceHandler(EventHandler):
         {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 1},  # (50, 120]
         {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 1},  # 50]
     ]
-    _DAILY_LIMIT = 1000
+    # temporarily increase daily amount to 50000, origin 1000
+    _DAILY_LIMIT = 50000
 
     def calc_result(self, orders, target_amount, lottery_number):
         result_a = 0

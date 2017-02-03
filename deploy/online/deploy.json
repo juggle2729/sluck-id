@@ -34,28 +34,9 @@
     "luckyweb": []
   },
   "env": {
-    "luckyservice": {
-      "120.27.162.212": {
+    "luckyservice-id": {
+      "47.88.214.13": {
         "bash": [
-          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
-          "rm -rf luckyweb"
-        ]
-      },
-      "121.41.86.172": {
-        "bash": [
-          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
-          "rm -rf luckyweb"
-        ]
-      },
-      "121.40.49.87": {
-        "bash": [
-          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
-          "rm -rf luckyweb"
-        ]
-      },
-      "121.199.0.80": {
-        "bash": [
-          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py",
           "rm -rf luckyweb"
         ]
       }
