@@ -153,17 +153,17 @@ class ActivityAnnounceHandler(EventHandler):
     _DEFAULT_RAND_LIMIT = 50  # 0 代表关闭
     _BASE_NUM = 10000001L
     _INTERNAL_SETTING = [
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20000, 'NET': -0.1, 'DAILY_FREE': 0, 'FREE_NET': 10000},  # (20000
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 15000, 'NET': -0.5, 'DAILY_FREE': 0, 'FREE_NET': 8000},  # (15000, 20000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 10000, 'NET': -1, 'DAILY_FREE': 0, 'FREE_NET': 5000},  # (10000, 15000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 4000, 'NET': -1.5, 'DAILY_FREE': 1, 'FREE_NET': 2000},  # (6000, 10000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2000, 'NET': -2, 'DAILY_FREE': 1, 'FREE_NET': 1000},  # (4000, 6000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1000, 'NET': -3, 'DAILY_FREE': 2, 'FREE_NET': 500},  # (2000, 4000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 500, 'NET': None, 'DAILY_FREE': 2, 'FREE_NET': 200},  # (1000, 2000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 100, 'NET': None, 'DAILY_FREE': 5, 'FREE_NET': 50},  # (500, 1000]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 20},  # (120, 500]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 1},  # (50, 120]
-        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 1},  # 50]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 40000, 'NET': -0.1, 'DAILY_FREE': 0, 'FREE_NET': 20000},  # (40000
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 30000, 'NET': -0.5, 'DAILY_FREE': 0, 'FREE_NET': 16000},  # (30000, 40000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 20000, 'NET': -1, 'DAILY_FREE': 0, 'FREE_NET': 10000},  # (20000, 30000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 8000, 'NET': -1.5, 'DAILY_FREE': 1, 'FREE_NET': 4000},  # (12000, 20000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 4000, 'NET': -2, 'DAILY_FREE': 1, 'FREE_NET': 2000},  # (8000, 12000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2000, 'NET': -3, 'DAILY_FREE': 2, 'FREE_NET': 1000},  # (4000, 8000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 1000, 'NET': None, 'DAILY_FREE': 2, 'FREE_NET': 400},  # (2000, 4000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 200, 'NET': None, 'DAILY_FREE': 5, 'FREE_NET': 100},  # (1000, 2000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 40, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 40},  # (240, 1000]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 4, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 2},  # (100, 240]
+        {'RAND_LIMIT': 0, 'SINGLE_BUY': 1, 'TOTAL_BUY': 2, 'NET': None, 'DAILY_FREE': 0, 'FREE_NET': 2},  # 100]
     ]
     # temporarily increase daily amount to 50000, origin 1000
     _DAILY_LIMIT = 50000
