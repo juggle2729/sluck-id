@@ -91,6 +91,7 @@ urlpatterns = patterns(
     url(r'^third/qiniu/remove/?$', 'luckyapi.views.third.delete_data'),
     url(r'^third/datacell/fail/?$', 'luckyapi.views.third.datacell_f'),
     url(r'^third/datacell/success/?$', 'luckyapi.views.third.datacell_s'),
+    url(r'^third/pulsa/?$', 'luckyapi.views.third.mobilepulsa'),
     # show
     url(r'^my/shows/?$', 'luckyapi.views.show.get_my_shows'),
     url(r'^my/shows/detail/?$', 'luckyapi.views.show.get_my_show_detail'),

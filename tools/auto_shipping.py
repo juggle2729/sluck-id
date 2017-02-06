@@ -8,8 +8,10 @@ import sys
 from lxml import etree
 import requests
 from datetime import timedelta
+from random import randint
 from datetime import datetime
 from hashlib import sha1
+from hashlib import md5
 
 import os
 
@@ -45,6 +47,10 @@ def strip_phone(phone_number):
         phone_number = remove_prefix(phone_number, prefix)
     return phone_number
 
+_PULSA_XML = """<?xml version='1.0' encoding='utf-8'?>
+<mp><commands>topup</commands> <username>tokoseribu</username><ref_id>%s</ref_id><hp>%s</hp><pulsa_code>%s</pulsa_code><sign>%s</sign>
+</mp>"""
+_PULSA_URL = 'http://mobilepulsa.com/api/receiver/index.php'
 
 _REQ_DATA = '<?xml version="1.0" ?><datacell><perintah>charge</perintah><oprcode>%s</oprcode><userid>62LFI950</userid><time>145339</time><msisdn>%s</msisdn> <ref_trxid>%s</ref_trxid><sgn>%s</sgn> </datacell>'
 
@@ -133,11 +139,19 @@ _STEAM_REQ = '''
   </params>
 </methodCall>'''
 COIN_TIDS = []
+_PULSA_TIDS = {
+    792: 5000,
+    666: 10000,
+    793: 25000,
+    667: 50000,
+    668: 100000,
+    794: 500000,
+    796: 1000000,
+}
 
 HUAFEI_TIDS = {
-    666: 10,
-    667: 50,
-    668: 100,
+#    667: 50,
+#    668: 100,
 }
 
 CARRIER_HUAFEI_TIDS = {
@@ -234,6 +248,14 @@ _CARRIER_PREFIX = {
         '0889': 'SF',
 }
 
+_PULSACODE_FOR_CARRIER = {
+    'TEL' : 'htelkomsel',
+    'IR': 'hindosat',
+    'XL': 'xld',
+    'TRI': 'hthree',
+    'SF': 'hsmart',
+}
+
 def stringxor(str1,str2):
     orxstr=""
     for i in range(0,len(str1)):
@@ -274,7 +296,6 @@ def shipping_steam(await_order, activity):
     charge_account = receipt_address.get('phone')
     if not charge_account:
         return
-    # check zero
     time_t = str(datetime.utcnow())
     time_t = 'T'.join([time_t[:10], time_t[11:19]])
     pay_id = await_order.order_id
@@ -312,20 +333,6 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
         return
-    #if not is_valid_user(user_id, activity):
-    #    print 'found invalid user %s' % user_id
-    #    _LOGGER.info('found invalid user %s %s', user_id, await_order.order_id)
-    #    # update order
-    #    order_db.update_order_by_id(
-    #        await_order.order_id,
-    #        {
-    #            'status': ORDER_STATUS.DEAL,
-    #            'ship_status': SHIP_STATUS.ILLEGAL,
-    #            'extend': json.dumps({'illegal': 1})
-    #        })
-    #    # black it
-    #    account_db.black_account(user_id)
-    #    return
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
     # do recharge
@@ -333,7 +340,6 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
     charge_account = receipt_address.get('phone')
     if not charge_account:
         return
-    # check zero
     if withcarrier:
         product = CARRIER_HUAFEI_TIDS[activity.template_id]
     else:
@@ -368,6 +374,55 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
                 await_order.order_id,
                 {'status': ORDER_STATUS.AWARDED}, None, True
         )
+
+def shipping_pulsa(await_order, activity):
+    user_id = await_order.user_id
+    if redis_cache.is_virtual_account(user_id):
+        return
+    receipt_address = {} if not await_order.receipt_address else json.loads(
+        await_order.receipt_address)
+    # do recharge
+    print 'begin pulsa recharge, %s' % await_order.order_id
+    charge_account = receipt_address.get('phone')
+    if not charge_account:
+        return
+    recharge_price = 0
+    recharge_price = _PULSA_TIDS[activity.template_id]
+    carrier = _get_carrier(charge_account)
+    if not carrier:
+        print 'NO CARRIER', charge_account
+        order_db.update_order_info(
+                await_order.order_id,
+                {'status': ORDER_STATUS.AWARDED}, None, True
+        )
+        return
+    product_prefix = _PULSACODE_FOR_CARRIER[carrier]
+    product = product_prefix + str(recharge_price)
+    if carrier in ('TRI', 'IR', 'SF'):
+        check_status = redis_cache.exists_phone_limit(charge_account)
+        if check_status:
+            print charge_account, ' already charged some mins before, just wait'
+            return
+    seed = str(randint(100, 99999))
+    req = _PULSA_XML % (str(await_order.order_id) +'#'+seed, charge_account, product, md5('tokoseributokoseribu123*'+str(await_order.order_id) +'#'+ seed).hexdigest())
+    headers = {'Content-Type': 'application/xml'} # set what your server accepts
+    resp = requests.post(_PULSA_URL, data=req, headers=headers)
+    if '<status>0</status>' in resp.content:
+        print 'done', await_order.order_id
+        order_db.update_order_info(
+                await_order.order_id,
+                {'status': ORDER_STATUS.DEAL}
+        )
+        show_order(await_order)
+        if carrier in ('TRI', 'IR', 'SF'):
+            redis_cache.set_phone_limit(charge_account, carrier)
+    else:
+        print resp.content, charge_account, product
+        order_db.update_order_info(
+                await_order.order_id,
+                {'status': ORDER_STATUS.AWARDED}, None, True
+        )
+
 
 
 def shipping(recharge_type, await_order, activity):
@@ -577,9 +632,21 @@ def start_steam():
             shipping_steam(await_order, activity)
 
 
+def start_pulsa():
+    await_orders = get_await_list()
+    print 'new pulsa'
+    for await_order in await_orders:
+        activity_id = await_order.activity_id
+        activity = get_activity(activity_id)
+        if not activity:
+            continue
+        if activity.template_id in _PULSA_TIDS:
+            print 'check pulsa order, %s %s' % (await_order.order_id, activity.template_id)
+            shipping_pulsa(await_order, activity)
+
 
 
 if __name__ == "__main__":
     start()
     start_steam()
-    #start_ex()
+    start_pulsa()

@@ -103,6 +103,26 @@ def set_15phone(phone):
     ProxyAgent().expire(key, 15*62)
 
 @cache_wrapper
+def exists_phone_limit(phone):
+    """
+    used for autoship
+    """
+    key = prefix_key('phonelimit:%s' % phone)
+    return ProxyAgent().exists(key)
+
+@cache_wrapper
+def set_phone_limit(phone, carrier):
+    """
+    used for autoship
+    """
+    key = prefix_key('phonelimit:%s' % phone)
+    ProxyAgent().setnx(key, 'lala')
+    if carrier in ('IR', 'TRI'):
+        ProxyAgent().expire(key, 3*61)
+    else:
+        ProxyAgent().expire(key, 15*61)
+
+@cache_wrapper
 def get_left_numbers_count(activity_id):
     """
     used for db

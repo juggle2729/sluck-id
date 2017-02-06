@@ -2,12 +2,15 @@
 import json
 import hashlib
 import logging
+import re
 import requests
 
 from django.views.decorators.http import require_GET, require_POST
 from django.conf import settings
 
 from luckycommon.third.image import get_token, delete_data_by_key
+from luckycommon.order.db import order as order_db
+from luckycommon.order.model.order import AwardedOrder, ORDER_STATUS
 
 from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
@@ -49,6 +52,21 @@ def datacell_f(req):
 @response_wrapper
 def datacell_s(req):
     _LOGGER.error('It seems Datacell , %s', req.body)
+    return {}
+
+@response_wrapper
+def mobilepulsa(req):
+    _LOGGER.info('It seems pulsa , %s,    %s,   %s', req.body, req.GET,req.POST)
+    if '<status>2</status>' in req.body:
+        l = re.compile(r'\<ref_id\>.*\<\/ref_id')
+        p = l.search(req.body)
+        if p:
+            order_id = int(p.group()[8:-8])
+            _LOGGER.error('beiju, pulsa charge fail, %s', order_id)
+     #       order_db.update_order_info(
+     #               order_id,
+     #               {'status': ORDER_STATUS.AWARDED}, None, True
+     #       )
     return {}
 
 
