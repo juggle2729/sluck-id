@@ -593,8 +593,8 @@ class ActivityAnnounceHandler(EventHandler):
                 first_candidates = v_list
 
         _LOGGER.info(
-            'check result %s, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
-            activity.id, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust, adjust_reason)
+            'check result <%s, %s>, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
+            activity.template_id, activity.term_number, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust, adjust_reason)
         return need_adjust, need_virtual, need_loser, first_candidates, second_candidates
 
     def announce_activity(self, activity_id, last_payat):
