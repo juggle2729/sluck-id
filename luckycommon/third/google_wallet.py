@@ -15,6 +15,7 @@ from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail
 from luckycommon.model.pay import PayStatus
 from luckycommon.pay.handler import pay_after_recharge
 from luckycommon.utils.exceptions import ParamError
+from luckycommon.cache.redis_cache import set_gwallet_purchase_token
 
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
@@ -74,6 +75,7 @@ def google_check_notify(request):
         check_string = info['info']
         info = json.loads(info['info'])
         trade_no = info.get('orderId')
+        purchase_token = info.get('purchaseToken')
         pay_id = int(info.get('developerPayload'))
         trade_status = info.get('purchaseState')
         price = PRODUCT_ID[info.get('productId').strip()]
@@ -103,6 +105,7 @@ def google_check_notify(request):
         if int(trade_status) == 0:
             _LOGGER.info('Google Wallet Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
                 user_id, pay_id, total_fee, currency))
+            set_gwallet_purchase_token(trade_no, user_id, purchase_token)
             res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
             if res:
                 _TRACKER.info({'user_id': user_id, 'type': 'recharge',

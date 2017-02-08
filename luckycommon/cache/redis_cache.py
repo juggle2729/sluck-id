@@ -927,3 +927,19 @@ def get_buy_records(user_id, activity_id, offset, limit):
     key = prefix_key('buyrecords:%s' % cache_key)
     record_list = ProxyAgent().get(key)
     return None if not record_list else json.loads(record_list)
+
+
+
+@cache_wrapper
+def set_gwallet_purchase_token(orderid, userid, ptoken):
+    key = prefix_key('purchasetoken:%s' % orderid)
+    field = str(userid)
+    value = str(ptoken)
+    return ProxyAgent().hset(key, field, value)
+
+@cache_wrapper
+def get_gwllet_purchase_token(orderid, userid):
+    key = prefix_key('purchasetoken:%s' % orderid)
+    field = str(userid)
+    return ProxyAgent().hget(key, field)
+
