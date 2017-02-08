@@ -9,9 +9,9 @@ from luckycommon.cache.redis_cache import get_gwllet_purchase_token
 from luckycommon.account.db.account import black_account
 
 
-KEY_JSON_FILE=''
-GOOGLE_SCOPES_URL=['https://www.googleapis.com/auth/androidpublisher',]
-PACKAGE_NAME='com.idyyg.tokohemat'
+KEY_JSON_FILE = 'tools/secret.json'
+GOOGLE_SCOPES_URL = ['https://www.googleapis.com/auth/androidpublisher',]
+PACKAGE_NAME = 'com.idyyg.tokohemat'
 
 
 
@@ -41,15 +41,5 @@ def black_account_by_purchase():
         else:
             print "Can't find user info, purchase token info: {0}".format(purchase_token)
 
-
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == "__main__":
+    black_account_by_purchase()
