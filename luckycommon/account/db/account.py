@@ -19,6 +19,7 @@ from luckycommon.utils.decorator import sql_wrapper
 from luckycommon.utils.respcode import StatusCode
 
 _LOGGER = logging.getLogger('lucky')
+_TRACKER = logging.getLogger('tracker')
 _BAN_VIRTUAL_LOGIN = settings.BAN_VIRTUAL_LOGIN
 
 
@@ -43,6 +44,16 @@ def get_account(user_id, use_cache=False):
         account = Account.query.filter(Account.id == user_id).first()
     return account
 
+@sql_wrapper
+def black_account(user_id, reason=''):
+    account = get_account(user_id)
+    json_extend = json.loads(account.extend or '{}')
+    json_extend['black_reason'] = reason
+    extend = json.dumps(json_extend, ensure_ascii=False)
+    account.extend = extend
+    account.status = 1
+    account.save()
+    _TRACKER.info({'user_id': user_id, 'type': 'black'})
 
 @sql_wrapper
 def get_logon_info(user_id):
