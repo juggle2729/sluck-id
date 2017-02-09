@@ -125,9 +125,9 @@
                             <% } else if (info.receipt_address.shipping_type == 6) { %>
                               <p>电费: <%= info.receipt_address.address %></p>
                             <% } else { %>
-                              <p>联系方式: <%= info.receipt_address.phone %></p>
                               <p>通信地址: <%= info.receipt_address.address || '' %></p>
                             <%  }%>
+                            <p>联系方式: <%= info.receipt_address.phone %></p>
                             <p>备注: <%= info.remark || '' %></p>
                         <%  } %>
                     </div>
