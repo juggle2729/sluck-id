@@ -83,8 +83,8 @@ urlpatterns = patterns(
     # feedback
     url(r'feedback/?$', FeedbackView.as_view()),
     url(r'feedback/uninstall/?$', UninstallView.as_view()),
-    url(r'feedback/uninstall/report/?$',
-        'luckyadmin.stats.report.get_uninstall_report'),
+    #url(r'feedback/uninstall/report/?$',
+    #    'luckyadmin.stats.report.get_uninstall_report'),
     url(r'notification/?$', NotificationView.as_view()),
     url(r'notification/(?P<notify_id>\d+)/?$',
         SingleNotificationView.as_view()),
