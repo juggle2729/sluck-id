@@ -26,6 +26,8 @@ SHIPPING_TYPE = Enum({
     "QQ": (2, u'QQ'),
     "COIN": (3, u'夺宝币'),
     "EMAIL": (4, u'邮箱'),
+    "GOJEK": (5, u'gojek'),
+    "ELECTRICTIY_BILL": (6, u'electricity bill'),
 })
 
 

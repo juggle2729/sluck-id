@@ -5,6 +5,12 @@ from httplib2 import Http
 from oauth2client.service_account import ServiceAccountCredentials
 from apiclient.discovery import build
 import time
+import sys
+import os
+
+# add up one level dir into sys path
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache.redis_cache import get_gwllet_purchase_token, get_gwallet_refund_endtime, \
     set_gwallet_refund_endtime
@@ -37,11 +43,14 @@ def get_voidedpurchases():
     purchases = s.purchases()
     voidedpurchases = purchases.voidedpurchases()
     start_time = get_start_time()
+    start_time = long(start_time)
+    print 'Start time is: {0} ms'.format(start_time)
     voidedpurchases_list = []
     result = voidedpurchases.list(packageName=PACKAGE_NAME, maxResults=100, startTime=start_time).execute()
     while True:
         if result.has_key('voidedPurchases'):
-            voidedpurchases_list += result['voidedPurchases']
+            for p in result['voidedPurchases']:
+                voidedpurchases_list.append(p)
         next_pagetoken =  get_next_pagetoken(result)
         if next_pagetoken == None:
             break
@@ -55,22 +64,25 @@ def get_voidedpurchases():
 def black_account_by_purchase():
     voided_time_set = set()
     r = get_voidedpurchases()
-    for p in r:
-        for info in p:
-            purchase_token = info.get['purchaseToken']
-            voided_time_millis = info.get['voidedTimeMillis']
-            voided_time_set.add(int(voided_time_millis))
-            value = get_gwllet_purchase_token(purchase_token)
-            if value != None:
-                userid = value['user_id']
-                orderid = value['order_id']
-                black_reason = 'black account by gwallet refund, order id is {0}, voided time is {1}'.format(orderid, voided_time_millis)
-                black_account(userid, black_reason)
-                print 'black account info: {0} ,userid: {1}, orderid: {2}'.format(purchase_token, userid, orderid)
-            else:
-                print "Can't find user info, purchase token info: {0}".format(purchase_token)
-    next_start_time = max(voided_time_set)
-    set_gwallet_refund_endtime(next_start_time)
+    print 'voidedpurchases list: {0}'.format(r)
+    for info in r:
+        print info
+        purchase_token = info.get('purchaseToken')
+        voided_time_millis = info.get('voidedTimeMillis')
+        voided_time_set.add(int(voided_time_millis))
+        value = get_gwllet_purchase_token(purchase_token)
+        print "Get gwallet purchase info in redis: {0}".format(value)
+        if len(value) != 0:
+            userid = value['user_id']
+            orderid = value['order_id']
+            black_reason = 'black account by gwallet refund, order id is {0}, voided time is {1}'.format(orderid, voided_time_millis)
+            black_account(userid, black_reason)
+            print 'black account info: {0} ,userid: {1}, orderid: {2}'.format(purchase_token, userid, orderid)
+        else:
+            print "Can't find user info, purchase token info: {0}".format(purchase_token)
+    if len(voided_time_set) != 0:
+        next_start_time = max(voided_time_set)
+        set_gwallet_refund_endtime(next_start_time)
 
 
 if __name__ == "__main__":

@@ -157,6 +157,12 @@ def update_award_order(user_id, order_id, receipt_info):
                 'resell_name': receipt_info.get('resell_name'),
                 'address': ''
             }
+        if shipping_type == 4:
+            receipt_info.update({'address': receipt_info.get('email')})
+        elif shipping_type == 5:
+            receipt_info.update({'address': receipt_info.get('gojek')})
+        elif shipping_type == 6:
+            receipt_info.update({'address': receipt_info.get('electricity_bill')})
     order_db.update_receipt_info(order_id, receipt_info, remark)
     redis_cache.remove_user_pending(user_id, 'award')
 

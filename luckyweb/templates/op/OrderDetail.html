@@ -118,10 +118,18 @@
                             <p>resell 支行: <%= info.receipt_address.resell_cabang || '' %></p>
                         <% }else { %>
                             <p>姓名: <%= info.receipt_address.name || ''%></p>
-                            <p>联系方式: <%= info.receipt_address.phone %></p>
-                            <p>通信地址: <%= info.receipt_address.address || '' %></p>
+                            <% if(info.receipt_address.shipping_type == 4){ %>
+                              <p>Email: <%= info.receipt_address.address %></p>
+                            <% } else if (info.receipt_address.shipping_type == 5) { %>
+                              <p>Gojek: <%= info.receipt_address.address %></p>
+                            <% } else if (info.receipt_address.shipping_type == 6) { %>
+                              <p>电费: <%= info.receipt_address.address %></p>
+                            <% } else { %>
+                              <p>联系方式: <%= info.receipt_address.phone %></p>
+                              <p>通信地址: <%= info.receipt_address.address || '' %></p>
+                            <%  }%>
                             <p>备注: <%= info.remark || '' %></p>
-                      <%  } %>
+                        <%  } %>
                     </div>
                 </div>
                 </div>
