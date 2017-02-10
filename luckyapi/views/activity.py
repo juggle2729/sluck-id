@@ -453,7 +453,7 @@ def get_tids_activitys(request):
     try:
         tids = request.GET.get('tids')
         if not tids:
-            raise
+            raise ParamError('param invalid')
         page = int(request.GET.get('page', 0))
         size = int(request.GET.get('size', 0))
     except:

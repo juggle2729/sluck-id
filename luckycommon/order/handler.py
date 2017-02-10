@@ -215,7 +215,7 @@ def view_current_status(user_id, activity_id, order_id):
     receipt_address = {} if not order.receipt_address else json.loads(
         order.receipt_address)
     if order.status in (ORDER_STATUS.WAIT_SHIP, ORDER_STATUS.WAIT_RECEIPT, ORDER_STATUS.DEAL, ORDER_STATUS.SHOW):
-        # shipping_type = receipt_address.get('shipping_type')
+        shipping_type = int(receipt_address.get('shipping_type'))
         order_detail.receipt_info = {
             'name': receipt_address.get('name'),
             'phone': receipt_address.get('phone'),
@@ -223,6 +223,13 @@ def view_current_status(user_id, activity_id, order_id):
             'address': receipt_address.get('address'),
             'addr_code': receipt_address.get('addr_code')
         }
+        if shipping_type in (4, 5, 6):
+            order_detail.receipt_info = {
+                'name': receipt_address.get('name'),
+                'phone': receipt_address.get('phone'),
+                'number': receipt_address.get('phone'),  # for compatible
+                'address': receipt_address.get('address'),
+            }
         if 'remark' in extend:
             order_detail.remark = extend.get('remark')
     if order.status in (ORDER_STATUS.WAIT_RECEIPT, ORDER_STATUS.DEAL, ORDER_STATUS.SHOW):
