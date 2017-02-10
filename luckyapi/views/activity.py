@@ -452,6 +452,7 @@ def get_tids_activitys(request):
     """
     try:
         tids = request.GET.get('tids')
+        tids = [int(tid) for tid in json.loads(tids)]
         if not tids:
             raise ParamError('param invalid')
         page = int(request.GET.get('page', 0))

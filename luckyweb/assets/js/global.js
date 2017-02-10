@@ -221,6 +221,8 @@ window.SHIPPING_TYPE = {
     2: "Q币",
     3: "夺宝币",
     4: "Email",
+    5: "Gojek",
+    6: "电费",
 }
 
 window.SHIP_STATUS = {

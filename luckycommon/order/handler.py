@@ -112,6 +112,7 @@ def update_award_order(user_id, order_id, receipt_info):
     receipt_id = receipt_info.get('id')
     shipping_type = int(receipt_info.get('shipping_type', 0))
     remark = receipt_info.get('remark')
+    receipt_info_new = receipt_info.copy()
     if remark:
         remark = remark.strip()
         remark = remark[:100]
