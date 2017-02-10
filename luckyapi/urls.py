@@ -173,6 +173,7 @@ urlpatterns = patterns(
     # search
     url(r'^search/hotkeys/?$', 'luckyapi.views.activity.get_hot_keys'),
     url(r'^search/?$', 'luckyapi.views.activity.get_search_activitys'),
+    url(r'^tids/?$', 'luckyapi.views.activity.get_tids_activitys'),
     # level
     url(r'^my/level/?$', 'luckyapi.views.level.get_my_level'),
     url(r'^level/activate_coupon/?$', 'luckyapi.views.level.activate_coupon'),

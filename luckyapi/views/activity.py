@@ -443,3 +443,28 @@ def get_search_activitys(request):
         'size': len(activitys),
     }
     return data
+
+@require_GET
+@response_wrapper
+def get_tids_activitys(request):
+    """
+    通过tids查找
+    """
+    try:
+        tids = request.GET.get('tids')
+        if not tids:
+            raise
+        page = int(request.GET.get('page', 0))
+        size = int(request.GET.get('size', 0))
+    except:
+        raise ParamError('param invalid')
+    activitys = view_activitys_by_tids(tids, page, size)
+    activitys = filter_apples(request, activitys)
+    activitys = filter_gp(request, activitys)
+    activitys = _filter_star(request, activitys)
+    data = {
+        'list': activitys,
+        'page': page if page > 0 else 1,
+        'size': len(activitys),
+    }
+    return data

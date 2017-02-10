@@ -139,7 +139,7 @@ def update_award_order(user_id, order_id, receipt_info):
     if shipping_type:
         is_resell = receipt_info.get('is_resell')
         if not is_resell:
-            receipt_info = {
+            receipt_info_new = {
                 'shipping_type': shipping_type,
                 'name': SHIPPING_TYPE.get_label(shipping_type),
                 'phone': receipt_item.number if receipt_item else receipt_info.get(
@@ -147,7 +147,7 @@ def update_award_order(user_id, order_id, receipt_info):
                 'address': ''
             }
         else:
-            receipt_info = {
+            receipt_info_new = {
                 'shipping_type': shipping_type,
                 'name': SHIPPING_TYPE.get_label(shipping_type),
                 'resell_phone': receipt_info.get('resell_phone'),
@@ -158,11 +158,12 @@ def update_award_order(user_id, order_id, receipt_info):
                 'address': ''
             }
         if shipping_type == 4:
-            receipt_info.update({'address': receipt_info.get('email')})
+            receipt_info_new.update({'address': receipt_info.get('email')})
         elif shipping_type == 5:
-            receipt_info.update({'address': receipt_info.get('gojek')})
+            receipt_info_new.update({'address': receipt_info.get('gojek')})
         elif shipping_type == 6:
-            receipt_info.update({'address': receipt_info.get('electricity_bill')})
+            receipt_info_new.update({'address': receipt_info.get('electricity_bill')})
+        receipt_info = receipt_info_new
     order_db.update_receipt_info(order_id, receipt_info, remark)
     redis_cache.remove_user_pending(user_id, 'award')
 
