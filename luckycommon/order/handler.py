@@ -113,6 +113,7 @@ def update_award_order(user_id, order_id, receipt_info):
     shipping_type = int(receipt_info.get('shipping_type', 0))
     remark = receipt_info.get('remark')
     receipt_info_new = receipt_info.copy()
+    receipt_name = receipt_info.get('name', SHIPPING_TYPE.get_label(shipping_type))
     if remark:
         remark = remark.strip()
         remark = remark[:100]
@@ -125,7 +126,7 @@ def update_award_order(user_id, order_id, receipt_info):
             raise ParamError('receipt id invalid')
         if shipping_type:
             receipt_info.update({
-                'name': SHIPPING_TYPE.get_label(shipping_type),
+                'name': receipt_name,
                 'phone': receipt_item.number,
                 'address': ''
             })
@@ -142,7 +143,7 @@ def update_award_order(user_id, order_id, receipt_info):
         if not is_resell:
             receipt_info_new = {
                 'shipping_type': shipping_type,
-                'name': SHIPPING_TYPE.get_label(shipping_type),
+                'name': receipt_name,
                 'phone': receipt_item.number if receipt_item else receipt_info.get(
                     'number'),
                 'address': ''
@@ -150,7 +151,7 @@ def update_award_order(user_id, order_id, receipt_info):
         else:
             receipt_info_new = {
                 'shipping_type': shipping_type,
-                'name': SHIPPING_TYPE.get_label(shipping_type),
+                'name': receipt_name,
                 'resell_phone': receipt_info.get('resell_phone'),
                 'resell_cabang': receipt_info.get('resell_cabang'),
                 'resell_bank': receipt_info.get('resell_bank'),
