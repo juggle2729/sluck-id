@@ -138,7 +138,7 @@ _STEAM_REQ = '''
     </param>
   </params>
 </methodCall>'''
-COIN_TIDS = []
+COIN_TIDS = {802:100}
 _PULSA_TIDS = {
     792: 5000,
     666: 10000,
@@ -556,7 +556,6 @@ def shipping_coin(await_order, activity, recharge_price=None):
         return
     if not recharge_price:
         recharge_price = COIN_TIDS[activity.template_id]
-    _LOGGER.info('begin recharge, %s, price %s', await_order.order_id, recharge_price)
     print('begin recharge, %s, price %s', await_order.order_id, recharge_price)
     try:
         # 加锁
@@ -585,11 +584,9 @@ def shipping_coin(await_order, activity, recharge_price=None):
             push_handler.push_shipping(
                 await_order.order_id, {'express': 'coin'})
             # show_order(await_order)
-            _LOGGER.info('finish recharge %s coin %s for %s', recharge_price, await_order.order_id, user_id)
             print('finish recharge %s coin %s for %s', recharge_price, await_order.order_id, user_id)
             return
     except Exception as e:
-        _LOGGER.exception('send coin to user exception, %s-%s, %s', user_id, await_order.order_id, e)
         print('send coin to user exception, %s-%s, %s', user_id, await_order.order_id, e)
 
 
