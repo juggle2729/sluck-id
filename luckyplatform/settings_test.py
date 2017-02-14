@@ -31,7 +31,7 @@ GEOLITE_CITY_DB = '/home/ubuntu/af-env/data/GeoLite2-City.mmdb'
 
 LIST_UPDATE = '/home/ubuntu/af-env/luckyservice/luckycommon/virtual/list_update'
 
-WEB_APP_ROOT_URL = 'http://121.40.29.144/'
+WEB_APP_ROOT_URL = 'http://121.40.29.144:9898'
 
 ADMIN_ROOT_URL = 'http://121.40.29.144/'
 
