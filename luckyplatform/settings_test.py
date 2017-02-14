@@ -7,12 +7,12 @@ ALLOWED_HOSTS = ['*']
 
 QINIU_KEY_PAIR = ('sVc1BlAXhHDHYHJ7gjW4VD6iqP5zo7iC2pf9c3n8',
                   'Cixqb8jq6esZjzhHonc8OkFY3mGIIAQlOK08DCm0')
-QINIU_DOMAIN = 'http://a.lucky-gou.com/'
+QINIU_DOMAIN = 'http://oi9q1c7wq.bkt.clouddn.com/'
+USER_BUCKET_NAME = 'lucky-test'
+ADMIN_BUCKET_NAME = 'lucky-test'
 
-USER_BUCKET_NAME = 'en-lucky-avatars'
 TIME_OFFSET = 7
 TIME_ZONE = 'Asia/Vientiane'
-ADMIN_BUCKET_NAME = 'en-lucky-pics'
 
 EXCHANGE_RATIO = 1000
 REGION = u'印尼'

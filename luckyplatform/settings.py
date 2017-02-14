@@ -1,15 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Django settings for luckyplatform project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
-"""
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import raven
 
@@ -17,13 +6,8 @@ from luckyplatform.jsonlogger import JsonFormatter
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'mzm2ojrfc54x#9%dptxc4c-!pa3ppj!h(5=@^h*346k-fs65vi'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 TEMPLATE_DEBUG = True
@@ -32,12 +16,11 @@ CACHE_REPORT = False
 
 ALLOWED_HOSTS = ['*']
 
-QINIU_KEY_PAIR = ('Ky-CJbVCsu109vAUtUTPRzlfMJgoRXD9bkXutD6_',
-                  '6vG5vafwFDxR0mffZK4w7-uQxWdrw2Hl6jS2ix3D')
-QINIU_DOMAIN = 'http://7xod1l.com1.z0.glb.clouddn.com/'
-
-USER_BUCKET_NAME = 'luckyservice'
-ADMIN_BUCKET_NAME = 'luckyservice'
+QINIU_KEY_PAIR = ('sVc1BlAXhHDHYHJ7gjW4VD6iqP5zo7iC2pf9c3n8',
+                  'Cixqb8jq6esZjzhHonc8OkFY3mGIIAQlOK08DCm0')
+QINIU_DOMAIN = 'http://oi9q1c7wq.bkt.clouddn.com/'
+USER_BUCKET_NAME = 'lucky-test'
+ADMIN_BUCKET_NAME = 'lucky-test'
 
 REGION = u'测试'
 
@@ -96,7 +79,7 @@ MISS_RETURN_TID = 641
 
 ADV_FLAG = False  # GP版开关, 旧版不用放着
 
-GP_FLAG = True  # GP 审核开关, True 为开�开启
+GP_FLAG = True  # GP 审核开关, True 为开�开启
 GP_VERSION_CODE = 120
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 662,664,663,665  ]
 
