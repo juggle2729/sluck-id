@@ -69,22 +69,22 @@ def get_my_credit(request):
         'command': '16#' if old_version else '11#%s/user/my_daily_attendance' % settings.WEB_APP_ROOT_URL,
         'enable': 0 if today_sign > 0 else 1
     })
-    credit_activity.append({
-        'icon': ICON_BUY,
-        'title': u"Bắt đầu dùng danh hiệu",
-        'content': u"Mỗi ngày tiêu 1 , nhận được 10",
-        'tips': u"Kiềm tiền",
-        'command': '0#',
-        'enable': 1
-    })
-    credit_activity.append({
-        'icon': ICON_PARTNER,
-        'title': u"mời bạn cùng chơi",
-        'content': u"Bạn và bạn của bạn đều có giải thưởng",
-        'tips': u"Kiềm tiền",
-        'command': '11#%s/user/my_rebate' % settings.WEB_APP_ROOT_URL,
-        'enable': 1
-    })
+    # credit_activity.append({
+    #     'icon': ICON_BUY,
+    #     'title': u"Bắt đầu dùng danh hiệu",
+    #     'content': u"Mỗi ngày tiêu 1 , nhận được 10",
+    #     'tips': u"Kiềm tiền",
+    #     'command': '0#',
+    #     'enable': 1
+    # })
+    # credit_activity.append({
+    #     'icon': ICON_PARTNER,
+    #     'title': u"mời bạn cùng chơi",
+    #     'content': u"Bạn và bạn của bạn đều có giải thưởng",
+    #     'tips': u"Kiềm tiền",
+    #     'command': '11#%s/user/my_rebate' % settings.WEB_APP_ROOT_URL,
+    #     'enable': 1
+    # })
     data['category'].append({
         'title': u"Tín dụng hàng ngày",
         'credit_activity': credit_activity
