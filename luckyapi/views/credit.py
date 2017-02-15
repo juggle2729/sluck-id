@@ -69,14 +69,14 @@ def get_my_credit(request):
         'command': '16#' if old_version else '11#%s/user/my_daily_attendance' % settings.WEB_APP_ROOT_URL,
         'enable': 0 if today_sign > 0 else 1
     })
-    # credit_activity.append({
-    #     'icon': ICON_BUY,
-    #     'title': u"Bắt đầu dùng danh hiệu",
-    #     'content': u"Mỗi ngày tiêu 1 , nhận được 10",
-    #     'tips': u"Kiềm tiền",
-    #     'command': '0#',
-    #     'enable': 1
-    # })
+    credit_activity.append({
+        'icon': ICON_BUY,
+        'title': u"Bắt đầu dùng danh hiệu",
+        'content': u"Mỗi ngày tiêu 1 , nhận được 10",
+        'tips': u"Kiềm tiền",
+        'command': '0#',
+        'enable': 1
+    })
     # credit_activity.append({
     #     'icon': ICON_PARTNER,
     #     'title': u"mời bạn cùng chơi",
@@ -89,19 +89,19 @@ def get_my_credit(request):
         'title': u"Tín dụng hàng ngày",
         'credit_activity': credit_activity
     })
-    if not old_version:
-        fresh_mission_done = fresh_mission.get_step_status(request.user_id)
-        data['category'].append({
-            'title': u"Tín dụng tăng",
-            'credit_activity': [{
-                'icon': ICON_FRESH,
-                'title': u"Nhiệm vụ người mới chơi",
-                'content': u"Nhanh tay, chuyển 1 tệ",
-                'tips': u"nhận lì xì",
-                'command': '11#%s/user/newbie_task' % settings.WEB_APP_ROOT_URL,
-                'enable': 0 if fresh_mission_done.get('activated') else 1
-            }]
-        })
+    # if not old_version:
+    #     fresh_mission_done = fresh_mission.get_step_status(request.user_id)
+    #     data['category'].append({
+    #         'title': u"Tín dụng tăng",
+    #         'credit_activity': [{
+    #             'icon': ICON_FRESH,
+    #             'title': u"Nhiệm vụ người mới chơi",
+    #             'content': u"Nhanh tay, chuyển 1 tệ",
+    #             'tips': u"nhận lì xì",
+    #             'command': '11#%s/user/newbie_task' % settings.WEB_APP_ROOT_URL,
+    #             'enable': 0 if fresh_mission_done.get('activated') else 1
+    #         }]
+    #     })
     return data
 
 
