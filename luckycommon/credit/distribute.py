@@ -25,13 +25,14 @@ _LOGGER = logging.getLogger('worker')
 
 
 def is_loser(user_id, target_amount):
+    return False
     user_stats = redis_cache.get_user_stats(user_id)
     if not user_stats:
         return False
     total_recharge = int(user_stats.get('total_recharge', 0))
     total_win = int(user_stats.get('total_win', 0))
     last_win = int(user_stats.get('last_win', 0))
-    if total_recharge < 20 or float(total_recharge - total_win - target_amount)/total_recharge < -0.1:
+    if total_recharge < 1000 or float(total_recharge - total_win - target_amount) / total_recharge < -0.1:
         return False
     exist_record = DistributeRecord.query.filter(DistributeRecord.user_id == user_id).first()
     if exist_record:
@@ -57,11 +58,13 @@ def start():
     _LOGGER.info('start distribute credit pool, total amount:%s, divided credit:%s', pool_amount, divided_amount)
     target_users = set()
     account_signs = credit_db.get_sign_users(start_date, end_date)
+    print 'account_signs %s' % account_signs
     for account_sign in account_signs:
         user_id = account_sign.user_id
-        is_valid = is_loser(user_id, divided_amount/1000)
+        is_valid = is_loser(user_id, divided_amount / 1000)
         if is_valid:
             target_users.add(user_id)
+    print 'target users: %s' % target_users
     supply_count = 100 - len(target_users)
     if len(target_users) < 100:
         while True:
@@ -70,13 +73,14 @@ def start():
             if len(target_users) >= 100:
                 break
     target_users = random.sample(target_users, 100)
+    print 'target users after resample: %s' % target_users
     # create detail record
     term_id = distribute_term.id
     for user_id in target_users:
-        credit_db.add_credit(user_id, divided_amount, u'幸运元宝')
+        credit_db.add_credit(user_id, divided_amount, u'奖池瓜分')
         account = get_account(user_id)
         user_info = {
-            'nick_name': account.nick_name, 
+            'nick_name': account.nick_name,
             'avatar_id': account.avatar_id,
         }
         record = DistributeRecord()
@@ -87,8 +91,8 @@ def start():
         record.save()
         push_handler.push_sign_award(user_id, divided_amount)
     _LOGGER.info('distributed credit pool, total amount:%s, divided credit:%s, supply count:%s',
-        pool_amount, divided_amount, supply_count)
-    
+                 pool_amount, divided_amount, supply_count)
+
 
 if __name__ == "__main__":
     start()
