@@ -4,8 +4,6 @@ from luckycommon.model import orm
 
 
 
-
-
 class IAPReceipt(orm.Model):
     __tablename__ = "iap_receipt"
     id = orm.Column(orm.VARCHAR, primary_key=True) #票据id
@@ -18,6 +16,7 @@ class IAPReceipt(orm.Model):
     provide_status = orm.Column(orm.Integer)  # 发货状态
     created_at = orm.Column(orm.DATETIME)
     updated_at = orm.Column(orm.DATETIME)
+
 
 class IAPInvalidReceipt(orm.Model):
     __tablename__ = "iap_invalid_receipt"
