@@ -24,6 +24,7 @@ class PayType(CustomEnum):
     MIMO_BCA = 18
     CODA_SMS = 19
     GOOGLE_BILLING = 20
+    APPLE_IAP = 21
 
 
 
@@ -170,7 +171,12 @@ AVAILABLE_PAY_TYPES = {
            'comment': u'GOOGLE BILLING',
            'highlight': 0,
     },
-
+    PayType.APPLE_IAP.value: {
+        'name': u'Apple IAP',
+        'pay_type': PayType.APPLE_IAP.value,
+        'comment': u'Apple IAP',
+        'highliht': 0,
+    },
 }
 class Pay(orm.Model):
     __tablename__ = "pay"

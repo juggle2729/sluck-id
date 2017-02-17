@@ -15,12 +15,13 @@ from luckycommon.cache import redis_cache
 from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
-from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion,bluepay,mimo_pay, google_wallet
+from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion,bluepay,mimo_pay, google_wallet, iap
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.respcode import StatusCode
+from luckycommon.utils.exceptions import AuthenticateError
 
 _LOGGER = logging.getLogger('pay')
 
@@ -316,6 +317,29 @@ def google_notify(request):
     except Exception as e:
         _LOGGER.exception('Google Pay notify exception.(%s)' % e)
         return {'msg':e}
+
+
+@require_POST
+@response_wrapper
+def iap_notify(request):
+    '''
+    校验IAP 票据
+    :param request:
+    :return:
+    '''
+    if not request.user_id:
+        raise AuthenticateError('not login')
+    try:
+        user_id = request.user_id
+        _LOGGER.error('IIIIIIIIIIIIIIIIIIIIIIII iap, user id: %s,date: %s %s', user_id, request.GET, request.POST)
+        env_flag = iap.check_sandbox_flag(request)
+        receipt_dic = json.loads(request.body)
+        resp = iap.iap_check_notify(user_id, receipt_dic, env_flag)
+        return resp
+    except Exception as e:
+        _LOGGER.exception('IAP Pay notify exception.(%s)' % e)
+        return {'msg': e}
+
 
 @require_GET
 def bluepay_notify(request):
