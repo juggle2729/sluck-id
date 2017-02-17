@@ -406,7 +406,9 @@ def shipping_pulsa(await_order, activity):
     seed = str(randint(100, 99999))
     req = _PULSA_XML % (str(await_order.order_id) +'#'+seed, charge_account, product, md5('tokoseributokoseribu123*'+str(await_order.order_id) +'#'+ seed).hexdigest())
     headers = {'Content-Type': 'application/xml'} # set what your server accepts
+    print req, await_order.order_id
     resp = requests.post(_PULSA_URL, data=req, headers=headers)
+    print resp, await_order.order_id
     if '<status>0</status>' in resp.content:
         print 'done', await_order.order_id
         order_db.update_order_info(

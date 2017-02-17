@@ -27,11 +27,11 @@ verifyReceiptURL = {
 APPLE_BID = 'com.as.treasure.snatch.tokoseribu.iShop'
 
 PRODUCT_ID = {
-    'TokoSeribu_15koins': 15,
-    'TokoSeribu_29koins': 29,
-    'TokoSeribu_45koins': 45,
-    'TokoSeribu_99koins': 99,
-    'TokoSeribu_199koins': 199
+    'TokoSeribu_15koins': 15.00,
+    'TokoSeribu_29koins': 29.00,
+    'TokoSeribu_45koins': 45.00,
+    'TokoSeribu_99koins': 99.00,
+    'TokoSeribu_199koins': 199.00
 }
 
 
@@ -70,7 +70,7 @@ def _get_hash_text(receipt):
 
 def iap_check_notify(user_id, receipt_dic, env_flag):
     try:
-        _LOGGER.info('IIIIIIIIIIIIIIIIIIIIIIIrequest_info %s' % receipt_dic)
+        _LOGGER.info('IIIIIIIIIIIIIIIIIIIIIII request_info %s' % receipt_dic)
         receipt_data = receipt_dic.get('receipt')
         transaction_id = receipt_dic.get('transaction_id')
     except:
@@ -79,49 +79,61 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
     receipt_date_hash = _get_hash_text(receipt_data)
     invalid_receipt_in_db = iap_receipt.get_invalid_receipt_by_hash_text(receipt_date_hash)
     if invalid_receipt_in_db: #通过hash值找到票据记录
-        _LOGGER.error('IAP receipt invalid, receipt data: %s,receipt hash : %s' % (receipt_data, receipt_date_hash))
-        return {'status': 2, 'msg': 'IAP receipt invalid'}
+        _LOGGER.error('IAP receipt invalid, user id: %s,receipt data: %s,receipt hash : %s' % (
+            user_id, receipt_data, receipt_date_hash))
+        return {'status': 1, 'msg': 'IAP receipt invalid'}
     #校验票据
     receipt_info = _check_receipt(receipt_data)
     if receipt_info == None:
-        _LOGGER.error('IAP check receipt from AppStore error, transaction id: %s, '
-                      'receipt_data: %s' % (transaction_id, receipt_data))
-        raise ParamError('check receipt error')
+        _LOGGER.error('IAP check receipt from AppStore error, user id: %s, transaction id: %s, '
+                      'receipt_data: %s' % (user_id, transaction_id, receipt_data))
+        return {'status': 2, 'msg': 'Check receipt error. Please retry'}
     receipt_status = receipt_info.get('status')
     if receipt_status not in [0, 21007]:
-        _LOGGER.error('IAP receipt invalid, receipt data: %s, receipt hash : %s, return status %s' % (
-            receipt_data, receipt_date_hash, receipt_status))
+        _LOGGER.error('IAP receipt invalid, user id: %s, receipt data: %s, receipt hash : %s, return status %s' % (
+            user_id, receipt_data, receipt_date_hash, receipt_status))
         # save invalid receipt to db
         iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, receipt_status)
-        return {'status': 2, 'msg': 'IAP receipt invalid'}
+        return {'status': 1, 'msg': 'IAP receipt invalid'}
     if receipt_status == 21007:  #sandbox环境票据
         if env_flag:
             receipt_info = _check_receipt(receipt_data, env='sandbox')
             _LOGGER.info("IAP receipt check in sandbox environment")
+            if receipt_info == None:
+                _LOGGER.error('IAP check receipt from AppStore sandbox error, user id: %s, transaction id: %s, '
+                              'receipt data: %s' % (user_id, transaction_id, receipt_data))
+                return {'status': 2, 'msg': 'Check receipt error. Please retry'}
+            receipt_status = receipt_info.get('status')
+            if receipt_status != 0:
+                _LOGGER.error("IAP receipt check in sandbox environment status error, user id: %s, transaction id: %s, "
+                              "receipt data: %s, return status %s" % (
+                    user_id, transaction_id, receipt_data, receipt_status))
+                return {'status': 1, 'msg': 'IAP receipt invalid'}
         else:
-            _LOGGER.error('IAP receipt environment is sandbox, receipt data: %s, receipt hash : %s, return status %s' % (
-                receipt_data, receipt_date_hash, receipt_status))
-            # iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, receipt_status)
-            return {'status': 2, 'msg': 'IAP receipt invalid'}
+            _LOGGER.error('IAP receipt environment is sandbox, user id: %s, receipt data: %s,'
+                          ' receipt hash : %s, return status %s' % (
+                user_id,receipt_data, receipt_date_hash, receipt_status))
+            iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, receipt_status)
+            return {'status': 1, 'msg': 'IAP receipt invalid'}
     _LOGGER.info("IAP receipt App Store check Success, user id: %s, receipt info: %s" % (user_id, receipt_info))
     # 校验bundle id
     receipt = receipt_info.get('receipt')
     r_bid = receipt.get('bundle_id')
     if r_bid != APPLE_BID:
-        _LOGGER.error("IAP receipt bid invalid,bid: %s" % r_bid)
+        _LOGGER.error("IAP receipt bid invalid,user id: %s, bid: %s" % (user_id, r_bid))
         # save invalid receipt to db
         iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, 30000)
-        return {'status': 2, 'msg': 'IAP receipt bid invalid'}
+        return {'status': 1, 'msg': 'IAP receipt bid invalid'}
 
     in_app = receipt.get('in_app')
     purchase_info = in_app[0]
     r_product_id = purchase_info.get('product_id')
     r_transaction_id = purchase_info.get('transaction_id')
     if r_product_id not in PRODUCT_ID.keys():
-        _LOGGER.error("IAP receipt product id invalid, purchase info: %s,product id: %s" % (
-            purchase_info, r_product_id))
+        _LOGGER.error("IAP receipt product id invalid, user id: %s,purchase info: %s,product id: %s" % (
+            user_id, purchase_info, r_product_id))
         iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, 30001)
-        return {'status': 2, 'msg': 'IAP receipt product id invalid'}
+        return {'status': 1, 'msg': 'IAP receipt product id invalid'}
     # 发货数量
     pay_amount = PRODUCT_ID[r_product_id]
     extend = {
@@ -132,41 +144,52 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
             'total_fee': pay_amount
         }
     }
-
     receipt_in_db = iap_receipt.get_receipt_by_transaction_id(r_transaction_id)
     if receipt_in_db:
         if receipt_in_db.provide_status == 1:
-            _LOGGER.info("IAP receipt has been delivery, transaction id: " % r_transaction_id)
+            _LOGGER.info("IAP receipt has been delivery, transaction id: %s" % r_transaction_id)
             return {'status': 1, 'msg': 'IAP receipt has been delivery'}
         else:
             # 补发
+            _LOGGER.info("IAP receipt has in db and reprovide, user id: %s, transaction id: %s, pay id: %s" % (
+                user_id, receipt_in_db.id, receipt_in_db.pay_id
+            ))
             res = add_pay_success_transaction(user_id, receipt_in_db.pay_id, pay_amount, extend)
             if res:
+                _LOGGER.info("IAP receipt reprovide success, user id: %s, transaction id: %s, "
+                             "pay id: %s, pay mount: %s" % (
+                    user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
+                ))
                 iap_receipt.update_receipt_provide_success(receipt_in_db.id)
                 return {'status': 0, 'msg': 'ok'}
             else:
+                _LOGGER.error("IAP receipt reprovide fail, user id: %s, transaction id: %s, "
+                             "pay id: %s, pay mount: %s" % (
+                                 user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
+                             ))
                 iap_receipt.update_receipt_provide_fail(receipt_in_db.id)
                 return {'status': 2, 'msg': 'Delivery error, please retry.'}
     else:
         # 创建订单
         pay = create_pay(user_id, PayType.APPLE_IAP)
+        pay.status = 1
+        pay.save()
+        _LOGGER.info("IAP receipt check success and provide, user id: %s, transaction id: %s, pay id: %s" %(
+            user_id, r_transaction_id, pay.id
+        ))
         iap_receipt.save_receipt(user_id, pay.id, receipt_data, receipt_info)
         res = add_pay_success_transaction(user_id, pay.id, pay_amount, extend)
         if res:
+            _LOGGER.info("IAP receipt provide success, user id: %s, transaction id: %s, "
+                         "pay id: %s, pay mount: %s" % (
+                             user_id, r_transaction_id, pay.id, pay_amount
+                         ))
             iap_receipt.update_receipt_provide_success(r_transaction_id)
             return {'status': 0, 'msg': 'ok'}
         else:
+            _LOGGER.info("IAP receipt provide fail, user id: %s, transaction id: %s, "
+                         "pay id: %s, pay mount: %s" % (
+                             user_id, r_transaction_id, pay.id, pay_amount
+                         ))
             iap_receipt.update_receipt_provide_fail(r_transaction_id)
             return {'status': 2, 'msg': 'Delivery error, please retry.'}
-
-
-
-
-
-
-
-
-
-
-
-
