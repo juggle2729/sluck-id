@@ -8,6 +8,8 @@ import logging
 from datetime import timedelta
 
 # add up one level dir into sys path
+from luckycommon.credit.model.check import DAILY_SIGN_AWARDS
+
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
@@ -25,7 +27,6 @@ _LOGGER = logging.getLogger('worker')
 
 
 def is_loser(user_id, target_amount):
-    return False
     user_stats = redis_cache.get_user_stats(user_id)
     if not user_stats:
         return False
@@ -61,12 +62,13 @@ def start():
     print 'account_signs %s' % account_signs
     for account_sign in account_signs:
         user_id = account_sign.user_id
-        is_valid = is_loser(user_id, divided_amount / 1000)
-        if is_valid:
-            target_users.add(user_id)
+        # is_valid = is_loser(user_id, divided_amount / 1000)
+        # if is_valid:
+        #     target_users.add(user_id)
+        target_users.add(user_id)
     print 'target users: %s' % target_users
     supply_count = 100 - len(target_users)
-    if len(target_users) < 100:
+    if divided_amount < DAILY_SIGN_AWARDS[0]/2 and len(target_users) < 100:
         while True:
             agent_id = redis_cache.get_random_virtual_account()
             target_users.add(int(agent_id))
