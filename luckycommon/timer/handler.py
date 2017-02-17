@@ -306,6 +306,12 @@ class ActivityAnnounceHandler(EventHandler):
             need_virtual = True
             _LOGGER.info(
                 'check result detail <%s, %s>, rand: %s, rand_limit: %s' % (activity.template_id, activity.term_number, rand, rand_limit))
+
+        if activity.template_id in settings.VIRTUAL_GOODS_IDS and rand < 10:
+            need_virtual = True
+            _LOGGER.info(
+                'check result detail <%s, %s>, virtual goods strategy applied' % (activity.template_id, activity.term_number))
+
         return need_virtual
 
     def standard_reached(self, activity, user_id, nums=None, ratio_check=True):

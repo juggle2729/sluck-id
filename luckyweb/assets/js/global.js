@@ -512,7 +512,7 @@ window.ADQ = function($, _, Backbone) {
         },
         _getUploaderParams: function (btnId, forAvatar) {
             var uptoken_url = '/admin/uptoken/',
-                domain = window.QINIU_DOMAIN || 'http://7xod1l.com1.z0.glb.clouddn.com/';
+                domain = window.QINIU_DOMAIN || 'http://oi9q1c7wq.bkt.clouddn.com/';
             if (forAvatar) {
                 uptoken_url = window.UPTOKEN_URL || uptoken_url;
                 domain = window.AVATAR_DOMAIN || domain;

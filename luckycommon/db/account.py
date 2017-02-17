@@ -9,19 +9,19 @@ from future.utils import raise_with_traceback
 from sqlalchemy.exc import IntegrityError
 
 from luckycommon.model import orm
-from luckycommon.model.pay import Pay, PAY_STATUS
+from luckycommon.model.pay import Pay, PayStatus
 from luckycommon.model.account import (ACCOUNT_STATUS, Account, AccountToken,
                                        AccountThird, THIRD_ACCOUNT_TYPE)
 from luckycommon.model.transaction import (Transaction, TRANSACTION_TYPE,
                                            TRANSACTION_STATUS)
 
 from luckycommon.cache import redis_cache
+from luckycommon.utils.api import EnhencedEncoder
 
 from luckycommon.utils.decorator import sql_wrapper
 from luckycommon.utils import exceptions as err
 from luckycommon.utils.respcode import StatusCode
 from luckycommon.utils import id_generator
-from luckycommon.utils import EnhencedEncoder
 
 from django.conf import settings
 
@@ -306,8 +306,8 @@ def add_account_balance(user_id, pay_id, added_balance, extend):
             user_id, added_balance))
     # update pay record status
     res = Pay.query.filter(Pay.id == pay_id).filter(
-        Pay.status == PAY_STATUS.SUBMIT).update({
-            'status': PAY_STATUS.DONE,
+        Pay.status == PayStatus.SUBMIT.value).update({
+            'status': PayStatus.DONE.value,
             'price': added_balance,
             'updated_at': datetime.utcnow()
         })

@@ -33,7 +33,7 @@ def generate_extend():
             }
         }],
         'alert': {
-            'image': 'http://7xod1l.com1.z0.glb.clouddn.com/o_1alp4e8ajv6fik82h01gv31j4f2f.png',
+            'image': '',
             'cmd': '11#http://121.41.6.238:9898/discovery/first_double_charge'
         }
     }
