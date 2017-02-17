@@ -37,8 +37,9 @@ mail_sender.init_conf({
         'mahongli@zhuohan-tech.com',
         'liuyu@zhuohan-tech.com',
         'sstong@zhuohan-tech.com',
-        'renxiaoyu@zhuohan-tech.com',
-        'wjxiao@zhuohan-tech.com',
+        'taocheng@zhuohan-tech.com',
+        'chenweiran@zhuohan-tech.com',
+        'lichang@zhuohan-tech.com'
     ]
 })
 EXPORT_PATH = '/home/ubuntu/af-env/data/stats/'

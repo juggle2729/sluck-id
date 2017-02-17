@@ -47,7 +47,7 @@ def start():
         if need_award:
             # add credit award by verify award
             award_credit = show.verify_award
-            credit_db.add_credit(show.user_id, award_credit, u'晒单奖励')
+            credit_db.add_credit(show.user_id, award_credit, u'Bonus Testimonial')
             push_handler.push_show_award(show)
         if need_push_fail:
             push_handler.push_verify_fail(show)

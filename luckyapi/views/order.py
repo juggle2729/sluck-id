@@ -2,23 +2,19 @@
 import json
 import logging
 
+from django.utils.encoding import smart_unicode
+from django.views.decorators.http import require_GET, require_POST
+
 from luckycommon.order.handler import (view_buy_record_list,
-                                       view_order_detail,
                                        view_current_status,
                                        view_available_red_envelopes,
                                        update_award_order,
                                        affirm_receipt_order)
-from luckycommon.push import handler as push_handler
 from luckycommon.pay import handler as pay_handler
-from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.api import token_required
-from luckycommon.utils.limit import frequency_limit
+from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.exceptions import ParamError, AuthenticateError
-
-from django.conf import settings
-from django.utils.encoding import smart_unicode
-from django.views.decorators.http import require_GET, require_POST
-
+from luckycommon.utils.limit import frequency_limit
 
 _LOGGER = logging.getLogger('lucky')
 _TRACKER = logging.getLogger('tracker')
@@ -109,17 +105,6 @@ def current_status(request, activity_id, order_id):
     data = {
         'info': order_info,
     } 
-    return data
-
-
-@require_GET
-@response_wrapper
-@token_required
-def get_order_detail(request, order_id):
-    """
-    获取订单详情
-    """
-    data = view_order_detail(request.user_id, order_id)
     return data
 
 

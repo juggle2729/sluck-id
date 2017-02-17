@@ -109,6 +109,9 @@ def update_award_order(user_id, order_id, receipt_info):
     if order.status != ORDER_STATUS.AWARDED:
         raise ParamError('order status invalid')
 
+    # just save the json client pass in, and return it to client, avoid all the complication
+    origin_info = receipt_info
+
     receipt_id = receipt_info.get('id')
     shipping_type = int(receipt_info.get('shipping_type', 0))
     remark = receipt_info.get('remark')
@@ -166,7 +169,7 @@ def update_award_order(user_id, order_id, receipt_info):
         elif shipping_type == 6:
             receipt_info_new.update({'address': receipt_info.get('electricity_bill')})
         receipt_info = receipt_info_new
-    order_db.update_receipt_info(order_id, receipt_info, remark)
+    order_db.update_receipt_info(order_id, receipt_info, remark, origin_info)
     redis_cache.remove_user_pending(user_id, 'award')
 
 
@@ -202,6 +205,10 @@ def view_current_status(user_id, activity_id, order_id):
         raise ParamError('order id invalid')
     if order.user_id != user_id:
         raise AuthenticateError('no authentication to access others order')
+
+    extend = json.loads(order.extend)
+    origin_info = extend.get('origin', None)
+
     order_detail = OrderDetail()
     order_detail.order_id = order_id
     order_detail.activity_id = activity_id
@@ -255,6 +262,10 @@ def view_current_status(user_id, activity_id, order_id):
         order_detail.receipt_info = receipt_address
         if 'remark' in extend:
             order_detail.remark = extend.get('remark')
+
+    order_detail.update({
+        'origin': origin_info
+    })
     return order_detail
 
 
