@@ -717,7 +717,7 @@ class ActivityAnnounceHandler(EventHandler):
         scrolling_dict = {
             # 'text': _('恭喜<font color="#2189ff">%s</font>{{ time }}前获得%s') % (account.nick_name, activity.name),
             #            'text': u"Selamat <font color='#2189ff'> %s </font> mendapatkan {{ time }} di menit %s" % (account.nick_name, activity.name),
-            'text': u"<font color='#2189ff'> %s </font> menang %s di menit {{time}}" % (account.nick_name, activity.name),
+            'text': u"<font color='#2189ff'> %s </font> berhasil tukar %s" % (account.nick_name, activity.name),
             'params': {
                 'ts': ts,
                 'uid': account.id,
