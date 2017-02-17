@@ -69,17 +69,12 @@ COIN_TIDS = {
     #    646: 1000,
 }
 
-<<<<<<< Updated upstream
 GP_FLAG = False  # GP 审核开关, True 为开�开启
-=======
-GP_FLAG = False # GP 审核开关, True 为开�开启
->>>>>>> Stashed changes
-GP_VERSION_CODE = 128
+GP_VERSION_CODE = 129
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
-
 IAP_FLAG = False # IAP 审核开关
-IAP_VERSION_CODE = []
+IAP_VERSION_CODE = [1,]
 IAP_TEST_ID = []
 
 FRESH_RECOMMEND = [0, 0]
