@@ -8,13 +8,13 @@ import logging
 from datetime import timedelta
 
 # add up one level dir into sys path
-from luckycommon.credit.model.check import DAILY_SIGN_AWARDS
-
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache import redis_cache
 from luckycommon.push import handler as push_handler
+from luckycommon.credit.model.check import DAILY_SIGN_AWARDS
+
 
 from luckycommon.credit.model.credit import *
 from luckycommon.credit.db import credit as credit_db
