@@ -10,6 +10,7 @@ import requests
 from datetime import timedelta
 from random import randint
 from datetime import datetime
+from time import time
 from hashlib import sha1
 from hashlib import md5
 
@@ -139,7 +140,7 @@ _STEAM_REQ = '''
   </params>
 </methodCall>'''
 COIN_TIDS = {802:100}
-_PULSA_TIDS = {
+_PULSA_TIDS = {  # 话费 tids
     792: 5000,
     666: 10000,
     793: 25000,
@@ -387,6 +388,16 @@ def shipping_pulsa(await_order, activity):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
         return
+    # delay deliver
+    delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
+    if not delay_timestamp:
+        timestamp = int(time()) + 3 * 3600  # 延迟 3 小时发货
+        redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
+        return
+    else:
+        if int(delay_timestamp) >= int(time()):
+            return
+
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
     # do recharge
