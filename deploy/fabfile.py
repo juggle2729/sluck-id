@@ -6,12 +6,13 @@ import uuid
 import getpass
 from os import path, listdir
 from distutils.util import strtobool
+from time import sleep
 
 from fabric.context_managers import lcd, cd
 from fabric.contrib import console, files
 from fabric.operations import local, put, sudo, run
 from fabric.state import env
-from fabric.colors import green
+from fabric.colors import green, red
 from fabric.api import task, parallel
 
 CUR_DIR = path.dirname(path.abspath(__file__))
@@ -23,6 +24,10 @@ REMOTE_PROJECT_NAME = {'luckyservice-id': 'luckyservice'}
 REMOTE_VIRENV = '/home/ubuntu/af-env/'
 REMOTE_USER = 'ubuntu'
 LOG_PATH = '/var/log/lucky/'
+
+
+def run_bg(cmd, sockname="dtach"):
+    return run('dtach -n `mktemp -u /tmp/%s.XXXX` %s' % (sockname, cmd))
 
 
 @task
@@ -126,7 +131,24 @@ def deploy(is_restart=True):
     # restart(env.project_name, is_restart)
     if env.project_name == 'luckyservice-id':
         sudo("killall uwsgi")
+        sudo("killall python")
+        run_bg("python af-env/luckyservice/luckycommon/virtual/virtual_buy.py")
     print green('deploy %s@%s done' % (env.project_name, env.host))
+
+    print green('\n     ==>>    check service process count')
+    for i in xrange(5):
+        sleep(1)
+        print '.' * (i + 1)
+    processor_count = int(run('ps aux | grep processor | wc -l'))
+    uwsgi_count = int(run('ps aux | grep uwsgi | wc -l'))
+    worker_count = int(run('ps aux | grep celery | wc -l'))
+    if uwsgi_count != 11:
+        print red('uwsgi count is not 11, need manual check')
+    if processor_count != 12:
+        print red('processor count is not 12, need manual check')
+    if worker_count != 7:
+        print red('worker count is not 7, need manual check')
+    print green('\n     ==>> everything ok')
 
 
 @task
