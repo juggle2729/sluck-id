@@ -111,7 +111,7 @@ def set_delay_timestamp(orderid, timestamp):
     :return None:
     '''
     key = prefix_key('phoneorder:%s' % orderid)
-    ProxyAgent.setnx(key, timestamp)
+    ProxyAgent().setnx(key, timestamp)
     ProxyAgent().expire(key, 3600 * 4)
 
 @cache_wrapper
@@ -122,7 +122,7 @@ def get_delay_timestamp(orderid):
     :return timestamp:
     '''
     key = prefix_key('phoneorder:%s' % orderid)
-    return ProxyAgent.get(key)
+    return ProxyAgent().get(key)
 
 @cache_wrapper
 def exists_phone_limit(phone):

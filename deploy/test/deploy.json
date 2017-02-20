@@ -2,6 +2,7 @@
   "default": {
     "mm": "ubuntu",
     "wangzaitao": "ubuntu",
+    "stackchen": "ubuntu",
     "need_confirm": false
   },
   "dependency": {
