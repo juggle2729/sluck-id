@@ -103,6 +103,28 @@ def set_15phone(phone):
     ProxyAgent().expire(key, 15*62)
 
 @cache_wrapper
+def set_delay_timestamp(orderid, timestamp):
+    '''
+    used for set phone charge  delay deliver
+    :param orderid:
+    :param timestamp:
+    :return None:
+    '''
+    key = prefix_key('phoneorder:%s' % orderid)
+    ProxyAgent.setnx(key, timestamp)
+    ProxyAgent().expire(key, 3600 * 4)
+
+@cache_wrapper
+def get_delay_timestamp(orderid):
+    '''
+    used for get phone charge  delay deliver
+    :param orderid:
+    :return timestamp:
+    '''
+    key = prefix_key('phoneorder:%s' % orderid)
+    return ProxyAgent.get(key)
+
+@cache_wrapper
 def exists_phone_limit(phone):
     """
     used for autoship
