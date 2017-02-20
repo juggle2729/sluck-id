@@ -63,7 +63,7 @@ HOT_TIDS = [330, 361, 302, 348, 353, 357, 340, 386]
 GOD_TIDS = [129, 331, 332, 333, 334]
 
 # 禁止晒单列
-#SHOW_BANNED_TIDS = [635, 657, 672, 659, 651, 649, 647, ]
+# SHOW_BANNED_TIDS = [635, 657, 672, 659, 651, 649, 647, ]
 
 COIN_TIDS = {
     659: 5,
@@ -79,9 +79,9 @@ MISS_RETURN_TID = 641
 
 ADV_FLAG = False  # GP版开关, 旧版不用放着
 
-GP_FLAG = True  # GP 审核开关, True 为开�开启
-GP_VERSION_CODE = 120
-GP_ALLOWED_TIDS = [752, 753, 754, 755, 662,664,663,665  ]
+GP_FLAG = True  # GP switch, True is on sensor
+GP_VERSION_CODE = 130
+GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
 
 ADMIN_ID = 1
 
