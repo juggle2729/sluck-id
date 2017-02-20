@@ -129,6 +129,12 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
     purchase_info = in_app[0]
     r_product_id = purchase_info.get('product_id')
     r_transaction_id = purchase_info.get('transaction_id')
+    # 检验 transaction_id 是否匹配
+    if transaction_id != r_transaction_id:
+        _LOGGER.error("IAP receipt bid invalid,user id: %s, transaction id: %s, "
+                      "AppStore return transaction id: %s" % (user_id, transaction_id, r_transaction_id))
+        return {'status': 1, 'msg': 'IAP receipt transaction not match'}
+    # 检验 product_id 是否匹配
     if r_product_id not in PRODUCT_ID.keys():
         _LOGGER.error("IAP receipt product id invalid, user id: %s,purchase info: %s,product id: %s" % (
             user_id, purchase_info, r_product_id))
@@ -147,7 +153,7 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
     receipt_in_db = iap_receipt.get_receipt_by_transaction_id(r_transaction_id)
     if receipt_in_db:
         if receipt_in_db.provide_status == 1:
-            _LOGGER.info("IAP receipt has been delivery, transaction id: %s" % r_transaction_id)
+            _LOGGER.info("IAP receipt has been delivery, user id: %s,transaction id: %s" % (user_id,r_transaction_id))
             return {'status': 1, 'msg': 'IAP receipt has been delivery'}
         else:
             # 补发

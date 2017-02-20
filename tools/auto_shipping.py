@@ -148,6 +148,14 @@ _PULSA_TIDS = {
     794: 500000,
     796: 1000000,
 }
+_PULSA_ELE_TIDS = {
+    838: 20000,
+    839: 50000,
+    840: 100000,
+    841: 200000,
+    842: 500000,
+    843: 1000000,
+}
 
 HUAFEI_TIDS = {
 #    667: 50,
@@ -425,6 +433,42 @@ def shipping_pulsa(await_order, activity):
                 {'status': ORDER_STATUS.AWARDED}, None, True
         )
 
+def shipping_ele_pulsa(await_order, activity):
+    user_id = await_order.user_id
+    if redis_cache.is_virtual_account(user_id):
+        return
+    receipt_address = {} if not await_order.receipt_address else json.loads(
+        await_order.receipt_address)
+    # do recharge
+    print 'begin pulsa electricity bill recharge, %s' % await_order.order_id
+    charge_account = receipt_address.get('address')  # electricity bill
+    if not charge_account:
+        return
+    recharge_price = 0
+    recharge_price = _PULSA_ELE_TIDS[activity.template_id]
+    product_prefix = 'hpln'
+    product = product_prefix + str(recharge_price)
+    print 'pulsa electricity bill recharge info, recharge_price: %s, product %s' % (recharge_price, product)
+    seed = str(randint(100, 99999))
+    req = _PULSA_XML % (str(await_order.order_id) + '#' + seed, charge_account, product,
+                        md5('tokoseributokoseribu123*' + str(await_order.order_id) + '#' + seed).hexdigest())
+    headers = {'Content-Type': 'application/xml'}  # set what your server accepts
+    print req, await_order.order_id
+    resp = requests.post(_PULSA_URL, data=req, headers=headers)
+    print resp, await_order.order_id
+    if '<status>0</status>' in resp.content:
+        print 'done', await_order.order_id
+        order_db.update_order_info(
+            await_order.order_id,
+            {'status': ORDER_STATUS.DEAL}
+        )
+        show_order(await_order)
+    else:
+        print resp.content, charge_account, product
+        order_db.update_order_info(
+            await_order.order_id,
+            {'status': ORDER_STATUS.AWARDED}, None, True
+        )
 
 
 def shipping(recharge_type, await_order, activity):
@@ -642,6 +686,9 @@ def start_pulsa():
         if activity.template_id in _PULSA_TIDS:
             print 'check pulsa order, %s %s' % (await_order.order_id, activity.template_id)
             shipping_pulsa(await_order, activity)
+        if  activity.template_id in _PULSA_ELE_TIDS:
+            print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
+            shipping_ele_pulsa(await_order, activity)
 
 
 
