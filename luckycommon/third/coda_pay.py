@@ -14,8 +14,7 @@ from luckycommon.utils.exceptions import ParamError
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 
-ORDER_URL = 'https://airtime.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
-#ORDER_URL = 'https://sandbox.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
+ORDER_URL = settings.CODA_PAY_ORDER_URL
 API_KEY_DICT = settings.CODA_API_KEY_DICT
 
 COUNTRY_CODES = {
@@ -41,6 +40,7 @@ CURRENCY_CODES = {
 }
 
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+
 
 def coda_create_charge(pay, pay_amount, currency, return_url=settings.PAYPAL_RETURN_URL,
                        cancel_url=settings.PAYPAL_CANCEL_URL):
@@ -68,7 +68,7 @@ def coda_create_charge(pay, pay_amount, currency, return_url=settings.PAYPAL_RET
                              data=json.dumps(payload))
     response_dict = json.loads(response.text)
     if response.status_code == 200 and response_dict['initResult']['resultCode'] == 0:
-        _LOGGER.error("response 200 data: %s, %s " , response_dict, payload)
+        _LOGGER.error("response 200 data: %s, %s ", response_dict, payload)
         return settings.CODA_PAY_GATEWAY_URL % response_dict['initResult']['txnId']
     else:
         _LOGGER.error("response data: %s" % response_dict)
@@ -89,7 +89,7 @@ def coda_check_notify(request):
     price = request.GET.get('TotalPrice')
     check_sum = request.GET.get('Checksum')
     pay = get_pay(pay_id)
-    currency = 'IDR' 
+    currency = 'IDR'
     calculated_sign = _sign("%s%s%s%s" % (
         trade_no, API_KEY_DICT[currency], pay_id, trade_status))
     _LOGGER.info("Coda Pay sign: %s, calculated sign: %",

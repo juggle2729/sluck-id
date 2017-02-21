@@ -131,6 +131,7 @@ NGANLUONG_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
 
 # Coda pay
 CODA_PAY_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/coda_pay/gateway/%s/'
+CODA_PAY_ORDER_URL = 'https://airtime.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
 CODA_API_KEY_DICT = {
     'TWD': '66180937d31a768a62bf463b3d5e5547',
     'IDR': '3d808b4a286535ad0ad2603620232b60',
