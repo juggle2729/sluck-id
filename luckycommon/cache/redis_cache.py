@@ -960,7 +960,7 @@ def set_gwallet_purchase_token(ptoken, orderid, userid, payid):
     ProxyAgent().expire(key, 3600 * 72)
 
 @cache_wrapper
-def get_gwllet_purchase_token(ptoken):
+def get_gwallet_purchase_token(ptoken):
     key = prefix_key('purchasetoken:%s' % ptoken)
     return ProxyAgent().hgetall(key)
 
