@@ -35,7 +35,7 @@ WEB_APP_ROOT_URL = 'http://121.40.29.144:9898'
 
 ADMIN_ROOT_URL = 'http://121.40.29.144/'
 
-INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
+INVITER_SHARE_LINK = 'http://121.40.29.144/share_app2/'
 
 IOS_DEBUG_CONF = {
     'int_ios_us': 6,
@@ -112,18 +112,19 @@ PAYPAL_API_PASSWORD = "E869TNPC95U2Z4JC"
 PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31Aq0XfM5N.PRkiDU4yeS-Fbj7jo0X"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
-PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
-PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/cancel'
-PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
+PAYPAL_RETURN_URL = 'http://121.40.29.144/api/v1/pay/paypal/return'
+PAYPAL_CANCEL_URL = 'http://121.40.29.144/api/v1/pay/paypal/cancel'
+PAYPAL_NOTIFY_URL = 'http://121.40.29.144/api/v1/pay/paypal/notify'
 
 # NganLuong pay
-NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'
-NGANLUONG_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/return'
-NGANLUONG_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/notify'
-NGANLUONG_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
+NGANLUONG_CHECK_ORDER_URL = 'http://121.40.29.144/api/v1/pay/nganluong/check_order'
+NGANLUONG_RETURN_URL = 'http://121.40.29.144/api/v1/pay/nganluong/return'
+NGANLUONG_NOTIFY_URL = 'http://121.40.29.144/api/v1/pay/nganluong/notify'
+NGANLUONG_CLOSE_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 
 # Coda pay
-CODA_PAY_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/coda_pay/gateway/%s/'
+CODA_PAY_GATEWAY_URL = 'http://121.40.29.144/api/v1/pay/coda_pay/gateway/%s/'
+CODA_PAY_ORDER_URL = 'https://sandbox.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
 CODA_API_KEY_DICT = {
     'TWD': '66180937d31a768a62bf463b3d5e5547',
     'IDR': '3d808b4a286535ad0ad2603620232b60',
@@ -132,10 +133,10 @@ CODA_API_KEY_DICT = {
 # Fortumo pay
 FORTUMO_SERVICE_ID = '8f06a4b67822839c44bef2eebb516ac8'
 FORTUMO_SECRET = 'ab19ee77832943b1631dd00331533a4b'
-FORTUMO_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/fortumo/notify/'
-FORTUMO_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview/'
+FORTUMO_NOTIFY_URL = 'http://121.40.29.144/api/v1/pay/fortumo/notify/'
+FORTUMO_CLOSE_URL = 'http://121.40.29.144/api/v1/pay/close_webview/'
 
 # Precard
-PRECARD_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/precard/%s/'
-PAY_GATEWAY_STATUS_URL = 'http://id.lucky-gou.com/api/v1/pay/%s/status'
+PRECARD_GATEWAY_URL = 'http://121.40.29.144/api/v1/pay/precard/%s/'
+PAY_GATEWAY_STATUS_URL = 'http://121.40.29.144/api/v1/pay/%s/status'
 

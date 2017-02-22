@@ -15,7 +15,8 @@ from luckycommon.cache import redis_cache
 from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
-from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion,bluepay,mimo_pay, google_wallet, iap
+from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion, bluepay, mimo_pay, \
+    google_wallet, iap
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
@@ -103,18 +104,7 @@ def get_pay_types(request):
 
 
 def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
-    if platform == 'android' and 100 == int(version_code) and locale == 'vn':
-        return [
-            pay_types[PayType.NGANLUONG.value],
-            pay_types[PayType.FORTUMO_PAY.value],
-        ]
-    if platform == 'android' and 110 == int(version_code) and locale == 'vn':
-        return [
-            pay_types[PayType.NGANLUONG.value],
-            pay_types[PayType.FORTUMO_PAY.value],
-            pay_types[PayType.PRE_CARD_NG.value],
-        ]
-    if 122 <= int(version_code) < 126:
+    if platform == 'android' and 122 <= int(version_code) < 126 and locale == 'id':
         return [
             pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
@@ -124,7 +114,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
         ]
-    if 126 <= int(version_code):
+    if platform == 'android' and 126 <= int(version_code) and locale == 'id':
         return [
             pay_types[PayType.GOOGLE_BILLING.value],
             pay_types[PayType.CODA_SMS.value],
@@ -137,13 +127,6 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and locale == 'id':
         return [
-    #        pay_types[PayType.EWALLET.value],
-    #        pay_types[PayType.CARRIER_BILLING.value],
-    #        pay_types[PayType.TELCO_VOUCHER.value],
-    #        pay_types[PayType.CONVENNIENCE_STORE.value],
-    #        pay_types[PayType.ATM.value],
-    #        pay_types[PayType.CODA_PAY.value],
-    #        pay_types[PayType.SMS.value],
             pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
@@ -152,9 +135,12 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
         ]
-
+    if platform == 'ios' and locale == 'id':
+        return [
+            pay_types[PayType.CODA_PAY.value],
+            pay_types[PayType.APPLE_IAP.value],
+        ]
     return [
-    #    pay_types[PayType.SMS.value],
         pay_types[PayType.MOGPLAY.value],
         pay_types[PayType.GAME_ON.value],
         pay_types[PayType.MANDIRI_ECASH.value],
@@ -300,38 +286,31 @@ def coda_gateway(request, token):
 @require_GET
 def coda_notify(request):
     try:
-        _LOGGER.error('CCCCCCCCCCCCCCCCCCCCCDDDDDDDDDDDDDDPPPPPPPPPP, %s %s', request.GET, request.POST)
         coda_pay.coda_check_notify(request)
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('Coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
+
 @require_POST
 @response_wrapper
 def google_notify(request):
     try:
-        _LOGGER.error('GGGGGGGGGGGGGGGPPPPPPPPP google, %s %s', request.GET, request.POST)
         resp = google_wallet.google_check_notify(request)
         return resp
     except Exception as e:
         _LOGGER.exception('Google Pay notify exception.(%s)' % e)
-        return {'msg':e}
+        return {'msg': e}
 
 
 @require_POST
 @response_wrapper
 def iap_notify(request):
-    '''
-    校验IAP 票据
-    :param request:
-    :return:
-    '''
     if not request.user_id:
         raise AuthenticateError('not login')
     try:
         user_id = request.user_id
-        _LOGGER.error('IIIIIIIIIIIIIIIIIIIIIIII iap, user id: %s,date: %s %s', user_id, request.GET, request.POST)
         env_flag = iap.check_sandbox_flag(request)
         receipt_dic = json.loads(request.body)
         resp = iap.iap_check_notify(user_id, receipt_dic, env_flag)
@@ -387,6 +366,7 @@ def payssion_notify(request):
         _LOGGER.exception('Payssion notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
+
 @require_GET
 def fortumo_notify(request):
     try:
@@ -396,44 +376,42 @@ def fortumo_notify(request):
         _LOGGER.exception('Coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
-def indomog_notify(request ):
+
+def indomog_notify(request):
     try:
-        #fortumo_pay.fortumo_check_notify(request)
-        _LOGGER.error("HHHHHAAAAAAAAAAAAAAAAAAAAAAA   iINNNNNNDOOOOOMMMOGGGGGG, %s, %s", request.POST, request.GET)
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('Indomog Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
+
+
 def mimo_notify(request):
     try:
-        _LOGGER.error("HHHHHAAAAAAAAAAAAAAAAAAAAAAA   iINNNNNNDOOOOOMMMOGGGGGG, %s, %s", request.POST, request.GET)
         mimo_pay.mimo_check_notify(request)
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('MIMO Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
+
 def coda_sms_notify(request):
     try:
-        #fortumo_pay.fortumo_check_notify(request)
-        _LOGGER.error("HHHHHAAAAAAAAAAAAAAAAAAAAAAA   CODAAAAA SMS %s, %s", request.POST, request.GET)
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
+
+
 def doku_notify(request):
     try:
-        #fortumo_pay.fortumo_check_notify(request)
-        _LOGGER.error("HHHHHAAAAAAAAAAAAAAAAAAAAAAA   DOKU %s", request.POST)
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('Doku Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
+
 def doku_identify(request):
     try:
-        #fortumo_pay.fortumo_check_notify(request)
-        _LOGGER.error("FFFFFFFFFFFFFFFFFFFFFFFFFFFFA   DOKU")
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('Doku Pay notify exception.(%s)' % e)
@@ -443,17 +421,11 @@ def doku_identify(request):
 @require_GET
 def test(request):
     try:
-        print 'adsfadsfadsfasdfasdfasdfasdfasdfaf'
-        _LOGGER.error('DOKU TEST' )
-        return HttpResponse(doku.doku_create_charge({'id':request.GET['pay_id']},request.GET['price'],None))
+        return HttpResponse(doku.doku_create_charge({'id': request.GET['pay_id']}, request.GET['price'], None))
     except Exception as e:
-        print 'adsfadsfadsfasdfasdfasdfasdfasdfaf', e
         _LOGGER.error('Coda Pay notify exception.(%s)' % e)
         _LOGGER.exception('Coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
-
-
-
 
 
 @require_http_methods(["GET", "POST"])
@@ -483,4 +455,3 @@ def precard_gateway(request, pay_id):
             return TemplateResponse(request, 'pay_status.html', {'pay_status_url': pay_status_url})
         else:
             return HttpResponse(u'Thanh toán thất bại', status=200)
-

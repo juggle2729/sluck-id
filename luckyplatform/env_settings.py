@@ -69,12 +69,12 @@ COIN_TIDS = {
     #    646: 1000,
 }
 
-GP_FLAG = False  # GP 审核开关, True 为开�开启
-GP_VERSION_CODE = 129
+GP_FLAG = True  # GP switch, True is on sensor
+GP_VERSION_CODE = 130
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
-IAP_FLAG = False # IAP 审核开关
-IAP_VERSION_CODE = [1,]
+IAP_FLAG = False  # IAP 审核开关
+IAP_VERSION_CODE = [1, ]
 IAP_TEST_ID = []
 
 FRESH_RECOMMEND = [0, 0]
@@ -131,6 +131,7 @@ NGANLUONG_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
 
 # Coda pay
 CODA_PAY_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/coda_pay/gateway/%s/'
+CODA_PAY_ORDER_URL = 'https://airtime.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
 CODA_API_KEY_DICT = {
     'TWD': '66180937d31a768a62bf463b3d5e5547',
     'IDR': '3d808b4a286535ad0ad2603620232b60',

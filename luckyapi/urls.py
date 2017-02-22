@@ -48,7 +48,6 @@ urlpatterns = patterns(
     url(r'^pay/(?P<pay_id>[^/]+)/submit/?$', 'luckyapi.views.transaction.pay_submit'),
     url(r'^pay/(?P<pay_id>[^/]+)/status/?$', 'luckyapi.views.transaction.get_pay_status'),
     url(r'^pay/paypal/return/?$', 'luckyapi.views.transaction.paypal_return'),
-    url(r'^pay/test/?$', 'luckyapi.views.transaction.test'),
     url(r'^pay/paypal/cancel/?$', 'luckyapi.views.transaction.paypal_cancel'),
     url(r'^pay/coda_pay/proxy/?$', 'luckyapi.views.transaction.coda_proxy'),
     url(r'^pay/coda_pay/gateway/(?P<token>[^/]+)/?$', 'luckyapi.views.transaction.coda_gateway'),
@@ -80,7 +79,6 @@ urlpatterns = patterns(
     url(r'^activitys/(?P<activity_id>[^/]+)/orders/(?P<order_id>[^/]+)/status/?$', 'luckyapi.views.order.current_status'),
     url(r'^orders/(?P<order_id>[^/]+)/award/?$', 'luckyapi.views.order.award'),
     url(r'^orders/(?P<order_id>[^/]+)/deal/?$', 'luckyapi.views.order.deal'),
-    url(r'^orders/(?P<order_id>[^/]+)/?$', 'luckyapi.views.order.get_order_detail'),
     url(r'^passcard/?$', 'luckyapi.views.order.get_available_passcard'),
     # preset
     url(r'^preset/?$', 'luckyapi.views.preset.fetch_preset'),

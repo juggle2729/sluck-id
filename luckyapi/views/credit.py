@@ -64,7 +64,7 @@ def get_my_credit(request):
     credit_activity.append({
         'icon': ICON_DAILY_SIGN,
         'title': u"Poin Absensi",
-        'content': u"Bagikan kebahagiaan, dapatkan poin, menang lebih banyak. Poin absensi bertambah setiap hari (max. 100)",
+        'content': u"Poin absensi bertambah setiap hari (max. 100)",
         'tips': u"Ikut",
         'command': '16#' if old_version else '11#%s/user/my_daily_attendance' % settings.WEB_APP_ROOT_URL,
         'enable': 0 if today_sign > 0 else 1

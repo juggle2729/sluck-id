@@ -8,13 +8,13 @@ import logging
 from datetime import timedelta
 
 # add up one level dir into sys path
-from luckycommon.credit.model.check import DAILY_SIGN_AWARDS
-
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache import redis_cache
 from luckycommon.push import handler as push_handler
+from luckycommon.credit.model.check import DAILY_SIGN_AWARDS
+
 
 from luckycommon.credit.model.credit import *
 from luckycommon.credit.db import credit as credit_db
@@ -55,8 +55,10 @@ def start():
     distribute_term.save()
     redis_cache.clear_credit_pool()
 
-    divided_amount = int(pool_amount) / 100
-    _LOGGER.info('start distribute credit pool, total amount:%s, divided credit:%s', pool_amount, divided_amount)
+    origin_divided_amount = int(pool_amount) / 100
+    new_divided_amount = int(pool_amount) / 100 + DAILY_SIGN_AWARDS[0]/2
+    _LOGGER.info('start distribute credit pool, total amount:%s, origin divided amount:%s, new amount: %s', pool_amount, origin_divided_amount, new_divided_amount)
+    divided_amount = new_divided_amount
     target_users = set()
     account_signs = credit_db.get_sign_users(start_date, end_date)
     print 'account_signs %s' % account_signs
@@ -68,7 +70,7 @@ def start():
         target_users.add(user_id)
     print 'target users: %s' % target_users
     supply_count = 100 - len(target_users)
-    if divided_amount < DAILY_SIGN_AWARDS[0]/2 and len(target_users) < 100:
+    if len(target_users) < 100:
         while True:
             agent_id = redis_cache.get_random_virtual_account()
             target_users.add(int(agent_id))

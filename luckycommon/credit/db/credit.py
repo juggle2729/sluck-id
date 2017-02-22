@@ -138,9 +138,9 @@ def daily_check(user_id, check_type):
         credit_record.user_id = user_id
         credit_record.type = RECORD_TYPE.IN
         if check_type == CHECK_TYPE.DAILY_SIGN:
-            credit_record.title = u"Ký"
+            credit_record.title = u"Poin Absensi"
         else:
-            credit_record.title = u"chia sẻ"
+            credit_record.title = u"Poin Bagikan"
         credit_record.amount = added_credit
         credit_record.balance = account.credit
         credit_record.save(auto_commit=False)
@@ -217,7 +217,7 @@ def add_credit_in_transaction(user_id, added_credit, title):
 
 def check_consume_credit(user_id, consume_amount):
     added_credit = int(consume_amount) * AWARD_CREDIT_UNIT
-    add_credit(user_id, added_credit, u"Kho báu")
+    add_credit(user_id, added_credit, u"Pakai Poin")
     _LOGGER.info('check consume credit, add credit %s', added_credit)
 
 
@@ -233,7 +233,7 @@ def exchange_credit(user_id):
         credit_record = CreditRecord()
         credit_record.user_id = user_id
         credit_record.type = RECORD_TYPE.EXCHANGE
-        credit_record.title = u"Đổi %s thành %s tiền xu" % (exchanged_credit, added_price)
+        credit_record.title = u"Tukar ke Koin"
         credit_record.amount = -exchanged_credit
         credit_record.balance = account.credit
         credit_record.save(auto_commit=False)

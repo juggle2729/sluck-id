@@ -419,7 +419,7 @@ def get_orders_by_time(start_time, end_time, limit, offset):
 
 
 @sql_wrapper
-def update_receipt_info(order_id, receipt_info, remark=None):
+def update_receipt_info(order_id, receipt_info, remark=None, origin_info=None):
     order = AwardedOrder.query.filter(
         AwardedOrder.order_id == order_id).first()
     receipt_addr = json.dumps(receipt_info, ensure_ascii=False)
@@ -430,6 +430,9 @@ def update_receipt_info(order_id, receipt_info, remark=None):
     extend = json.loads(order.extend or '{}')
     extend.update({
         'award_time': local_now().strftime('%Y-%m-%d %H:%M:%S')
+    })
+    extend.update({
+        'origin': origin_info
     })
     order.extend = json.dumps(extend, ensure_ascii=False)
     if SHIPPING_TYPE.BALANCE == receipt_info.get('shipping_type'):
