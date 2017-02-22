@@ -9,8 +9,9 @@ from django.conf import settings
 from luckycommon.utils.exceptions import ParamError
 from luckycommon.db import iap_receipt
 from luckycommon.model.pay import PayType
-from luckycommon.db.pay import create_pay
+from luckycommon.db.pay import create_pay, get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
+from luckycommon.pay.handler import pay_after_recharge
 from luckycommon.utils.api import parse_p
 
 
@@ -167,6 +168,12 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
                     user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
                 ))
                 iap_receipt.update_receipt_provide_success(receipt_in_db.id)
+                try:
+                    pay = get_pay(receipt_in_db.pay_id)
+                    pay_after_recharge(pay)
+                except Exception as e:
+                    _LOGGER.exception(
+                        'pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
                 return {'status': 0, 'msg': 'ok'}
             else:
                 _LOGGER.error("IAP receipt reprovide fail, user id: %s, transaction id: %s, "
@@ -191,6 +198,11 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
                              user_id, r_transaction_id, pay.id, pay_amount
                          ))
             iap_receipt.update_receipt_provide_success(r_transaction_id)
+            try:
+                pay_after_recharge(pay)
+            except Exception as e:
+                _LOGGER.exception(
+                    'pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
             return {'status': 0, 'msg': 'ok'}
         else:
             _LOGGER.info("IAP receipt provide fail, user id: %s, transaction id: %s, "

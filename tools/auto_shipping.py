@@ -35,6 +35,7 @@ from luckycommon.model.receipt import SHIPPING_TYPE
 from luckycommon.db.goods import get_goods
 from luckycommon.db.activity import get_activity, get_activity_users
 from luckycommon.db.transaction import add_system_award_transaction
+from luckycommon.account.db.account import get_account_status
 #from luckycommon.strategy.handler import is_valid_user
 
 from django.conf import settings
@@ -149,7 +150,7 @@ _PULSA_TIDS = {  # 话费 tids
     794: 500000,
     796: 1000000,
 }
-_PULSA_ELE_TIDS = {
+_PULSA_ELE_TIDS = { #电费
     838: 20000,
     839: 50000,
     840: 100000,
@@ -391,11 +392,13 @@ def shipping_pulsa(await_order, activity):
     # delay deliver
     delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
     if not delay_timestamp:
-        timestamp = int(time()) + 3 * 3600  # 延迟 3 小时发货
+        timestamp = int(time()) + 2 * 3600  # 延迟 3 小时发货
         redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
+        print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
         return
     else:
         if int(delay_timestamp) >= int(time()):
+            print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (await_order.order_id, delay_timestamp)
             return
 
     receipt_address = {} if not await_order.receipt_address else json.loads(
@@ -403,6 +406,7 @@ def shipping_pulsa(await_order, activity):
     # do recharge
     print 'begin pulsa recharge, %s' % await_order.order_id
     charge_account = receipt_address.get('phone')
+    name = receipt_address.get('name')
     if not charge_account:
         return
     recharge_price = 0
@@ -426,8 +430,15 @@ def shipping_pulsa(await_order, activity):
     req = _PULSA_XML % (str(await_order.order_id) +'#'+seed, charge_account, product, md5('tokoseributokoseribu123*'+str(await_order.order_id) +'#'+ seed).hexdigest())
     headers = {'Content-Type': 'application/xml'} # set what your server accepts
     print req, await_order.order_id
+    if get_account_status(await_order.user_id):
+        print '[{0}] limit the delivery, account status is banned, ' \
+              'user id: {1}, order id: {2}, product id: {3}, phone: {4}, name: {5} ' \
+              'activity id: {6}, tid: {7}, term number: {8}, activity price: {9}'.format(
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S'), user_id, await_order.order_id, product, charge_account, name,
+            activity.id, activity.template_id, activity.term_number, activity.price)
+        return
     resp = requests.post(_PULSA_URL, data=req, headers=headers)
-    print resp, await_order.order_id
+    print resp.content, await_order.order_id
     if '<status>0</status>' in resp.content:
         print 'done', await_order.order_id
         order_db.update_order_info(
@@ -450,10 +461,18 @@ def shipping_ele_pulsa(await_order, activity):
         return
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
+    order_extend = {} if not await_order.extend else json.loads(
+        await_order.extend)
     # do recharge
     print 'begin pulsa electricity bill recharge, %s' % await_order.order_id
     charge_account = receipt_address.get('address')  # electricity bill
     if not charge_account:
+        print 'pulsa electricity bill recharge, %s , electricity bill no is null' % await_order.order_id
+        return
+    origin = order_extend.get('origin', {})
+    charge_phone = origin.get('number')
+    if not charge_phone:
+        print 'pulsa electricity bill recharge, %s , phone no is null' % await_order.order_id
         return
     recharge_price = 0
     recharge_price = _PULSA_ELE_TIDS[activity.template_id]
@@ -466,9 +485,19 @@ def shipping_ele_pulsa(await_order, activity):
     headers = {'Content-Type': 'application/xml'}  # set what your server accepts
     print req, await_order.order_id
     resp = requests.post(_PULSA_URL, data=req, headers=headers)
-    print resp, await_order.order_id
+    print resp.content, await_order.order_id
     if '<status>0</status>' in resp.content:
-        print 'done', await_order.order_id
+        obj_etree = etree.fromstring(resp.content)
+        root_tree = obj_etree.getroottree()
+        obj_mp = root_tree.getroot()
+        status = obj_mp.find('status')
+        sn = obj_mp.find('sn')
+        if not sn:
+            print await_order.order_id, 'sn is null'
+            return
+        print await_order.order_id, sn, charge_phone
+        charge_phone = strip_phone(charge_phone)
+        send_sms([charge_account, ], 'sms_ele_pulsa', {'sn_code': sn})
         order_db.update_order_info(
             await_order.order_id,
             {'status': ORDER_STATUS.DEAL}

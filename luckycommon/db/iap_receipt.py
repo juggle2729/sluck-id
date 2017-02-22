@@ -3,6 +3,7 @@ from datetime import datetime
 
 from luckycommon.utils.decorator import sql_wrapper
 from luckycommon.model.iap_receipt import IAPReceipt, IAPInvalidReceipt
+from luckycommon.model import orm
 
 @sql_wrapper
 def get_receipt_by_transaction_id(transaction_id):
@@ -75,6 +76,7 @@ def update_receipt_provide_success(transaction_id):
         }
     )
     if res:
+        orm.session.commit()
         return True
     else:
         res = IAPReceipt.query.filter(IAPReceipt.id == transaction_id).filter(IAPReceipt.provide_status == 2).update(
@@ -84,6 +86,7 @@ def update_receipt_provide_success(transaction_id):
         }
     )
         if res:
+            orm.session.commit()
             return True
         else:
             return False
@@ -98,6 +101,7 @@ def update_receipt_provide_fail(transaction_id):
         }
     )
     if res:
+        orm.session.commit()
         return True
     else:
         return False

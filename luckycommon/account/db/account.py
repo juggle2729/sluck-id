@@ -55,6 +55,14 @@ def black_account(user_id, reason=''):
     account.save()
     _TRACKER.info({'user_id': user_id, 'type': 'black'})
 
+
+@sql_wrapper
+def get_account_status(user_id):
+    account = get_account(user_id)
+    if account:
+        return account.status
+
+
 @sql_wrapper
 def get_logon_info(user_id):
     info = AccountToken.query.filter(AccountToken.user_id == user_id).order_by(
