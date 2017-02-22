@@ -953,9 +953,9 @@ def get_buy_records(user_id, activity_id, offset, limit):
 
 
 @cache_wrapper
-def set_gwallet_purchase_token(ptoken, orderid, userid):
+def set_gwallet_purchase_token(ptoken, orderid, userid, payid):
     key = prefix_key('purchasetoken:%s' % ptoken)
-    dic = {'order_id': orderid, 'user_id': userid}
+    dic = {'order_id': orderid, 'user_id': userid, 'pay_id': payid}
     ProxyAgent().hmset(key, dic)
     ProxyAgent().expire(key, 3600 * 72)
 

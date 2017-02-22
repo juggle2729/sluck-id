@@ -105,7 +105,7 @@ def google_check_notify(request):
         if int(trade_status) == 0:
             _LOGGER.info('Google Wallet Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
                 user_id, pay_id, total_fee, currency))
-            set_gwallet_purchase_token(purchase_token, trade_no, user_id)
+            set_gwallet_purchase_token(purchase_token, trade_no, user_id, pay_id)
             res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
             if res:
                 _TRACKER.info({'user_id': user_id, 'type': 'recharge',
