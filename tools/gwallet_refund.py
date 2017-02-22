@@ -26,7 +26,7 @@ PACKAGE_NAME = 'com.idyyg.tokohemat'
 
 def _get_format_datetime(timestamp=None):
     if timestamp:
-        timestamp = timestamp / 1000.0
+        timestamp = long(timestamp) / 1000.0
         return datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
     else:
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -99,8 +99,8 @@ def black_account_by_purchase():
                 orderid, _get_format_datetime(voided_time_millis), _get_format_datetime())
             black_account(userid, black_reason)
             print _get_format_datetime(), 'black account info: {0}, ' \
-                                          'userid: {1}, orderid: {2}' \
-                                          'payid: {3}, price: {4}, chargetime: {5}' \
+                                          'userid: {1}, orderid: {2}, ' \
+                                          'payid: {3}, price: {4}, chargetime: {5}, ' \
                                           'purchase time: {6}, refund time: {7}.'.format(
                 purchase_token, userid, orderid, payid, pay_price, pay_charge_time,
                 _get_format_datetime(purchase_time_millis), _get_format_datetime(voided_time_millis))
