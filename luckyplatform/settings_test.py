@@ -50,25 +50,25 @@ APNS_ENV = 1
 APPLE_TIDS = [547, 517, 518, 519, 559, 545, 546, 548, 550, 551, 549]
 
 # 禁止晒单列
-#SHOW_BANNED_TIDS = [635, 636, 638, 640, 641, 642, 643, 644, 645, 646, 647, 648,
+# SHOW_BANNED_TIDS = [635, 636, 638, 640, 641, 642, 643, 644, 645, 646, 647, 648,
 #                    649, 650, 651, 659, 654, 656, 657, 658]
 SHOW_BANNED_TIDS = []
 
 MISS_RETURN_TID = 641
 
 COIN_TIDS = {
-#    659: 5,
-#    641: 10,
-#    642: 50,
-#    643: 100,
-#    644: 200,
-#    645: 500,
-#    646: 1000,
+    #    659: 5,
+    #    641: 10,
+    #    642: 50,
+    #    643: 100,
+    #    644: 200,
+    #    645: 500,
+    #    646: 1000,
 }
 
-GP_FLAG = False # GP 审核开关, True 为开�开启
+GP_FLAG = False  # GP sensor switch, True is on
 GP_VERSION_CODE = 128
-GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751,665  ]
+GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = True  # IAP 审核开关
 IAP_VERSION_CODE = [1, ]
@@ -143,4 +143,3 @@ FORTUMO_CLOSE_URL = 'http://121.40.29.144/api/v1/pay/close_webview/'
 # Precard
 PRECARD_GATEWAY_URL = 'http://121.40.29.144/api/v1/pay/precard/%s/'
 PAY_GATEWAY_STATUS_URL = 'http://121.40.29.144/api/v1/pay/%s/status'
-

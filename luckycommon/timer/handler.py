@@ -13,7 +13,7 @@ from datetime import datetime
 from luckyapi.logic.crowdfunding import start_next_activity
 
 from luckycommon.cache import redis_cache
-from luckycommon.async.async_job import stats_announce
+from luckycommon.async.async_job import stats_announce, track_one
 
 from luckycommon.campaign import god_campaign
 
@@ -625,6 +625,14 @@ class ActivityAnnounceHandler(EventHandler):
                 need_adjust = True
                 adjust_reason = u'赢家-未知异常'
                 first_candidates = v_list
+
+        _LOGGER.info('track reached')
+        track_one.delay(collection='announce', properties={
+            'real_win': 1 if not virtual_win else 0,
+            'adjust': 1 if need_adjust else 0,
+            'winner_strategy': 1 if u'赢家' in adjust_reason else 0,
+            'loser_strategy': 1 if u'输家' in adjust_reason else 0
+        })
         _LOGGER.info(
             'check result <%s, %s>, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
             activity.template_id, activity.term_number, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust,

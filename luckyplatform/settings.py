@@ -79,7 +79,7 @@ MISS_RETURN_TID = 641
 
 ADV_FLAG = False  # GP版开关, 旧版不用放着
 
-GP_FLAG = True  # GP switch, True is on sensor
+GP_FLAG = False  # GP switch, True is on sensor
 GP_VERSION_CODE = 130
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
 

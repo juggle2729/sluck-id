@@ -22,6 +22,8 @@ class MyRouter(object):
             return {'queue': 'async_campaign', 'routing_key': 'async_campaign'}
         if task.startswith('partner'):
             return {'queue': 'async_partner', 'routing_key': 'async_partner'}
+        if task.startswith('utils'):
+            return {'queue': 'async_utils', 'routing_key': 'async_utils'}
 
 
 QUEUES = (
@@ -31,6 +33,8 @@ QUEUES = (
           routing_key='async_campaign'),
     Queue('async_partner', Exchange('async_partner'),
           routing_key='async_partner'),
+    Queue('async_utils', Exchange('async_utils'),
+          routing_key='async_utils'),
 )
 
 
