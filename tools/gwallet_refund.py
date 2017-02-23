@@ -87,7 +87,7 @@ def black_account_by_purchase():
             orderid = value['order_id']
             if exists_gp_order(orderid):
                 print 'Has been processed gp order id: ', orderid
-                return
+                continue
             payid = value.get('pay_id', 0)
             if not payid:
                 pay_price = None
