@@ -436,6 +436,10 @@ def shipping_pulsa(await_order, activity):
               'activity id: {6}, tid: {7}, term number: {8}, activity price: {9}'.format(
             datetime.now().strftime('%Y-%m-%d %H:%M:%S'), user_id, await_order.order_id, product, charge_account, name,
             activity.id, activity.template_id, activity.term_number, activity.price)
+        order_db.update_order_info(
+            await_order.order_id,
+            {'status': ORDER_STATUS.DEAL}
+        )
         return
     resp = requests.post(_PULSA_URL, data=req, headers=headers)
     print resp.content, await_order.order_id

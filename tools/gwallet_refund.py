@@ -14,7 +14,7 @@ sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache.redis_cache import get_gwallet_purchase_token, get_gwallet_refund_endtime, \
-    set_gwallet_refund_endtime
+    set_gwallet_refund_endtime, exists_gp_order, set_gp_order
 from luckycommon.account.db.account import black_account
 from luckycommon.db.pay import get_pay
 
@@ -85,6 +85,9 @@ def black_account_by_purchase():
         if len(value) != 0:
             userid = value['user_id']
             orderid = value['order_id']
+            if exists_gp_order(orderid):
+                print 'Has been processed gp order id: ', orderid
+                return
             payid = value.get('pay_id', 0)
             if not payid:
                 pay_price = None
@@ -98,6 +101,7 @@ def black_account_by_purchase():
                            'black time is {2}'.format(
                 orderid, _get_format_datetime(voided_time_millis), _get_format_datetime())
             black_account(userid, black_reason)
+            set_gp_order(orderid)
             print _get_format_datetime(), 'black account info: {0}, ' \
                                           'userid: {1}, orderid: {2}, ' \
                                           'payid: {3}, price: {4}, chargetime: {5}, ' \
