@@ -555,6 +555,7 @@ class ActivityAnnounceHandler(EventHandler):
                         'winner_strategy': 0,
                         'loser_strategy': 0,
                         'buy_all': 1 if buy_all else 0,
+                        'announce': 1,
                     })
                     return False, False, False, [], []
 
@@ -645,6 +646,7 @@ class ActivityAnnounceHandler(EventHandler):
             'winner_strategy': 1 if u'赢家' in adjust_reason else 0,
             'loser_strategy': 1 if u'输家' in adjust_reason else 0,
             'buy_all': 1 if buy_all else 0,
+            'announce': 1,
         })
         _LOGGER.info(
             'check result <%s, %s>, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
