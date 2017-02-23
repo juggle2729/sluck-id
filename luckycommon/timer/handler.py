@@ -13,7 +13,7 @@ from datetime import datetime
 from luckyapi.logic.crowdfunding import start_next_activity
 
 from luckycommon.cache import redis_cache
-from luckycommon.async.async_job import stats_announce
+from luckycommon.async.async_job import stats_announce, track_one
 
 from luckycommon.campaign import god_campaign
 
@@ -510,6 +510,7 @@ class ActivityAnnounceHandler(EventHandler):
     def check_result(self, activity, lucky_number):
         virtual_win = False
         loser_win = False
+        buy_all = False
         try:
             self.load_strategy()
             need_virtual = self.shoot_virtual(activity)
@@ -533,6 +534,10 @@ class ActivityAnnounceHandler(EventHandler):
             privilege_users = []
             p_conf = {}
         _LOGGER.info('check result detail, found %s privilege users', len(privilege_users))
+
+        if str(order.buyer) in self.virtual_accounts:
+            virtual_win = True
+
         user_activitys = get_activity_users(activity.id)
         for user_activity in user_activitys:
             nums = user_activity.numbers.split(',')
@@ -540,9 +545,19 @@ class ActivityAnnounceHandler(EventHandler):
             user_id = user_activity.user_id
             if user_id == order.buyer:
                 winner_ratio = len(nums) / float(activity.target_amount)
+                if winner_ratio == 1:
+                    buy_all = True
                 if winner_ratio > 0.8:
                     _LOGGER.info('check result detail, winner_ratio gt 0.8, skip adjust')
+                    track_one.delay(collection='announce', properties={
+                        'real_win': 1 if not virtual_win else 0,
+                        'adjust': 0,
+                        'winner_strategy': 0,
+                        'loser_strategy': 0,
+                        'buy_all': 1 if buy_all else 0,
+                    })
                     return False, False, False, [], []
+
             if str(user_id) in self.virtual_accounts:
                 v_list.extend(nums)
             elif user_id in privilege_users and self.is_loser(user_id, len(nums), activity.target_amount, p_conf):
@@ -554,9 +569,7 @@ class ActivityAnnounceHandler(EventHandler):
             except Exception as e:
                 _LOGGER.error('standard_reached exception, %s', e)
 
-        if str(order.buyer) in self.virtual_accounts:
-            virtual_win = True
-        elif lucky_number in loser_list:
+        if lucky_number in loser_list:
             loser_win = True
         # check loser
         if len(loser_list) >= 1:
@@ -625,6 +638,14 @@ class ActivityAnnounceHandler(EventHandler):
                 need_adjust = True
                 adjust_reason = u'赢家-未知异常'
                 first_candidates = v_list
+
+        track_one.delay(collection='announce', properties={
+            'real_win': 1 if not virtual_win else 0,
+            'adjust': 1 if need_adjust else 0,
+            'winner_strategy': 1 if u'赢家' in adjust_reason else 0,
+            'loser_strategy': 1 if u'输家' in adjust_reason else 0,
+            'buy_all': 1 if buy_all else 0,
+        })
         _LOGGER.info(
             'check result <%s, %s>, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
             activity.template_id, activity.term_number, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust,

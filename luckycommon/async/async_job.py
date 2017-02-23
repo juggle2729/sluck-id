@@ -25,6 +25,7 @@ from luckycommon.activity.auto_shipping import shipping_coin
 from luckycommon.mission import fresh_mission
 
 from luckycommon.cache import redis_cache
+from luckycommon.track import collect_event
 from luckycommon.utils import id_generator
 from luckycommon.order.db.order import get_order
 from luckycommon.db.pay import get_pay
@@ -35,7 +36,6 @@ from luckycommon.third.sms.helper import send_sms
 from luckycommon.async.celery import app
 
 from django.conf import settings
-
 
 _LOGGER = logging.getLogger('worker')
 
@@ -251,7 +251,18 @@ def stats_announce(activity_id, winner):
     miss_return.announce_callback(activity, winner)
 
 
+@app.task(name='utils.track')
+def track_one(collection, properties, user_id=None):
+    if settings.TEST_ENV:
+        collection += '_test'
+    _LOGGER.info('track one event into collection: %s' % collection)
+    status, error_message = collect_event(collection, properties, user_id)
+    if not status:
+        _LOGGER.info('track failed, collection: %s, properties: %s, reason: %s' % (collection, properties, error_message))
+
+
 if __name__ == "__main__":
     import sys
+
     activity_id = sys.argv[1]
     modify_hot_activity(activity_id)

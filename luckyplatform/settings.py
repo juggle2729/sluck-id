@@ -10,6 +10,8 @@ SECRET_KEY = 'mzm2ojrfc54x#9%dptxc4c-!pa3ppj!h(5=@^h*346k-fs65vi'
 
 DEBUG = True
 
+TEST_ENV = False
+
 TEMPLATE_DEBUG = True
 
 CACHE_REPORT = False
@@ -79,7 +81,7 @@ MISS_RETURN_TID = 641
 
 ADV_FLAG = False  # GP版开关, 旧版不用放着
 
-GP_FLAG = True  # GP switch, True is on sensor
+GP_FLAG = False  # GP switch, True is on sensor
 GP_VERSION_CODE = 130
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
 

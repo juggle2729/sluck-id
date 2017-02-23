@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 DEBUG = False
-
-TEMPLATE_DEBUG = True
+TEST_ENV = False
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
