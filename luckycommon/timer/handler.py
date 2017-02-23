@@ -626,7 +626,6 @@ class ActivityAnnounceHandler(EventHandler):
                 adjust_reason = u'赢家-未知异常'
                 first_candidates = v_list
 
-        _LOGGER.info('track reached')
         track_one.delay(collection='announce', properties={
             'real_win': 1 if not virtual_win else 0,
             'adjust': 1 if need_adjust else 0,

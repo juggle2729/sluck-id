@@ -10,6 +10,8 @@ SECRET_KEY = 'mzm2ojrfc54x#9%dptxc4c-!pa3ppj!h(5=@^h*346k-fs65vi'
 
 DEBUG = True
 
+TEST_ENV = False
+
 TEMPLATE_DEBUG = True
 
 CACHE_REPORT = False

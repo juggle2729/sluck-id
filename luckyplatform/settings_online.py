@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
 DEBUG = False
-
 TEST_ENV = False
-
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_REGEX_WHITELIST = ('^(https?://)?(\w+\.)?1yuan-gou\.com$', )
-
 QINIU_KEY_PAIR = ('sVc1BlAXhHDHYHJ7gjW4VD6iqP5zo7iC2pf9c3n8',
                   'Cixqb8jq6esZjzhHonc8OkFY3mGIIAQlOK08DCm0')
-QINIU_DOMAIN = 'http://avatar.1yuan-gou.com/'
+QINIU_DOMAIN = 'http://a.lucky-gou.com/'
+USER_BUCKET_NAME = 'en-lucky-avatars'
+ADMIN_BUCKET_NAME = 'en-lucky-pics'
 
-USER_BUCKET_NAME = 'lucky-avatars'
-ADMIN_BUCKET_NAME = 'lucky-pics'
+TIME_OFFSET = 7
+TIME_ZONE = 'Asia/Vientiane'
 
-COUNTRY = 'cn'
+EXCHANGE_RATIO = 1000
+REGION = u'印尼'
 
-ROOT_URL = 'http://120.27.162.212'
+COUNTRY = 'id'
+
+LANGUAGE_CODE = 'en-us'
+
+CITY_LAN = 'id'
+
+ROOT_URL = 'http://id.lucky-gou.com'
 
 CELERY_BROKER = 'redis://127.0.0.1:6379//'
 
@@ -26,159 +31,119 @@ GEOLITE_CITY_DB = '/home/ubuntu/af-env/data/GeoLite2-City.mmdb'
 
 LIST_UPDATE = '/home/ubuntu/af-env/luckyservice/luckycommon/virtual/list_update'
 
-WEB_APP_ROOT_URL = 'http://www.1yuan-gou.com'
+WEB_APP_ROOT_URL = 'http://id.lucky-gou.com'
 
-ADMIN_ROOT_URL = 'http://120.26.57.89/'
+ADMIN_ROOT_URL = 'http://47.88.214.2/'
 
-INVITER_SHARE_LINK = 'http://www.1yuan-gou.com/share_app2/'
+INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
 
 IOS_DEBUG_CONF = {
-    'ios': 29,
-    'ios_pro': 29,
-    'ios_hd': 29,
-    'qg_ios': 26,
-    'qg_pro': 1,
-    'qg_hd': 1,
+    'int_ios_us': 6,
+    'int_ios_tw': 6,
+    'int_ios_uk': 9,
 }
 
 XINGE_ACCESS_ID = '2200194027'
 XINGE_SECRET = 'a24df2ea34f4ef67021a22a1ba41a032'
 APNS_ENV = 1
 
-APPLE_TIDS = [235, 120, 121, 122, 206, 124, 125, 221, 123, 563, 568, 543, 580, 581, 583,
-              553, 587, 185, 282, 306, 308, 328, 354, 340, 360, 372, 427, 428, 430, 582, 612, 638]
+APPLE_TIDS = [547, 517, 518, 519, 559, 545, 546, 548, 550, 551, 549]
 
-SHOW_BANNED_TIDS = [397, 398, 424, 425, 426, 483, 485, 486, 488, 588,
-                    331, 421, 460, 461, 462, 463, 506, 519, 520, 521, 597,
-                    522, 523, 524, 525, 526, 527, 528, 529, 530, 531]
+# 禁止晒单列
+# SHOW_BANNED_TIDS = [635, 636, 638, 640, 641, 642, 643, 644, 645, 646, 647, 648,
+#                    649, 650, 651, 659, 654, 656, 657, 658]
+SHOW_BANNED_TIDS = []
+
+MISS_RETURN_TID = 641
+
+# virtual goods IDs, use special strategy
+VIRTUAL_GOODS_IDS = [796, 666, 668, 793, 792, 667, 794, 802]
 
 COIN_TIDS = {
-    397: 10,
-    398: 100,
-    424: 200,
-    425: 500,
-    426: 1000,
-    483: 200,
-    485: 100,
-    486: 500,
-    488: 300,
-    588: 200,
+    #    659: 5,
+    #    641: 10,
+    #    642: 50,
+    #    643: 100,
+    #    644: 200,
+    #    645: 500,
+    #    646: 1000,
 }
 
-CARD_TIDS = [460, 461, 462, 463, 506, 522, 523, 524, 597,
-             525, 526, 527, 528, 529, 530, 531, 519, 520, 521]
+GP_FLAG = False  # GP switch, True is on sensor
+GP_VERSION_CODE = 130
+GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
-RED_ENVELOPE_TIDS = {
-    # template_id : price
-    506: 10,
-    460: 30,
-    461: 50,
-    462: 100,
-    463: 200,
-    597: 200
-}
+IAP_FLAG = False  # IAP 审核开关
+IAP_VERSION_CODE = [1, ]
+IAP_TEST_ID = []
 
-TRANSFER_TIDS = {
-}
-
-
-CAMEN_TIDS = {
-    # template_id : price
-    # 移动
-    522: {'product_id': 1138217, 'count': 1},  # 移动30
-    523: {'product_id': 1138223, 'count': 1},  # 移动50
-    524: {'product_id': 1138224, 'count': 1},  # 移动100
-    525: {'product_id': 1138224, 'count': 2},  # 移动200
-    526: {'product_id': 1138224, 'count': 5},  # 移动500
-    # 联通
-    527: {'product_id': 1138228, 'count': 1},  # 联通30
-    528: {'product_id': 1138229, 'count': 1},  # 联通50
-    529: {'product_id': 1138230, 'count': 1},  # 联通100
-    530: {'product_id': 1138230, 'count': 2},  # 联通200
-    531: {'product_id': 1138230, 'count': 5},  # 联通500
-    # 电信
-    519: {'product_id': 1138266, 'count': 1},  # 电信100
-    520: {'product_id': 1138266, 'count': 2},  # 电信200
-    521: {'product_id': 1138266, 'count': 5},  # 电信500
-}
-
-# weixin settings
-WX_APP_ID = "wx3bded55c34db1844"
-WX_SECRET_KEY = "e5bf72f5961bb4412e0176c912bca8ae"
-WX_CLIENT_TOKEN = "zYmnWmXGsbDhgVttvfpH272WCfTz5gUH"
-WX_ENCODING_AES_KEY = "J4fzqiBDtba6hLT1xvbfvxRND5AT6TGOiWp0AHqpHOx"
+FRESH_RECOMMEND = [0, 0]
 
 ADMIN_ID = 1001010
 
 CACHE_REPORT = True
 
-MONGO_ADDR = "mongodb://10.168.5.23/"
+JPUSH_ENV = 'prod'
+
+MONGO_ADDR = "mongodb://10.25.164.238/"
 
 MYSQL_CONF = {
-    'db': 'mysql://lucky:P@55word@10.25.235.79:3306/lucky?charset=utf8',
+    'db': 'mysql://lucky:P@55word@10.25.164.238:3306/lucky?charset=utf8',
     'DEBUG': DEBUG
 }
 
 SLAVE_CONF = {
-    'db': 'mysql://lucky:P@55word@10.25.242.204:3306/lucky?charset=utf8',
+    'db': 'mysql://lucky:P@55word@10.25.164.238:3306/lucky?charset=utf8',
     'DEBUG': DEBUG
 }
 
 ADMIN_CONF = {
-    'db': 'mysql://lucky:P@55word@10.25.235.79:3306/admin?charset=utf8',
+    'db': 'mysql://lucky:P@55word@10.25.164.238:3306/admin?charset=utf8',
     'DEBUG': DEBUG
 }
 
-ENABLE_CODIS = True
-
-REDIS_HOST = '10.46.71.31'
-REDIS_PORT = 6479
-
-ZK_HOSTS = '10.46.71.31:2181'
-ZK_PROXY_DIR = '/zk/codis/db_test/proxy'
+REDIS_HOST = '10.25.164.238'
+REDIS_PORT = 6379
 
 DEBUG_USER = 1001010
 BAN_VIRTUAL_LOGIN = False
 
 SERVICE_ID = 1
 
-# PingPlusPlus config
+ANNOUNCE_DELAY = 300
 
-# Pingpp App key
-APP_ID = 'app_TOabLOTi58C0T4av'
+# paypal settings
+PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"
+PAYPAL_API_USERNAME = "sunshineking86_api1.gmail.com"
+PAYPAL_API_PASSWORD = "E869TNPC95U2Z4JC"
+PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31Aq0XfM5N.PRkiDU4yeS-Fbj7jo0X"
+PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
-# Pingpp alipay wap return and cancel URL
-SUCCESS_URL = 'http://www.yourdomain.com/success'
-CANCEL_URL = 'http://www.yourdomain.com/cancel'
+PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
+PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/cancel'
+PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
 
-# iapppay notify URL
-IAPPPAY_NOTIFY_URL = 'http://120.27.162.212/api/v1/pay/iapppay/notify/'
+# NganLuong pay
+NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'
+NGANLUONG_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/return'
+NGANLUONG_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/notify'
+NGANLUONG_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
 
-# iapppay tmp notify URL
-IAPPPAY_TMP_NOTIFY_URL = 'http://120.27.162.212/api/v1/pay/iapppay_tmp/notify/'
+# Coda pay
+CODA_PAY_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/coda_pay/gateway/%s/'
+CODA_PAY_ORDER_URL = 'https://airtime.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
+CODA_API_KEY_DICT = {
+    'TWD': '66180937d31a768a62bf463b3d5e5547',
+    'IDR': '3d808b4a286535ad0ad2603620232b60',
+}
 
-# ipaynow notify URL
-IPAYNOW_NOTIFY_URL = 'http://120.27.162.212/api/v1/pay/ipaynow/notify/'
+# Fortumo pay
+FORTUMO_SERVICE_ID = '8f06a4b67822839c44bef2eebb516ac8'
+FORTUMO_SECRET = 'ab19ee77832943b1631dd00331533a4b'
+FORTUMO_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/fortumo/notify/'
+FORTUMO_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview/'
 
-# ofpay notify url
-OFFPAY_NOTIFY_URL = 'http://120.27.162.212/api/v1/ofpay/'
+# Precard
+PRECARD_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/precard/%s/'
+PAY_GATEWAY_STATUS_URL = 'http://id.lucky-gou.com/api/v1/pay/%s/status'
 
-# swiftpass notify url
-SWIFTPASS_NOTIFY_URL = 'http://120.27.162.212/api/v1/swiftpass/'
-
-# shenfutong notify url
-SHENFUTONG_NOTIFY_URL = 'http://120.27.162.212/api/v1/shenfutong/notify/'
-SHENFUTONG_RETURN_URL = 'http://120.27.162.212/api/v1/shenfutong/return/'
-
-# gaoyang notify url
-GAOYANG_NOTIFY_URL = 'http://120.27.162.212/api/v1/pay/gaoyang/notify/'
-PAY_GATEWAY_URL = 'http://120.27.162.212/api/v1/pay/gateway/'
-PAY_GATEWAY_STATUS_URL = 'http://120.27.162.212/api/v1/pay/%s/status'
-
-# paypayfu notify url
-PAYPAYFU_NOTIFY_URL = 'http://120.27.162.212/api/v1/pay/paypayfu/notify/'
-
-# mingtianyun notify url
-MINGTIANYUN_NOTIFY_URL = 'http://120.27.162.212/api/v1/pay/mingtianyun/notify/'
-
-FRESH_RECOMMEND = [568, 331]

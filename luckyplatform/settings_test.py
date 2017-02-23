@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-DEBUG = False
-
+DEBUG = True
+TEST_ENV = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['*']
@@ -86,17 +86,17 @@ MONGO_ADDR = "mongodb://127.0.0.1/"
 
 MYSQL_CONF = {
     'db': 'mysql://root:123456@127.0.0.1:3306/lucky?charset=utf8',
-    'DEBUG': DEBUG
+    'DEBUG': False
 }
 
 SLAVE_CONF = {
     'db': 'mysql://root:123456@127.0.0.1:3306/lucky?charset=utf8',
-    'DEBUG': DEBUG
+    'DEBUG': False
 }
 
 ADMIN_CONF = {
     'db': 'mysql://root:123456@127.0.0.1:3306/admin?charset=utf8',
-    'DEBUG': DEBUG
+    'DEBUG': False
 }
 
 REDIS_HOST = '127.0.0.1'

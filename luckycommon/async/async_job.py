@@ -253,6 +253,8 @@ def stats_announce(activity_id, winner):
 
 @app.task(name='utils.track')
 def track_one(collection, properties, user_id=None):
+    if settings.TEST_ENV:
+        collection += '_test'
     _LOGGER.info('track one event into collection: %s' % collection)
     status, error_message = collect_event(collection, properties, user_id)
     if not status:

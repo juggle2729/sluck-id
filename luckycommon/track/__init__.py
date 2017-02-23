@@ -9,12 +9,14 @@ from luckyplatform import settings
 def collect_event(collection, properties, user_id=None):
     if user_id:
         properties['_user'] = user_id
+    if '_user' not in properties:
+        properties['_user'] = ''
     url = "http://54.179.142.74:9999/event/collect"
     headers = {
         'content-type': "application/json"
     }
     payload = {
-        "collection": collection if not settings.DEBUG else collection + '_test',
+        "collection": collection,
         "api": {
             "api_key": "4cj10bvb4ptfi7jhbc39r90h6a69msflm2hiicroloftvbcbc8b0v56n2shhqo7a",
             "library": {
