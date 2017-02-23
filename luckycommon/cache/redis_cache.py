@@ -110,14 +110,14 @@ def set_gp_order(orderid):
     :param orderid:
     :return:
     '''
-    key = prefix_key('gporder:' % orderid)
+    key = prefix_key('gporder:%s' % orderid)
     ProxyAgent().setnx(key, 'limit')
     ProxyAgent().expire(key, 3600 * 24 * 7)
 
 
 @cache_wrapper
 def exists_gp_order(orderid):
-    key = prefix_key('gporder:' % orderid)
+    key = prefix_key('gporder:%s' % orderid)
     return ProxyAgent().exists(key)
 
 
