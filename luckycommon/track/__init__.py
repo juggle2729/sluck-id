@@ -3,8 +3,6 @@ import json
 
 import requests
 
-from luckyplatform import settings
-
 
 def collect_event(collection, properties, user_id=None):
     if user_id:
@@ -34,5 +32,34 @@ def collect_event(collection, properties, user_id=None):
         return False, response.text
 
 
+def create_user(user_id, properties):
+    url = "http://54.179.142.74:9999/user/create"
+    headers = {
+        'content-type': 'application/json',
+    }
+    payload = {
+        "id": user_id,
+        "api": {
+            "api_key": "5svsjrik67tluh44s9000svfk21rlc073p1vrrs6pj2ttlf9s6lvivom37ihc7h4",
+            "library": {
+                "name": "python",
+                "version": "1.0"
+            },
+            "api_version": "1.0"
+        },
+        "properties": properties
+    }
+    response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+    if response.text == '1':
+        return True, None
+    else:
+        return False, response.text
+
+
+def set_user_properties():
+    pass
+
+
 if __name__ == '__main__':
-    print collect_event('demo', {'click': False, '_user': 123})
+    # print collect_event('demo', {'click': False, '_user': 123})
+    print create_user(1234, {'is_virtual': '1'})
