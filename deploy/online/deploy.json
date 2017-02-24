@@ -37,7 +37,8 @@
     "luckyservice-id": {
       "47.88.214.13": {
         "bash": [
-          "rm -rf luckyweb"
+          "rm -rf luckyweb",
+          "mv luckyplatform/settings_online.py luckyplatform/env_settings.py"
         ]
       }
     }
