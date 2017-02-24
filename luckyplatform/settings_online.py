@@ -146,4 +146,3 @@ FORTUMO_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview/'
 # Precard
 PRECARD_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/precard/%s/'
 PAY_GATEWAY_STATUS_URL = 'http://id.lucky-gou.com/api/v1/pay/%s/status'
-
