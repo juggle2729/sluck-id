@@ -416,7 +416,7 @@ def shipping_pulsa(await_order, activity):
         gp_timestamp = 0
     print 'gp user: %s, last charge timestamp: %s' % (user_id, gp_timestamp)
     delivery_time = gp_timestamp + 24 * 3600 * 1   # gp充值用户延迟一天发货
-    current_timestamp = time.time()
+    current_timestamp = int(time.time())
     if delivery_time > current_timestamp:
         print 'gp user: %s, order id: %s delay deliver timestamp: %s >= current timestamp' % (user_id, await_order.order_id, delivery_time)
         return

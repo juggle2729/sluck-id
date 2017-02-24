@@ -49,6 +49,8 @@ urlpatterns = patterns(
     url(r'^pay/(?P<pay_id>[^/]+)/status/?$', 'luckyapi.views.transaction.get_pay_status'),
     url(r'^pay/paypal/return/?$', 'luckyapi.views.transaction.paypal_return'),
     url(r'^pay/paypal/cancel/?$', 'luckyapi.views.transaction.paypal_cancel'),
+    url(r'^pay/paypal/button/?$', 'luckyapi.views.transaction.paypal_button'),
+    url(r'^pay/paypal/notify/?$', 'luckyapi.views.transaction.paypal_inp_notify'),
     url(r'^pay/coda_pay/proxy/?$', 'luckyapi.views.transaction.coda_proxy'),
     url(r'^pay/coda_pay/gateway/(?P<token>[^/]+)/?$', 'luckyapi.views.transaction.coda_gateway'),
     url(r'^pay/coda_pay/notify/?$', 'luckyapi.views.transaction.coda_notify'),

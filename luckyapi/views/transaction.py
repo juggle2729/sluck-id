@@ -16,7 +16,7 @@ from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
 from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion, bluepay, mimo_pay, \
-    google_wallet, iap
+    google_wallet, iap, paypal_button
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
@@ -290,6 +290,21 @@ def paypal_return(request):
 @require_GET
 def paypal_cancel(request):
     return HttpResponse('Payment cancelled', status=200)
+
+
+@require_GET
+def paypal_button(request):
+    return TemplateResponse(request, 'paypal_button.html')
+
+@require_POST
+def paypal_inp_notify(request):
+    try:
+        _LOGGER.error('PPPPPPPPPPPPPPPPAAAAAAAAAAAAAAAAAAAA, %s %s', request.GET, request.POST)
+        paypal_button.verify_ipn_message(request)
+        return HttpResponse('Payment success', status=200)
+    except Exception as e:
+        _LOGGER.exception('Paypal INP notify exception.(%s)' % e)
+        return HttpResponse('N', status=400)
 
 
 @require_GET

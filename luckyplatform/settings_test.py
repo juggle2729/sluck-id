@@ -74,6 +74,10 @@ IAP_FLAG = True  # IAP 审核开关
 IAP_VERSION_CODE = [1, ]
 IAP_TEST_ID = [298, 18045996]
 
+PAYPAL_VERIFY_URL_PROD = 'https://www.paypal.com/cgi-bin/webscr'
+PAYPAL_VERIFY_URL_TEST = 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+
+
 FRESH_RECOMMEND = [0, 0]
 
 ADMIN_ID = 1001010
