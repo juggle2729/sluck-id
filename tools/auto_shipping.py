@@ -398,17 +398,28 @@ def shipping_pulsa(await_order, activity):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
         return
-    # delay deliver
-    delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
-    if not delay_timestamp:
-        timestamp = int(time.time()) + 2 * 3600  # 延迟 3 小时发货
-        redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
-        print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
+    # # delay deliver
+    # delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
+    # if not delay_timestamp:
+    #     timestamp = int(time.time()) + 2 * 3600  # 延迟 3 小时发货
+    #     redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
+    #     print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
+    #     return
+    # else:
+    #     if int(delay_timestamp) >= int(time.time()):
+    #         print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (await_order.order_id, delay_timestamp)
+    #         return
+
+    # gp charge user  delay  deliver  1  day
+    gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
+    if not gp_timestamp:
+        gp_timestamp = 0
+    print 'gp user: %s, last charge timestamp: %s' % (user_id, gp_timestamp)
+    delivery_time = gp_timestamp + 24 * 3600 * 1   # gp充值用户延迟一天发货
+    current_timestamp = time.time()
+    if delivery_time > current_timestamp:
+        print 'gp user: %s, order id: %s delay deliver timestamp: %s >= current timestamp' % (user_id, await_order.order_id, delivery_time)
         return
-    else:
-        if int(delay_timestamp) >= int(time.time()):
-            print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (await_order.order_id, delay_timestamp)
-            return
 
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
@@ -756,9 +767,9 @@ def start_pulsa():
         if activity.template_id in _PULSA_TIDS:
             print 'check pulsa order, %s %s' % (await_order.order_id, activity.template_id)
             shipping_pulsa(await_order, activity)
-        if  activity.template_id in _PULSA_ELE_TIDS:
-            print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
-            shipping_ele_pulsa(await_order, activity)
+        # if  activity.template_id in _PULSA_ELE_TIDS:
+        #     print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
+        #     shipping_ele_pulsa(await_order, activity)
 
 
 

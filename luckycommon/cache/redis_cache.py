@@ -978,6 +978,7 @@ def set_gwallet_purchase_token(ptoken, orderid, userid, payid):
     ProxyAgent().hmset(key, dic)
     ProxyAgent().expire(key, 3600 * 72)
 
+
 @cache_wrapper
 def get_gwallet_purchase_token(ptoken):
     key = prefix_key('purchasetoken:%s' % ptoken)
@@ -993,3 +994,29 @@ def set_gwallet_refund_endtime(end_time):
 def get_gwallet_refund_endtime():
     key = prefix_key('gwrefundendtime')
     return ProxyAgent().get(key)
+
+
+@cache_wrapper
+def set_gp_delivery_timestamp(userid, timestamp):
+    '''
+    used for set gp userid flag
+    :param userid:
+    :param timestamp:
+    :return None:
+    '''
+    key = prefix_key('gpuserid:%s' % userid)
+    ProxyAgent().setx(key, timestamp)
+    ProxyAgent().expire(key, 3600 * 24 * 2)
+
+
+@cache_wrapper
+def get_gp_delivery_timestamp(userid):
+    '''
+    used for get gp userid flag
+    :param userid:
+    :return timestamp:
+    '''
+    key = prefix_key('gpuserid:%s' % userid)
+    return ProxyAgent().get(key)
+
+

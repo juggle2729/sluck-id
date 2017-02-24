@@ -3,6 +3,7 @@ import requests
 import json
 import logging
 import hashlib
+import time
 import  base64
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
@@ -15,7 +16,7 @@ from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail
 from luckycommon.model.pay import PayStatus
 from luckycommon.pay.handler import pay_after_recharge
 from luckycommon.utils.exceptions import ParamError
-from luckycommon.cache.redis_cache import set_gwallet_purchase_token
+from luckycommon.cache.redis_cache import set_gwallet_purchase_token, set_gp_delivery_timestamp
 
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
@@ -106,6 +107,7 @@ def google_check_notify(request):
             _LOGGER.info('Google Wallet Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
                 user_id, pay_id, total_fee, currency))
             set_gwallet_purchase_token(purchase_token, trade_no, user_id, pay_id)
+            set_gp_delivery_timestamp(user_id, time.time())
             res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
             if res:
                 _TRACKER.info({'user_id': user_id, 'type': 'recharge',

@@ -75,7 +75,7 @@ GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = True  # IAP 审核开关
 IAP_VERSION_CODE = [1, ]
-IAP_TEST_ID = []
+IAP_TEST_ID = [298, 18045996]
 
 FRESH_RECOMMEND = [0, 0]
 
@@ -122,6 +122,11 @@ PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
 PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/cancel'
 PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
+
+
+PAYPAL_VERIFY_URL_PROD = 'https://www.paypal.com/cgi-bin/webscr'
+PAYPAL_VERIFY_URL_TEST = 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+
 
 # NganLuong pay
 NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'
