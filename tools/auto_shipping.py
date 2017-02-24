@@ -506,7 +506,7 @@ def shipping_ele_pulsa(await_order, activity):
         sn = obj_mp.find('sn')
         if not sn:
             print await_order.order_id, 'sn is null'
-            time.sleep(30)
+            time.sleep(60)
             # checkstatus
             ref_id = str(await_order.order_id) + '#' + seed
             req = _PULSA_CS_XML % ref_id
