@@ -148,6 +148,8 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.ATM.value],
         ]
     if platform == 'ios' and locale == 'id':
+        if settings.IAP_FLAG:
+            return [pay_types[PayType.CODA_PAY.value], ]
         return [
             pay_types[PayType.CODA_PAY.value],
             pay_types[PayType.APPLE_IAP.value],
