@@ -1005,7 +1005,7 @@ def set_gp_delivery_timestamp(userid, timestamp):
     :return None:
     '''
     key = prefix_key('gpuserid:%s' % userid)
-    ProxyAgent().setx(key, timestamp)
+    ProxyAgent().set(key, timestamp)
     ProxyAgent().expire(key, 3600 * 24 * 2)
 
 
