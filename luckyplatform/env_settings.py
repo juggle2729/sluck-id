@@ -57,7 +57,7 @@ SHOW_BANNED_TIDS = []
 MISS_RETURN_TID = 641
 
 # virtual goods IDs, use special strategy
-VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802]
+VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856]
 
 COIN_TIDS = {
     #    659: 5,
@@ -75,7 +75,7 @@ GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = True  # IAP 审核开关
 IAP_VERSION_CODE = [1, ]
-IAP_TEST_ID = [298, 18045996]
+IAP_TEST_ID = []
 
 FRESH_RECOMMEND = [0, 0]
 
@@ -114,19 +114,14 @@ ANNOUNCE_DELAY = 300
 
 # paypal settings
 PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"
-PAYPAL_API_USERNAME = "sunshineking86_api1.gmail.com"
-PAYPAL_API_PASSWORD = "E869TNPC95U2Z4JC"
-PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31Aq0XfM5N.PRkiDU4yeS-Fbj7jo0X"
+PAYPAL_API_USERNAME = "kareenkan_api1.gmail.com"
+PAYPAL_API_PASSWORD = "8KZ7JQBPD8TRGZM2"
+PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31AOYYSrzTeuaKtabX-rYdg4udNU98"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
 PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
 PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/cancel'
 PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
-
-
-PAYPAL_VERIFY_URL_PROD = 'https://www.paypal.com/cgi-bin/webscr'
-PAYPAL_VERIFY_URL_TEST = 'https://www.sandbox.paypal.com/cgi-bin/webscr'
-
 
 # NganLuong pay
 NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'

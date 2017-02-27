@@ -14,7 +14,7 @@ _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
-_CURRENCY = 'VND'
+_CURRENCY = 'SGD'
 
 PAYPAL_REDIRECT_URL = settings.PAYPAL_REDIRECT_URL
 
