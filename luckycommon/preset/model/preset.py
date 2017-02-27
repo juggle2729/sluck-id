@@ -11,6 +11,7 @@ DEVICE_TYPE = Enum({
     "INT_IOS_US": (16, "int ios us"),
     "INT_IOS_TW": (32, "int ios tw"),
     "INT_IOS_UK": (64, "int ios uk"),
+    "QG_IOS": (128, "qg ios"),
 })
 
 

@@ -47,8 +47,9 @@ ADMIN_ROOT_URL = 'http://120.26.57.89/'
 INVITER_SHARE_LINK = 'http://vn.lucky-gou.com/share_app/'
 
 IOS_DEBUG_CONF = {
-    'ios': 9,
-    'ios_pro': 1
+    'ios': 1,
+    'ios_pro': 1,
+    'qg_ios': 1,
 }
 
 FRESH_RECOMMEND = [129, 122]
