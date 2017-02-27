@@ -197,7 +197,9 @@ def create_activity_detail(user_id, activity, user_activity=None, use_cache=Fals
     }
     detail.price = activity.price
     goods = get_goods(activity.goods_id)
-    detail.is_resell = 1 if int(activity.target_amount) >= 1000 and goods.shipping_type==0 else 0
+    # detail.is_resell = 1 if int(activity.target_amount) >= 1000 and goods.shipping_type==0 else 0
+    # 27 Fed. 2017  remove resell goods amount more than 1000 limit.
+    detail.is_resell = 1 if goods.shipping_type == 0 else 0
     if detail.is_resell:
         detail.resell_price_h = int(float(goods.price)*0.9*1000)
         detail.resell_price_l = int(float(goods.price)*0.8*1000)
