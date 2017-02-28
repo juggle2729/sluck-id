@@ -403,7 +403,7 @@ def shipping_pulsa(await_order, activity):
     if not delay_timestamp:
         gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
         if gp_timestamp:
-            timestamp = int(time.time()) + 24 * 3600  # 延迟 24 小时发货
+            timestamp = int(time.time()) + 24 * 3600 * 2  # 28 Fed. 2017  Delay delivery 48 hours
             redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
             print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
             return
