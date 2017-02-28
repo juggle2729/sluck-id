@@ -24,7 +24,7 @@ PAYPAL_REDIRECT_URL = settings.PAYPAL_REDIRECT_URL
 
 
 def paypal_create_charge(pay, pay_amount, return_url=settings.PAYPAL_NOTIFY_URL,
-                         cancel_url=settings.PAYPAL_CANCEL_URL):
+                         cancel_url=settings.PAYPAL_FAILED_URL):
     paypal = PayPalInterface(API_USERNAME=settings.PAYPAL_API_USERNAME,
                              API_PASSWORD=settings.PAYPAL_API_PASSWORD,
                              API_SIGNATURE=settings.PAYPAL_API_SIGNATURE,
