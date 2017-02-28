@@ -13,7 +13,8 @@ from luckycommon.utils.exceptions import ParamError
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 
-_EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+# exchange ratio just for SGD
+_EXCHANGE_RATIO = 0.1
 _CURRENCY = 'SGD'
 
 PAYPAL_REDIRECT_URL = settings.PAYPAL_REDIRECT_URL
@@ -26,7 +27,7 @@ def paypal_create_charge(pay, pay_amount, return_url=settings.PAYPAL_RETURN_URL,
                              API_SIGNATURE=settings.PAYPAL_API_SIGNATURE,
                              API_ENVIRONMENT=settings.PAYPAL_API_ENVIRONMENT)
     set_result = paypal.set_express_checkout(
-        PAYMENTREQUEST_0_AMT=pay_amount / _EXCHANGE_RATIO,
+        PAYMENTREQUEST_0_AMT=pay_amount * _EXCHANGE_RATIO,
         PAYMENTREQUEST_0_CURRENCYCODE=_CURRENCY,
         PAYMENTREQUEST_0_PAYMENTACTION="Sale",
         PAYMENTREQUEST_0_INVNUM=str(pay.id),
@@ -54,7 +55,7 @@ def paypal_do_charge(token):
                                                         AMT=detail_result['AMT'])
     _LOGGER.info("paypal checkout confirm result: %s" % confirm_result)
     trade_status = confirm_result['PAYMENTSTATUS']
-    total_fee = float(confirm_result['AMT']) * _EXCHANGE_RATIO
+    total_fee = float(confirm_result['AMT']) / _EXCHANGE_RATIO
     pay_id = detail_result['PAYMENTREQUEST_0_INVNUM']
     trade_no = confirm_result['PAYMENTINFO_0_TRANSACTIONID']
     _LOGGER.info("paypal checkout confirm result: %s" % confirm_result)
