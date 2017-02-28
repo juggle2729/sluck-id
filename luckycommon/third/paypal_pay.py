@@ -4,6 +4,8 @@ from paypal.interface import PayPalInterface
 
 import logging
 from django.conf import settings
+
+from luckycommon.credit.db.credit import add_special_recharge_award_credit
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -16,11 +18,12 @@ _TRACKER = logging.getLogger('tracker')
 # exchange ratio just for SGD
 _EXCHANGE_RATIO = 0.1
 _CURRENCY = 'SGD'
+_AWARD_CREDIT_UNIT = 10
 
 PAYPAL_REDIRECT_URL = settings.PAYPAL_REDIRECT_URL
 
 
-def paypal_create_charge(pay, pay_amount, return_url=settings.PAYPAL_RETURN_URL,
+def paypal_create_charge(pay, pay_amount, return_url=settings.PAYPAL_NOTIFY_URL,
                          cancel_url=settings.PAYPAL_CANCEL_URL):
     paypal = PayPalInterface(API_USERNAME=settings.PAYPAL_API_USERNAME,
                              API_PASSWORD=settings.PAYPAL_API_PASSWORD,
@@ -79,10 +82,11 @@ def paypal_do_charge(token):
     if trade_status == 'Completed' or (trade_status == 'Pending' and confirm_result['PENDINGREASON'] == 'multicurrency'):
         _LOGGER.info('paypal check order success, user_id:%s pay_id:%s' % (user_id, pay_id))
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+        add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
         if res:
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
                            'price': total_fee,
-                           'channel': 'swiftpass'})
+                           'channel': 'paypal'})
             try:
                 pay_after_recharge(pay)
             except Exception as e:

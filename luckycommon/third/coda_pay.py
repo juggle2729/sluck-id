@@ -42,8 +42,7 @@ CURRENCY_CODES = {
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
 
 
-def coda_create_charge(pay, pay_amount, currency, return_url=settings.PAYPAL_RETURN_URL,
-                       cancel_url=settings.PAYPAL_CANCEL_URL):
+def coda_create_charge(pay, pay_amount, currency):
     price = int(pay_amount) * _EXCHANGE_RATIO
     payload = {"initRequest": {"orderId": pay.id,
                                "profile": "",
