@@ -124,6 +124,9 @@ PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
 PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/cancel'
 PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
 
+PAYPAL_VERIFY_URL_PROD = 'https://www.paypal.com/cgi-bin/webscr'
+PAYPAL_VERIFY_URL_TEST = 'https://www.sandbox.paypal.com/cgi-bin/webscr'
+
 # NganLuong pay
 NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'
 NGANLUONG_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/return'

@@ -81,7 +81,7 @@ def start():
     # create detail record
     term_id = distribute_term.id
     for user_id in target_users:
-        credit_db.add_credit(user_id, divided_amount, u'奖池瓜分')
+        credit_db.add_credit(user_id, divided_amount, u'Poin Bersama')
         account = get_account(user_id)
         user_info = {
             'nick_name': account.nick_name,
