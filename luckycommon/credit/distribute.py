@@ -55,10 +55,6 @@ def start():
     distribute_term.save()
     redis_cache.clear_credit_pool()
 
-    origin_divided_amount = int(pool_amount) / 100
-    new_divided_amount = int(pool_amount) / 100 + DAILY_SIGN_AWARDS[0]/2
-    _LOGGER.info('start distribute credit pool, total amount:%s, origin divided amount:%s, new amount: %s', pool_amount, origin_divided_amount, new_divided_amount)
-    divided_amount = new_divided_amount
     target_users = set()
     account_signs = credit_db.get_sign_users(start_date, end_date)
     print 'account_signs %s' % account_signs
@@ -70,13 +66,32 @@ def start():
         target_users.add(user_id)
     print 'target users: %s' % target_users
     supply_count = 100 - len(target_users)
-    if len(target_users) < 100:
-        while True:
-            agent_id = redis_cache.get_random_virtual_account()
-            target_users.add(int(agent_id))
+    # if len(target_users) < 100:        # 1 Mar. 2017 Remove target users less than 100 filled with virtual user logic
+    #     while True:
+    #         agent_id = redis_cache.get_random_virtual_account()
+    #         target_users.add(int(agent_id))
+    #         if len(target_users) >= 100:
+    #             break
+    # target_users = random.sample(target_users, 100)
+    if len(target_users) < 1 or len(target_users) >= 100:
+        origin_divided_amount = int(pool_amount) / 100
+        new_divided_amount = int(pool_amount) / 100 + DAILY_SIGN_AWARDS[0] / 2
+        _LOGGER.info('start distribute credit pool, total amount:%s, origin divided amount:%s, new amount: %s',
+                     pool_amount, origin_divided_amount, new_divided_amount)
+        divided_amount = new_divided_amount
+        while True:  # 当 target_users 为空时
             if len(target_users) >= 100:
                 break
-    target_users = random.sample(target_users, 100)
+            agent_id = redis_cache.get_random_virtual_account()
+            target_users.add(int(agent_id))
+        target_users = random.sample(target_users, 100)
+    else: # 当 target_users 少于 100 人时，直接把积分分给这些用户，不在用虚拟用户填充
+        origin_divided_amount = int(pool_amount) / len(target_users)
+        new_divided_amount = int(pool_amount) / len(target_users)  + DAILY_SIGN_AWARDS[0] / 2
+        _LOGGER.info('start distribute credit pool, total amount:%s, origin divided amount:%s, new amount: %s',
+                     pool_amount, origin_divided_amount, new_divided_amount)
+        divided_amount = new_divided_amount
+
     print 'target users after resample: %s' % target_users
     # create detail record
     term_id = distribute_term.id
