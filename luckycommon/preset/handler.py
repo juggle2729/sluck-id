@@ -17,7 +17,9 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def _chn2type(chn):
-    if chn == 'int_ios_us':
+    if chn == 'gp_ios':
+        return DEVICE_TYPE.QG_IOS
+    elif chn == 'int_ios_us':
         return DEVICE_TYPE.INT_IOS_US
     elif chn == 'int_ios_tw':
         return DEVICE_TYPE.INT_IOS_TW

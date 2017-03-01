@@ -38,16 +38,16 @@ ADMIN_ROOT_URL = 'http://47.88.214.2/'
 INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
 
 IOS_DEBUG_CONF = {
-    'int_ios_us': 6,
-    'int_ios_tw': 6,
-    'int_ios_uk': 9,
+    'ios': 3,
+    'ios_pro': 3,
+    'qg_ios': 1,
 }
 
 XINGE_ACCESS_ID = '2200194027'
 XINGE_SECRET = 'a24df2ea34f4ef67021a22a1ba41a032'
 APNS_ENV = 1
 
-APPLE_TIDS = [547, 517, 518, 519, 559, 545, 546, 548, 550, 551, 549]
+APPLE_TIDS = [647, 648, 650, 659, 660, 669, 670, 671, 672, 687, 693, 701, 702, 703, 786, 805, 808, 818]
 
 # 禁止晒单列
 # SHOW_BANNED_TIDS = [635, 636, 638, 640, 641, 642, 643, 644, 645, 646, 647, 648,
@@ -73,8 +73,8 @@ GP_FLAG = False  # GP switch, True is on sensor
 GP_VERSION_CODE = 130
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
-IAP_FLAG = False  # IAP 审核开关
-IAP_VERSION_CODE = [1, ]
+IAP_FLAG = True  # IAP 审核开关
+IAP_VERSION_CODE = [1, 3]
 IAP_TEST_ID = []
 
 FRESH_RECOMMEND = [0, 0]
@@ -114,14 +114,16 @@ ANNOUNCE_DELAY = 300
 
 # paypal settings
 PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"
-PAYPAL_API_USERNAME = "sunshineking86_api1.gmail.com"
-PAYPAL_API_PASSWORD = "E869TNPC95U2Z4JC"
-PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31Aq0XfM5N.PRkiDU4yeS-Fbj7jo0X"
+PAYPAL_API_USERNAME = "tokoseribu.id_api1.gmail.com"
+PAYPAL_API_PASSWORD = "NM9R6AYQ67B4LV84"
+PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31AHfwRGYJfzLcwi-.BLrQMUf3ZxLi"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
-PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
-PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/cancel'
 PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
+PAYPAL_SUCCESS_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/success'
+PAYPAL_FAILED_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/failed'
+PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
+PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
 
 # NganLuong pay
 NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'
@@ -146,4 +148,3 @@ FORTUMO_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview/'
 # Precard
 PRECARD_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/precard/%s/'
 PAY_GATEWAY_STATUS_URL = 'http://id.lucky-gou.com/api/v1/pay/%s/status'
-

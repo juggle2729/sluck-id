@@ -26,10 +26,6 @@ REMOTE_USER = 'ubuntu'
 LOG_PATH = '/var/log/lucky/'
 
 
-def run_bg(cmd, sockname="dtach"):
-    return run('dtach -n `mktemp -u /tmp/%s.XXXX` %s' % (sockname, cmd))
-
-
 @task
 def dep(name='aliyun'):
     """choose env name, for example: aliyun
@@ -132,7 +128,6 @@ def deploy(is_restart=True):
     if env.project_name == 'luckyservice-id':
         sudo("killall uwsgi")
         sudo("killall python")
-        run_bg("python af-env/luckyservice/luckycommon/virtual/virtual_buy.py")
     print green('deploy %s@%s done' % (env.project_name, env.host))
 
     print green('\n     ==>>    check service process count')

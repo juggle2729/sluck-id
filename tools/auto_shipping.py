@@ -6,11 +6,11 @@ import logging
 import base64
 import sys
 from lxml import etree
+import time
 import requests
 from datetime import timedelta
 from random import randint
 from datetime import datetime
-from time import time
 from hashlib import sha1
 from hashlib import md5
 
@@ -52,6 +52,15 @@ def strip_phone(phone_number):
 _PULSA_XML = """<?xml version='1.0' encoding='utf-8'?>
 <mp><commands>topup</commands> <username>tokoseribu</username><ref_id>%s</ref_id><hp>%s</hp><pulsa_code>%s</pulsa_code><sign>%s</sign>
 </mp>"""
+
+_PULSA_CS_XML = '''<?xml version='1.0' encoding='utf-8'?>
+<mp>
+<commands>checkstatus</commands>
+<username>tokoseribu</username>
+<ref_id>%s</ref_id>
+<sign>7382ec53a55aea38e052799fa2178fe0</sign>
+</mp>'''
+
 _PULSA_URL = 'http://mobilepulsa.com/api/receiver/index.php'
 
 _REQ_DATA = '<?xml version="1.0" ?><datacell><perintah>charge</perintah><oprcode>%s</oprcode><userid>62LFI950</userid><time>145339</time><msisdn>%s</msisdn> <ref_trxid>%s</ref_trxid><sgn>%s</sgn> </datacell>'
@@ -389,17 +398,30 @@ def shipping_pulsa(await_order, activity):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
         return
-    # delay deliver
+    # # delay deliver
     delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
     if not delay_timestamp:
-        timestamp = int(time()) + 2 * 3600  # 延迟 3 小时发货
-        redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
-        print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
-        return
+        gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
+        if gp_timestamp:
+            timestamp = int(time.time()) + 24 * 3600 * 2  # 28 Fed. 2017  Delay delivery 48 hours
+            redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
+            print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
+            return
     else:
-        if int(delay_timestamp) >= int(time()):
+        if int(delay_timestamp) >= int(time.time()):
             print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (await_order.order_id, delay_timestamp)
             return
+
+    # gp charge user  delay  deliver  1  day
+    # gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
+    # if gp_timestamp:
+    #     print 'gp user: %s, last charge timestamp: %s' % (user_id, gp_timestamp)
+    #     delivery_time = int(time.time()) + 24 * 3600 * 1   # gp充值用户延迟一天发货
+    #     redis_cache.set_delay_timestamp(await_order.order_id, delivery_time)
+    #
+    # if delivery_time > current_timestamp:
+    #     print 'gp user: %s, order id: %s delay deliver timestamp: %s >= current timestamp' % (user_id, await_order.order_id, delivery_time)
+    #     return
 
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
@@ -474,7 +496,7 @@ def shipping_ele_pulsa(await_order, activity):
         print 'pulsa electricity bill recharge, %s , electricity bill no is null' % await_order.order_id
         return
     origin = order_extend.get('origin', {})
-    charge_phone = origin.get('number')
+    charge_phone = origin.get('phone')
     if not charge_phone:
         print 'pulsa electricity bill recharge, %s , phone no is null' % await_order.order_id
         return
@@ -494,14 +516,31 @@ def shipping_ele_pulsa(await_order, activity):
         obj_etree = etree.fromstring(resp.content)
         root_tree = obj_etree.getroottree()
         obj_mp = root_tree.getroot()
-        status = obj_mp.find('status')
         sn = obj_mp.find('sn')
         if not sn:
             print await_order.order_id, 'sn is null'
-            return
+            time.sleep(60)
+            # checkstatus
+            ref_id = str(await_order.order_id) + '#' + seed
+            req = _PULSA_CS_XML % ref_id
+            resp = requests.post(_PULSA_URL, data=req, headers=headers)
+            print 'checkstatus ', resp.content, await_order.order_id
+            if '<status>1</status>' in resp.content:
+                obj_etree = etree.fromstring(resp.content)
+                root_tree = obj_etree.getroottree()
+                obj_mp = root_tree.getroot()
+                sn = obj_mp.find('message')
+            else:
+                print 'checkstatus error', await_order.order_id
+                order_db.update_order_info(
+                    await_order.order_id,
+                    {'status': ORDER_STATUS.DEAL}
+                )
+                return
+        sn = sn.text
         print await_order.order_id, sn, charge_phone
         charge_phone = strip_phone(charge_phone)
-        send_sms([charge_account, ], 'sms_ele_pulsa', {'sn_code': sn})
+        send_sms([charge_phone, ], 'sms_ele_pulsa', {'sn_code': sn})
         order_db.update_order_info(
             await_order.order_id,
             {'status': ORDER_STATUS.DEAL}
@@ -730,9 +769,9 @@ def start_pulsa():
         if activity.template_id in _PULSA_TIDS:
             print 'check pulsa order, %s %s' % (await_order.order_id, activity.template_id)
             shipping_pulsa(await_order, activity)
-        if  activity.template_id in _PULSA_ELE_TIDS:
-            print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
-            shipping_ele_pulsa(await_order, activity)
+        # if  activity.template_id in _PULSA_ELE_TIDS:
+        #     print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
+        #     shipping_ele_pulsa(await_order, activity)
 
 
 
