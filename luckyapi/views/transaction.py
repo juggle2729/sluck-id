@@ -4,6 +4,7 @@ import logging
 
 from django.conf import settings
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from future.utils import raise_with_traceback
@@ -15,14 +16,14 @@ from luckycommon.cache import redis_cache
 from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
-from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, indomog, doku, payssion, bluepay, mimo_pay, \
-    google_wallet, iap, paypal_button
+from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, doku, payssion, bluepay, mimo_pay, \
+    google_wallet, iap
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
-from luckycommon.utils.respcode import StatusCode
 from luckycommon.utils.exceptions import AuthenticateError
+from luckycommon.utils.respcode import StatusCode
 
 _LOGGER = logging.getLogger('pay')
 
@@ -272,33 +273,23 @@ def get_pay_status(request, pay_id):
 
 
 @require_GET
-def paypal_return(request):
+def paypal_notify(request):
     try:
         token = request.GET.get('token')
+        paypal_pay.paypal_do_charge(token)
+        return redirect(settings.PAYPAL_SUCCESS_URL)
     except Exception:
-        return HttpResponse('Payment failed', status=400)
-    paypal_pay.paypal_do_charge(token)
-    return HttpResponse('Payment success', status=200)
+        return redirect(settings.PAYPAL_FAILED_URL)
 
 
 @require_GET
-def paypal_cancel(request):
-    return HttpResponse('Payment cancelled', status=200)
+def paypal_success(request):
+    return TemplateResponse(request, 'pay_success.html', {'return_url': settings.PAYPAL_RETURN_URL})
 
 
 @require_GET
-def paypal_button(request):
-    return TemplateResponse(request, 'paypal_button.html')
-
-@require_POST
-def paypal_inp_notify(request):
-    try:
-        _LOGGER.error('PPPPPPPPPPPPPPPPAAAAAAAAAAAAAAAAAAAA, %s %s', request.GET, request.POST)
-        paypal_button.verify_ipn_message(request)
-        return HttpResponse('Payment success', status=200)
-    except Exception as e:
-        _LOGGER.exception('Paypal INP notify exception.(%s)' % e)
-        return HttpResponse('N', status=400)
+def paypal_failed(request):
+    return TemplateResponse(request, 'pay_failed.html', {'return_url': settings.PAYPAL_RETURN_URL})
 
 
 @require_GET

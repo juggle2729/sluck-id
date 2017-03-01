@@ -221,6 +221,11 @@ def check_consume_credit(user_id, consume_amount):
     _LOGGER.info('check consume credit, add credit %s', added_credit)
 
 
+def add_special_recharge_award_credit(user_id, amount):
+    add_credit(user_id, amount, u"Isi Ulang")
+    _LOGGER.info('add special recharge award credit: %s', amount)
+
+
 @sql_wrapper
 def exchange_credit(user_id):
     account = Account.query.filter(
