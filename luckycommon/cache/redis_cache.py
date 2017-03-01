@@ -131,7 +131,7 @@ def set_delay_timestamp(orderid, timestamp):
     '''
     key = prefix_key('phoneorder:%s' % orderid)
     ProxyAgent().setnx(key, timestamp)
-    ProxyAgent().expire(key, 3600 * 4)
+    ProxyAgent().expire(key, 3600 * 24 * 7)
 
 @cache_wrapper
 def get_delay_timestamp(orderid):
@@ -1006,7 +1006,7 @@ def set_gp_delivery_timestamp(userid, timestamp):
     '''
     key = prefix_key('gpuserid:%s' % userid)
     ProxyAgent().set(key, timestamp)
-    ProxyAgent().expire(key, 3600 * 24 * 2)
+    ProxyAgent().expire(key, 3600 * 24 * 3)
 
 
 @cache_wrapper

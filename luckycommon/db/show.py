@@ -198,8 +198,10 @@ def update_show(user_id, show_id, title, content, images):
     # modify order status
     order = AwardedOrder.query.filter(
         AwardedOrder.order_id == announce_show.order_id).one()
-    if order.status == ORDER_STATUS.DEAL:
+    # if order.status == ORDER_STATUS.DEAL:
+    if order.status == ORDER_STATUS.DEAL or order.status == ORDER_STATUS.AFFIRMED:  # 28 Fed. 2017
         order.status = ORDER_STATUS.SHOW
+        order.save()
     announce_show.save()
 
 

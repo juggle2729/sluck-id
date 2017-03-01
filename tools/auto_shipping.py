@@ -290,6 +290,32 @@ def _get_carrier(phone):
     else:
         return _CARRIER_PREFIX[prefix]
 
+
+def _delay_delivery(order_id, user_id, delay_hour):
+    '''
+    Used for virtual goods delay delivery
+    :param order_id:
+    :param user_id:
+    :param delay_hour:
+    :return:  False -- delivery, True -- delay delivery
+    '''
+    delay_timestamp = redis_cache.get_delay_timestamp(order_id)
+    if not delay_timestamp:
+        gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
+        if gp_timestamp: # gwallet 充值用户
+            timestamp = int(time.time()) + 3600 * int(delay_hour) # 28 Fed. 2017  Delay delivery 48 hours
+            redis_cache.set_delay_timestamp(order_id, timestamp)
+            print 'set order id: %s delay deliver timestamp: %s' % (order_id, timestamp)
+            return True
+        return False    # 非 gwallet 充值用户
+    else:
+        if int(delay_timestamp) >= int(time.time()):  # 未到发货时间
+            print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (
+                order_id, delay_timestamp)
+            return True
+        return False
+
+
 def shipping_steam(await_order, activity):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
@@ -308,6 +334,8 @@ def shipping_steam(await_order, activity):
     #    # black it
     #    account_db.black_account(user_id)
     #    return
+    if _delay_delivery(await_order.order_id, user_id, 72):
+        return
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
     # do recharge
@@ -351,6 +379,8 @@ def shipping_steam(await_order, activity):
 def shipping_phone_charge(await_order, activity, withcarrier=False):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
+        return
+    if _delay_delivery(await_order.order_id, user_id, 72):
         return
     receipt_address = {} if not await_order.receipt_address else json.loads(
         await_order.receipt_address)
@@ -399,18 +429,20 @@ def shipping_pulsa(await_order, activity):
     if redis_cache.is_virtual_account(user_id):
         return
     # # delay deliver
-    delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
-    if not delay_timestamp:
-        gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
-        if gp_timestamp:
-            timestamp = int(time.time()) + 24 * 3600 * 2  # 28 Fed. 2017  Delay delivery 48 hours
-            redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
-            print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
-            return
-    else:
-        if int(delay_timestamp) >= int(time.time()):
-            print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (await_order.order_id, delay_timestamp)
-            return
+    # delay_timestamp = redis_cache.get_delay_timestamp(await_order.order_id)
+    # if not delay_timestamp:
+    #     gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
+    #     if gp_timestamp:
+    #         timestamp = int(time.time()) + 24 * 3600 * 2  # 28 Fed. 2017  Delay delivery 48 hours
+    #         redis_cache.set_delay_timestamp(await_order.order_id, timestamp)
+    #         print 'set order id: %s delay deliver timestamp: %s' % (await_order.order_id, timestamp)
+    #         return
+    # else:
+    #     if int(delay_timestamp) >= int(time.time()):
+    #         print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (await_order.order_id, delay_timestamp)
+    #         return
+    if _delay_delivery(await_order.order_id, user_id, 72):
+        return
 
     # gp charge user  delay  deliver  1  day
     # gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
@@ -481,77 +513,77 @@ def shipping_pulsa(await_order, activity):
                 {'status': ORDER_STATUS.AWARDED}, None, True
         )
 
-def shipping_ele_pulsa(await_order, activity):
-    user_id = await_order.user_id
-    if redis_cache.is_virtual_account(user_id):
-        return
-    receipt_address = {} if not await_order.receipt_address else json.loads(
-        await_order.receipt_address)
-    order_extend = {} if not await_order.extend else json.loads(
-        await_order.extend)
-    # do recharge
-    print 'begin pulsa electricity bill recharge, %s' % await_order.order_id
-    charge_account = receipt_address.get('address')  # electricity bill
-    if not charge_account:
-        print 'pulsa electricity bill recharge, %s , electricity bill no is null' % await_order.order_id
-        return
-    origin = order_extend.get('origin', {})
-    charge_phone = origin.get('phone')
-    if not charge_phone:
-        print 'pulsa electricity bill recharge, %s , phone no is null' % await_order.order_id
-        return
-    recharge_price = 0
-    recharge_price = _PULSA_ELE_TIDS[activity.template_id]
-    product_prefix = 'hpln'
-    product = product_prefix + str(recharge_price)
-    print 'pulsa electricity bill recharge info, recharge_price: %s, product %s' % (recharge_price, product)
-    seed = str(randint(100, 99999))
-    req = _PULSA_XML % (str(await_order.order_id) + '#' + seed, charge_account, product,
-                        md5('tokoseributokoseribu123*' + str(await_order.order_id) + '#' + seed).hexdigest())
-    headers = {'Content-Type': 'application/xml'}  # set what your server accepts
-    print req, await_order.order_id
-    resp = requests.post(_PULSA_URL, data=req, headers=headers)
-    print resp.content, await_order.order_id
-    if '<status>0</status>' in resp.content:
-        obj_etree = etree.fromstring(resp.content)
-        root_tree = obj_etree.getroottree()
-        obj_mp = root_tree.getroot()
-        sn = obj_mp.find('sn')
-        if not sn:
-            print await_order.order_id, 'sn is null'
-            time.sleep(60)
-            # checkstatus
-            ref_id = str(await_order.order_id) + '#' + seed
-            req = _PULSA_CS_XML % ref_id
-            resp = requests.post(_PULSA_URL, data=req, headers=headers)
-            print 'checkstatus ', resp.content, await_order.order_id
-            if '<status>1</status>' in resp.content:
-                obj_etree = etree.fromstring(resp.content)
-                root_tree = obj_etree.getroottree()
-                obj_mp = root_tree.getroot()
-                sn = obj_mp.find('message')
-            else:
-                print 'checkstatus error', await_order.order_id
-                order_db.update_order_info(
-                    await_order.order_id,
-                    {'status': ORDER_STATUS.DEAL}
-                )
-                return
-        sn = sn.text
-        print await_order.order_id, sn, charge_phone
-        charge_phone = strip_phone(charge_phone)
-        send_sms([charge_phone, ], 'sms_ele_pulsa', {'sn_code': sn})
-        order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.DEAL}
-        )
-        show_order(await_order)
-    else:
-        print resp.content, charge_account, product
-        order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.AWARDED}, None, True
-        )
+# def shipping_ele_pulsa(await_order, activity):
+#     user_id = await_order.user_id
+#     if redis_cache.is_virtual_account(user_id):
+#         return
+#     receipt_address = {} if not await_order.receipt_address else json.loads(
+#         await_order.receipt_address)
+#     order_extend = {} if not await_order.extend else json.loads(
+#         await_order.extend)
+#     # do recharge
+#     print 'begin pulsa electricity bill recharge, %s' % await_order.order_id
+#     charge_account = receipt_address.get('address')  # electricity bill
+#     if not charge_account:
+#         print 'pulsa electricity bill recharge, %s , electricity bill no is null' % await_order.order_id
+#         return
+#     origin = order_extend.get('origin', {})
+#     charge_phone = origin.get('phone')
+#     if not charge_phone:
+#         print 'pulsa electricity bill recharge, %s , phone no is null' % await_order.order_id
+#         return
+#     recharge_price = 0
+#     recharge_price = _PULSA_ELE_TIDS[activity.template_id]
+#     product_prefix = 'hpln'
+#     product = product_prefix + str(recharge_price)
+#     print 'pulsa electricity bill recharge info, recharge_price: %s, product %s' % (recharge_price, product)
+#     seed = str(randint(100, 99999))
+#     req = _PULSA_XML % (str(await_order.order_id) + '#' + seed, charge_account, product,
+#                         md5('tokoseributokoseribu123*' + str(await_order.order_id) + '#' + seed).hexdigest())
+#     headers = {'Content-Type': 'application/xml'}  # set what your server accepts
+#     print req, await_order.order_id
+#     resp = requests.post(_PULSA_URL, data=req, headers=headers)
+#     print resp.content, await_order.order_id
+#     if '<status>0</status>' in resp.content:
+#         obj_etree = etree.fromstring(resp.content)
+#         root_tree = obj_etree.getroottree()
+#         obj_mp = root_tree.getroot()
+#         sn = obj_mp.find('sn')
+#         if not sn:
+#             print await_order.order_id, 'sn is null'
+#             time.sleep(60)
+#             # checkstatus
+#             ref_id = str(await_order.order_id) + '#' + seed
+#             req = _PULSA_CS_XML % ref_id
+#             resp = requests.post(_PULSA_URL, data=req, headers=headers)
+#             print 'checkstatus ', resp.content, await_order.order_id
+#             if '<status>1</status>' in resp.content:
+#                 obj_etree = etree.fromstring(resp.content)
+#                 root_tree = obj_etree.getroottree()
+#                 obj_mp = root_tree.getroot()
+#                 sn = obj_mp.find('message')
+#             else:
+#                 print 'checkstatus error', await_order.order_id
+#                 order_db.update_order_info(
+#                     await_order.order_id,
+#                     {'status': ORDER_STATUS.DEAL}
+#                 )
+#                 return
+#         sn = sn.text
+#         print await_order.order_id, sn, charge_phone
+#         charge_phone = strip_phone(charge_phone)
+#         send_sms([charge_phone, ], 'sms_ele_pulsa', {'sn_code': sn})
+#         order_db.update_order_info(
+#             await_order.order_id,
+#             {'status': ORDER_STATUS.DEAL}
+#         )
+#         show_order(await_order)
+#     else:
+#         print resp.content, charge_account, product
+#         order_db.update_order_info(
+#             await_order.order_id,
+#             {'status': ORDER_STATUS.AWARDED}, None, True
+#         )
 
 
 def shipping(recharge_type, await_order, activity):
@@ -682,6 +714,8 @@ def get_await_coin_list():
 def shipping_coin(await_order, activity, recharge_price=None):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
+        return
+    if _delay_delivery(await_order.order_id, user_id, 72):
         return
     if not recharge_price:
         recharge_price = COIN_TIDS[activity.template_id]

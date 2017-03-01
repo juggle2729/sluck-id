@@ -47,7 +47,7 @@ def get_credit_records(user_id, limit=0, offset=0, record_type=None):
 
 @sql_wrapper
 def get_today_checks(user_id):
-    today = utc_to_local(datetime.datetime.now())
+    today = utc_to_local(datetime.datetime.utcnow())
     today_str = today.strftime('%Y-%m-%d')
     today_checks = AccountDailyCheck.query.filter(AccountDailyCheck.user_id == user_id)\
                                           .filter(AccountDailyCheck.date == today_str)\
@@ -84,7 +84,7 @@ def get_user_sign(user_id):
 @sql_wrapper
 def daily_check(user_id, check_type):
     today = datetime.datetime.strptime(
-        utc_to_local_str(datetime.datetime.now()), '%Y-%m-%d %H:%M:%S')
+        utc_to_local_str(datetime.datetime.utcnow()), '%Y-%m-%d %H:%M:%S')
     today_str = today.strftime('%Y-%m-%d')
     daily_check = AccountDailyCheck.query.filter(AccountDailyCheck.user_id == user_id)\
                                          .filter(AccountDailyCheck.date == today_str)\
