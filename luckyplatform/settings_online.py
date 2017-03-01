@@ -115,9 +115,9 @@ ANNOUNCE_DELAY = 300
 
 # paypal settings
 PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"
-PAYPAL_API_USERNAME = "kareenkan_api1.gmail.com"
-PAYPAL_API_PASSWORD = "8KZ7JQBPD8TRGZM2"
-PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31AOYYSrzTeuaKtabX-rYdg4udNU98"
+PAYPAL_API_USERNAME = "tokoseribu.id_api1.gmail.com"
+PAYPAL_API_PASSWORD = "NM9R6AYQ67B4LV84"
+PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31AHfwRGYJfzLcwi-.BLrQMUf3ZxLi"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
 PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/return'
