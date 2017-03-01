@@ -35,7 +35,8 @@ def paypal_create_charge(pay, pay_amount, return_url=settings.PAYPAL_NOTIFY_URL,
         PAYMENTREQUEST_0_PAYMENTACTION="Sale",
         PAYMENTREQUEST_0_INVNUM=str(pay.id),
         RETURNURL=return_url,
-        CANCELURL=cancel_url
+        CANCELURL=cancel_url,
+        LANDINGPAGE="Billing"
     )
     token = set_result["TOKEN"]
     redirect_url = PAYPAL_REDIRECT_URL % token
@@ -55,7 +56,8 @@ def paypal_do_charge(token):
                                                         PAYMENTACTION="Sale",
                                                         PAYERID=detail_result['PAYERID'],
                                                         CURRENCYCODE=currency,
-                                                        AMT=detail_result['AMT'])
+                                                        AMT=detail_result['AMT'],
+                                                        )
     _LOGGER.info("paypal checkout confirm result: %s" % confirm_result)
     trade_status = confirm_result['PAYMENTSTATUS']
     total_fee = float(confirm_result['AMT']) / _EXCHANGE_RATIO
