@@ -16,8 +16,8 @@ _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 
 # exchange ratio just for SGD
-_EXCHANGE_RATIO = 0.1
-_CURRENCY = 'SGD'
+_EXCHANGE_RATIO = 0.075
+_CURRENCY = 'USD'
 _AWARD_CREDIT_UNIT = 10
 
 PAYPAL_REDIRECT_URL = settings.PAYPAL_REDIRECT_URL
