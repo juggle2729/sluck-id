@@ -2,15 +2,16 @@
 import json
 import logging
 from cStringIO import StringIO
+from datetime import datetime
 
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.utils.encoding import smart_unicode
 from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import TemplateView
-from future.utils import raise_with_traceback
 
 from luckyapi.logic.account import send_auth_code
+from luckycommon.async.async_job import track_new_user, track_one
 from luckycommon.account import handler as account_handler
 from luckycommon.account import internal_handler as account_internal_handler
 from luckycommon.account.db import account as account_db
@@ -21,6 +22,7 @@ from luckycommon.cache import account as cache
 from luckycommon.partner import handler as partner_handler
 from luckycommon.push import handler as push_handler
 from luckycommon.third import facebook_login
+from luckycommon.third import google_login
 from luckycommon.utils import exceptions as err
 from luckycommon.utils.api import (token_required, get_client_ip, parse_p,
                                    get_city, check_params)
@@ -111,6 +113,8 @@ def register(request):
                    "inviter_id": inviter_id or '',
                    "pkg": tracks.get('pkg'),
                    "code": tracks.get('code')})
+    track_new_user.delay(account.id, {'is_virtual': False, 'channel': tracks.get('chn', None), 'register_at': datetime.now().isoformat()})
+    track_one.delay('register', {'channel': tracks.get('chn', None), 'package': tracks.get('pkg', None)}, account.id)
     return {}
 
 

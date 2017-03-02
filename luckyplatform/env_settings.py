@@ -106,6 +106,11 @@ ADMIN_CONF = {
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = 6379
 
+# Track via Rakam
+RAKAM_HOST = "http://54.179.142.74:9999"
+WRITE_KEY = "pm7o8k64oa0us9b15ofgaei4k524ruqol0npct3vr8tbbgelsqktp56bsfohse4o"
+MASTER_KEY = "41i1ht2rl1cv0r8f7ssgcms1g7eca2lhc2vbkb6ibcgs2hrc7603v1eij4t59tec"
+
 DEBUG_USER = 1001010
 BAN_VIRTUAL_LOGIN = False
 

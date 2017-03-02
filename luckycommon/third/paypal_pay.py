@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # pip install paypal
+import logging
+
+from django.conf import settings
 from paypal.interface import PayPalInterface
 
-import logging
-from django.conf import settings
-
+from luckycommon.async.async_job import track_one
 from luckycommon.credit.db.credit import add_special_recharge_award_credit
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
@@ -86,6 +87,7 @@ def paypal_do_charge(token):
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
         add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
         if res:
+            track_one.delay('recharge', {'price': float(total_fee), 'channel': 'paypal'}, user_id)
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
                            'price': total_fee,
                            'channel': 'paypal'})

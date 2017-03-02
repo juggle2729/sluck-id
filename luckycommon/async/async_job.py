@@ -25,7 +25,7 @@ from luckycommon.activity.auto_shipping import shipping_coin
 from luckycommon.mission import fresh_mission
 
 from luckycommon.cache import redis_cache
-from luckycommon.track import collect_event
+from luckycommon.track import collect_event, create_user
 from luckycommon.utils import id_generator
 from luckycommon.order.db.order import get_order
 from luckycommon.db.pay import get_pay
@@ -251,14 +251,20 @@ def stats_announce(activity_id, winner):
     miss_return.announce_callback(activity, winner)
 
 
-@app.task(name='utils.track')
+@app.task(name='utils.track_one')
 def track_one(collection, properties, user_id=None):
-    if settings.TEST_ENV:
-        collection += '_test'
     _LOGGER.info('track one event into collection: %s' % collection)
     status, error_message = collect_event(collection, properties, user_id)
     if not status:
         _LOGGER.info('track failed, collection: %s, properties: %s, reason: %s' % (collection, properties, error_message))
+
+
+@app.task(name='utils.track_new_user')
+def track_new_user(user_id, properties):
+    _LOGGER.info('track one new user %s' % user_id)
+    status, error_message = create_user(user_id, properties)
+    if not status:
+        _LOGGER.info('track failed, user_id: %s, properties: %s, reason: %s' % (user_id, properties, error_message))
 
 
 if __name__ == "__main__":
