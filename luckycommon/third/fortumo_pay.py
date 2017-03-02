@@ -5,6 +5,7 @@ import urllib
 
 from django.conf import settings
 
+from luckycommon.async.async_job import track_one
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -71,6 +72,7 @@ def fortumo_check_notify(request):
     update_pay_ext(pay_id, extend['ext'])
     if str(trade_status) == 'completed':
         _LOGGER.info('Fortumo Pay check order success, user_id:%s pay_id:%s, amount: %s' % (user_id, pay_id, total_fee))
+        track_one.delay('recharge', {'price': float(total_fee), 'channel': 'fortumo'}, user_id)
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
         if res:
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
