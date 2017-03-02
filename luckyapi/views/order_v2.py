@@ -2,17 +2,15 @@
 import json
 import logging
 
-from luckycommon.cache import redis_cache
-from luckycommon.credit.model.credit import AWARD_CREDIT_UNIT
-from luckycommon.db.activity import get_activity
-from luckycommon.pay import handler as pay_handler
-from luckycommon.utils.decorator import response_wrapper
-from luckycommon.utils.api import token_required
-from luckycommon.utils.limit import frequency_limit
-from luckycommon.utils.exceptions import ParamError
-
 from django.views.decorators.http import require_POST
 
+from luckycommon.async.async_job import track_one
+from luckycommon.credit.model.credit import AWARD_CREDIT_UNIT
+from luckycommon.pay import handler as pay_handler
+from luckycommon.utils.api import token_required
+from luckycommon.utils.decorator import response_wrapper
+from luckycommon.utils.exceptions import ParamError
+from luckycommon.utils.limit import frequency_limit
 
 _LOGGER = logging.getLogger('lucky')
 _TRACKER = logging.getLogger('tracker')
@@ -34,7 +32,7 @@ def pay(request, activity_id):
         pk_size = request.POST.get('pk_size', 0)
     except:
         raise ParamError('buy quantity parameter wrong')
-    
+
     order_context = {}
     if request.user and request.user.extend:
         extend = json.loads(request.user.extend)
@@ -64,8 +62,9 @@ def pay(request, activity_id):
                    'activity_id': order.activity_id,
                    'price': order.total_price,
                    'from': 'api'})
-    
-    return data 
+    track_one.delay('buy', {'activity_id': order.activity_id, 'price': float(order.total_price)}, order.buyer)
+
+    return data
 
 
 @require_POST
