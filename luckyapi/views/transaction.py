@@ -128,7 +128,6 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and 131 <= int(version_code) and locale == 'id':
         return [
-            pay_types[PayType.PAYPAL_EC.value],
             pay_types[PayType.GOOGLE_BILLING.value],
             pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
