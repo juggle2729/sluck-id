@@ -2,6 +2,7 @@
 
 import json
 import logging
+import datetime
 
 from django.views.generic import TemplateView
 from django.utils.encoding import smart_unicode
@@ -117,6 +118,15 @@ class SingleOrderView(TemplateView):
             data = item.as_dict()
             data['id'] = str(data.pop('order_id'))
             data['buyer'] = str(data.pop('user_id'))
+            data['advise_delivery_time'] = 'No Delay'
+            if data['status'] == 5:
+                gp_flag = redis_cache.get_gp_delivery_timestamp(data['buyer'])
+                extend = json.loads(data['extend'])
+                if gp_flag:
+                    award_time = extend.get('award_time')
+                    advise_delivery_time = datetime.datetime.strptime(award_time, '%Y-%m-%d %H:%M:%S') \
+                                           + datetime.timedelta(3)
+                    data['advise_delivery_time'] = advise_delivery_time.strftime('%Y-%m-%d %H:%M:%S')
         else:
             item = db.get_order(long(order_id))
             data = item.as_dict()
