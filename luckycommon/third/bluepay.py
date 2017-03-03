@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-import requests
-import json
-from random import randint
-import logging
 import hashlib
+import logging
 
 from django.conf import settings
+
+from luckycommon.async.async_job import track_one
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -42,14 +41,14 @@ CURRENCY_CODES = {
 
 
 def _sign(origin_str):
-    m = hashlib.md5(origin_str+_BLUEPAY_KEY)
+    m = hashlib.md5(origin_str + _BLUEPAY_KEY)
     sign = m.hexdigest().lower()
     return sign
 
 
 def bluepay_check_notify(request):
     path = request.get_full_path()
-    checkpath = path[path.index('?')+1 : path.index('&encry')]
+    checkpath = path[path.index('?') + 1: path.index('&encry')]
     cmd = request.GET.get('cmd')
     pay_id = request.GET.get('t_id')
     msisdn = request.GET.get('msisdn')
@@ -61,12 +60,12 @@ def bluepay_check_notify(request):
     status = request.GET.get('status')
     trade_no = request.GET.get('bt_id')
     pay = get_pay(pay_id)
-    
-    _LOGGER.error('bluepay notify, path %s', path[path.index('?')+1:path.index('&encry')])
+
+    _LOGGER.error('bluepay notify, path %s', path[path.index('?') + 1:path.index('&encry')])
     _LOGGER.error('bluepay notify, sign %s, encry %s', _sign(checkpath), encry)
     if _sign(checkpath) != encry:
         raise ParamError('sign not pass, data: %s' % request.GET)
-    
+
     user_id = pay.user_id
     if not pay or (pay.status != PayStatus.SUBMIT.value and pay.status != PayStatus.FAIL.value):
         raise ParamError('pay %s has been processed' % pay_id)
@@ -86,6 +85,7 @@ def bluepay_check_notify(request):
             user_id, pay_id, total_fee, currency))
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
         if res:
+            track_one.delay('recharge', {'price': float(total_fee), 'channel': 'bluepay'}, user_id)
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
                            'price': total_fee,
                            'channel': 'bluepay'})
@@ -97,8 +97,3 @@ def bluepay_check_notify(request):
     else:
         add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
         _LOGGER.error('BluePay response data show transaction failed, data: %s', request.GET)
-
-
-if __name__ == '__main__':
-    pay = {'id': 'sndbox_' + str(randint(1000,13333))}
-    doku_create_charge(pay, 66, 'IDR')

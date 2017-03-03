@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import hashlib
 import logging
-import urllib
 
 from django.conf import settings
 
+from luckycommon.async.async_job import track_one
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -18,9 +18,10 @@ _API_KEY = 'ef5dfd28f0527d32'
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
 _SECRET = 'ef0a9e3f2b67af4bcaf557f93c404c3c'
 
+
 def _sign(pm_id, amount, order_id, state):
     s = '|'.join([_API_KEY, pm_id, amount, 'IDR', order_id, state, _SECRET])
-    
+
     sign = hashlib.md5(s).hexdigest()
     return sign
 
@@ -59,6 +60,7 @@ def payssion_check_notify(request):
         _LOGGER.info('Payssion Pay check order success, user_id:%s pay_id:%s, amount: %s' % (user_id, str(pay_id), total_fee))
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
         if res:
+            track_one.delay('recharge', {'price': float(total_fee), 'channel': 'payssion'}, user_id)
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
                            'price': total_fee,
                            'channel': 'payssion'})
