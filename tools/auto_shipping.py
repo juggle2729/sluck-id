@@ -149,7 +149,10 @@ _STEAM_REQ = '''
     </param>
   </params>
 </methodCall>'''
-COIN_TIDS = {802:100}
+COIN_TIDS = {
+    802:100,
+    856:500,
+    }
 _PULSA_TIDS = {  # 话费 tids
     792: 5000,
     666: 10000,
@@ -299,15 +302,16 @@ def _delay_delivery(order_id, user_id, delay_hour):
     :param delay_hour:
     :return:  False -- delivery, True -- delay delivery
     '''
+    gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
+    if not gp_timestamp:
+        return False
     delay_timestamp = redis_cache.get_delay_timestamp(order_id)
     if not delay_timestamp:
-        gp_timestamp = redis_cache.get_gp_delivery_timestamp(user_id)
-        if gp_timestamp: # gwallet 充值用户
-            timestamp = int(time.time()) + 3600 * int(delay_hour) # 28 Fed. 2017  Delay delivery 48 hours
-            redis_cache.set_delay_timestamp(order_id, timestamp)
-            print 'set order id: %s delay deliver timestamp: %s' % (order_id, timestamp)
-            return True
-        return False    # 非 gwallet 充值用户
+        # gwallet 充值用户
+        timestamp = int(time.time()) + 3600 * int(delay_hour) # 28 Fed. 2017  Delay delivery 48 hours
+        redis_cache.set_delay_timestamp(order_id, timestamp)
+        print 'set order id: %s delay deliver timestamp: %s' % (order_id, timestamp)
+        return True
     else:
         if int(delay_timestamp) >= int(time.time()):  # 未到发货时间
             print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (
