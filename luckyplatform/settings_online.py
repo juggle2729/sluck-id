@@ -38,7 +38,7 @@ ADMIN_ROOT_URL = 'http://47.88.214.2/'
 INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
 
 IOS_DEBUG_CONF = {
-    'qg_ios': 1,
+    'qg_ios': 3,
     # 'int_ios_us': 6,
     # 'int_ios_tw': 6,
     # 'int_ios_uk': 9,
@@ -48,7 +48,7 @@ XINGE_ACCESS_ID = '2200194027'
 XINGE_SECRET = 'a24df2ea34f4ef67021a22a1ba41a032'
 APNS_ENV = 1
 
-APPLE_TIDS = [647, 648, 650, 659, 660, 669, 670, 671, 672, 687, 693, 701, 702, 703, 786, 805, 808, 818]
+# APPLE_TIDS = [647, 648, 650, 659, 660, 669, 670, 671, 672, 687, 693, 701, 702, 703, 786, 805, 808, 818]
 
 # 禁止晒单列
 # SHOW_BANNED_TIDS = [635, 636, 638, 640, 641, 642, 643, 644, 645, 646, 647, 648,
