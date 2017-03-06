@@ -119,7 +119,7 @@ class SingleOrderView(TemplateView):
             data['id'] = str(data.pop('order_id'))
             data['buyer'] = str(data.pop('user_id'))
             data['advise_delivery_time'] = 'No Delay'
-            if data['status'] == 5:
+            if data['status'] in (5, 11):
                 gp_flag = redis_cache.get_gp_delivery_timestamp(data['buyer'])
                 extend = json.loads(data['extend'])
                 if gp_flag:
