@@ -4,6 +4,7 @@ from datetime import datetime
 from hashlib import sha1
 
 from luckycommon.async.async_job import track_one
+from luckycommon.credit.db.credit import add_special_recharge_award_credit
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_fail_transaction
 from luckycommon.db.transaction import add_pay_success_transaction
@@ -12,14 +13,15 @@ from luckycommon.pay.handler import pay_after_recharge
 from luckycommon.utils.exceptions import ParamError
 
 _EXCHANGE_RATIO = 1000
+_AWARD_CREDIT_UNIT = 10
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 
 # doku test credit card. 4111 - 1111 - 1111 - 1111, 04/20, 869, phone: 0217998391
 
-ORDER_URL = 'http://staging.doku.com/Suite/Receive'
-MALL_ID = '3798'
-SHARED_KEY = 'C1F2OqSy22az'
+ORDER_URL = 'https://pay.doku.com/Suite/Receive'
+MALL_ID = '1966'
+SHARED_KEY = 'NB5aG16q4Zip'
 
 
 def _sign(pay_amount, pay_id):
@@ -32,11 +34,16 @@ def _notify_sign(pay_amount, pay_id, result_msg, verify_status):
     return signature
 
 
-def doku_create_charge(pay, pay_amount):
+def doku_create_charge(pay, pay_amount, doku_channel):
     pay_id = str(pay.id)
     pay_amount = str(int(pay_amount) * _EXCHANGE_RATIO) + '.00'
     signature = _sign(pay_amount, pay_id)
-    _LOGGER.info("pay_id: %s, pay_amount: %s, signature: %s" % (pay_id, pay_amount, signature))
+    if doku_channel == 'visa':
+        channel_number = '15'
+    elif doku_channel == 'wallet':
+        channel_number = '04'
+    else:
+        channel_number = ''
     response = """
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +68,7 @@ def doku_create_charge(pay, pay_amount):
     <input name="REQUESTDATETIME" type="hidden" value="%s">
     <input name="NAME" type="hidden" value="CustomerName">
     <input name="EMAIL" type="hidden" value="customer@domain.com">
-    <input name="PAYMENTCHANNEL" type="hidden" value="">
+    <input name="PAYMENTCHANNEL" type="hidden" value=%s>
 </form>
 
 <script type="text/javascript">
@@ -70,7 +77,9 @@ document.getElementById('pay_form').submit();
 
 </body>
 </html>
-       """ % (ORDER_URL, MALL_ID, pay_amount, pay_amount, pay_amount, pay_amount, pay_id, signature, datetime.now().strftime("%Y%m%d%H%M%S"))
+       """ % (
+    ORDER_URL, MALL_ID, pay_amount, pay_amount, pay_amount, pay_amount, pay_id, signature, datetime.now().strftime("%Y%m%d%H%M%S"),
+    channel_number)
     return response
 
 
@@ -107,6 +116,7 @@ def doku_check_notify(request):
         _LOGGER.info('Doku Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
             user_id, pay_id, total_fee, currency))
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+        add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
         if res:
             track_one.delay('recharge', {'price': float(total_fee), 'channel': 'doku'}, user_id)
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
@@ -120,4 +130,3 @@ def doku_check_notify(request):
     else:
         add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
         _LOGGER.error('Doku Pay response data show transaction failed, data: %s', request.POST)
-

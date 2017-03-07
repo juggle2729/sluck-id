@@ -11,8 +11,6 @@ _numbers = ''.join(map(str, range(3, 10)))
 
 init_chars = ''.join((_letter_cases, _upper_cases, _numbers))
 
-FONT_PATH = '/home/ubuntu/af-env/luckyservice/luckycommon/utils/font/'
-
 path = os.path.dirname(__file__)
 font_path = os.path.abspath(os.path.join(path, "STENCIL.TTF"))
 

@@ -129,7 +129,8 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and 131 <= int(version_code) and locale == 'id':
         return [
-            pay_types[PayType.DOKU.value],
+            pay_types[PayType.DOKU_VISA.value],
+            pay_types[PayType.DOKU_WALLET.value],
             pay_types[PayType.GOOGLE_BILLING.value],
             pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
@@ -291,6 +292,11 @@ def paypal_success(request):
 @require_GET
 def paypal_failed(request):
     return TemplateResponse(request, 'pay_failed.html', {'return_url': settings.PAYPAL_RETURN_URL})
+
+
+@require_GET
+def close_webview(request):
+    return TemplateResponse(request, 'close_webview.html')
 
 
 @require_GET

@@ -9,7 +9,7 @@ class PayType(CustomEnum):
     PAYPAL_EC = 3
     PRE_CARD_NG = 4
     CODA_PAY = 5
-    DOKU =6
+    DOKU_WALLET = 6
     PAYSSION = 7
     EWALLET = 8
     SMS = 9
@@ -25,8 +25,7 @@ class PayType(CustomEnum):
     CODA_SMS = 19
     GOOGLE_BILLING = 20
     APPLE_IAP = 21
-
-
+    DOKU_VISA = 22
 
 
 class PayStatus(CustomEnum):
@@ -68,108 +67,114 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Thanh toán điện tử',
         'highlight': 0,
     },
-    PayType.DOKU.value: {
-           'name': u'Doku',
-           'pay_type': PayType.DOKU.value,
-           'comment': u'Doku',
-           'highlight': 0,
+    PayType.DOKU_WALLET.value: {
+        'name': u'Doku',
+        'pay_type': PayType.DOKU_WALLET.value,
+        'comment': u'Doku',
+        'highlight': 0,
+    },
+    PayType.DOKU_VISA.value: {
+        'name': u'Doku Visa',
+        'pay_type': PayType.DOKU_VISA.value,
+        'comment': u'Doku Visa',
+        'highlight': 0,
     },
     PayType.PAYSSION.value: {
-           'name': u'Payssion',
-           'pay_type': PayType.PAYSSION.value,
-           'comment': u'PAYSSION ',
-           'highlight': 0,
+        'name': u'Payssion',
+        'pay_type': PayType.PAYSSION.value,
+        'comment': u'PAYSSION ',
+        'highlight': 0,
     },
     PayType.EWALLET.value: {
-           'name': u'E-Wallet',
-           'pay_type': PayType.EWALLET.value,
-           'comment': u'E-Wallet',
-           'open_type': u'',
-           'providers': [
-               {'name': u'doku', 'type': 3},
-               {'name': u'mandiri', 'type': 4},
-            ],
-           'highlight': 0,
+        'name': u'E-Wallet',
+        'pay_type': PayType.EWALLET.value,
+        'comment': u'E-Wallet',
+        'open_type': u'',
+        'providers': [
+            {'name': u'doku', 'type': 3},
+            {'name': u'mandiri', 'type': 4},
+        ],
+        'highlight': 0,
     },
     PayType.SMS.value: {
-           'name': u'sms',
-           'pay_type': PayType.SMS.value,
-           'comment': u'sms test',
-           'highlight': 0,
+        'name': u'sms',
+        'pay_type': PayType.SMS.value,
+        'comment': u'sms test',
+        'highlight': 0,
     },
     PayType.CARRIER_BILLING.value: {
-           'name': u'Phone Billing',
-           'pay_type': PayType.CARRIER_BILLING.value,
-           'comment': u'cb ',
-           'open_type': u'',
-           'providers': [
-               {'name': u'telpomsel', 'type': 6},
-               {'name': u'indosat', 'type': 7},
-               {'name': u'xl', 'type': 8},
-               {'name': u'h3i', 'type': 9},
-               {'name': u'bolt', 'type': 10},
-            ],
-           'highlight': 0,
+        'name': u'Phone Billing',
+        'pay_type': PayType.CARRIER_BILLING.value,
+        'comment': u'cb ',
+        'open_type': u'',
+        'providers': [
+            {'name': u'telpomsel', 'type': 6},
+            {'name': u'indosat', 'type': 7},
+            {'name': u'xl', 'type': 8},
+            {'name': u'h3i', 'type': 9},
+            {'name': u'bolt', 'type': 10},
+        ],
+        'highlight': 0,
     },
     PayType.TELCO_VOUCHER.value: {
-           'name': u'Vouchers',
-           'pay_type': PayType.TELCO_VOUCHER.value,
-           'comment': u'Vouchers',
-           'open_type': u'',
-           'providers': [
-               {'name': u'telpomsel', 'type': 16},
-               {'name': u'sevelin', 'type': 11},
-               {'name': u'smartfren', 'type': 12},
-            ],
-           'highlight': 0,
+        'name': u'Vouchers',
+        'pay_type': PayType.TELCO_VOUCHER.value,
+        'comment': u'Vouchers',
+        'open_type': u'',
+        'providers': [
+            {'name': u'telpomsel', 'type': 16},
+            {'name': u'sevelin', 'type': 11},
+            {'name': u'smartfren', 'type': 12},
+        ],
+        'highlight': 0,
     },
     PayType.CONVENNIENCE_STORE.value: {
-           'name': u'Convenience Store',
-           'pay_type': PayType.CONVENNIENCE_STORE.value,
-           'comment': u'Convenience Store',
-           'highlight': 0,
+        'name': u'Convenience Store',
+        'pay_type': PayType.CONVENNIENCE_STORE.value,
+        'comment': u'Convenience Store',
+        'highlight': 0,
     },
     PayType.ATM.value: {
-           'name': u'Bank Transfer',
-           'pay_type': PayType.ATM.value,
-           'comment': u'Bank Transfer',
-           'highlight': 0,
+        'name': u'Bank Transfer',
+        'pay_type': PayType.ATM.value,
+        'comment': u'Bank Transfer',
+        'highlight': 0,
     },
     PayType.MANDIRI_ECASH.value: {
-           'name': u'Bank Transfer',
-           'pay_type': PayType.MANDIRI_ECASH.value,
-           'comment': u'Bank Transfer',
-           'highlight': 0,
+        'name': u'Bank Transfer',
+        'pay_type': PayType.MANDIRI_ECASH.value,
+        'comment': u'Bank Transfer',
+        'highlight': 0,
     },
     PayType.MOGPLAY.value: {
-           'name': u'mogplay',
-           'pay_type': PayType.MOGPLAY.value,
-           'comment': u'Mogplay',
-           'highlight': 0,
+        'name': u'mogplay',
+        'pay_type': PayType.MOGPLAY.value,
+        'comment': u'Mogplay',
+        'highlight': 0,
     },
     PayType.GAME_ON.value: {
-           'name': u'game on',
-           'pay_type': PayType.GAME_ON.value,
-           'comment': u'Game On',
-           'highlight': 0,
+        'name': u'game on',
+        'pay_type': PayType.GAME_ON.value,
+        'comment': u'Game On',
+        'highlight': 0,
     },
     PayType.CODA_SMS.value: {
-           'name': u'coda sms',
-           'pay_type': PayType.CODA_SMS.value,
-           'comment': u'coda sms',
-           'highlight': 0,
+        'name': u'coda sms',
+        'pay_type': PayType.CODA_SMS.value,
+        'comment': u'coda sms',
+        'highlight': 0,
     },
     PayType.MIMO_BCA.value: {
-           'name': u'MIMO BCA',
-           'pay_type': PayType.MIMO_BCA.value,
-           'comment': u'MIMO BCA',
-           'highlight': 0,
+        'name': u'MIMO BCA',
+        'pay_type': PayType.MIMO_BCA.value,
+        'comment': u'MIMO BCA',
+        'highlight': 0,
     },
     PayType.GOOGLE_BILLING.value: {
-           'name': u'Google Billing',
-           'pay_type': PayType.GOOGLE_BILLING.value,
-           'comment': u'GOOGLE BILLING',
-           'highlight': 0,
+        'name': u'Google Billing',
+        'pay_type': PayType.GOOGLE_BILLING.value,
+        'comment': u'GOOGLE BILLING',
+        'highlight': 0,
     },
     PayType.APPLE_IAP.value: {
         'name': u'Apple IAP',
@@ -178,6 +183,8 @@ AVAILABLE_PAY_TYPES = {
         'highliht': 0,
     },
 }
+
+
 class Pay(orm.Model):
     __tablename__ = "pay"
     id = orm.Column(orm.BigInteger, primary_key=True, autoincrement=False)
