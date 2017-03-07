@@ -18,6 +18,7 @@ from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
 from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, doku, payssion, bluepay, mimo_pay, \
     google_wallet, iap
+from luckycommon.third.doku import doku_check_notify
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
@@ -128,6 +129,8 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and 131 <= int(version_code) and locale == 'id':
         return [
+            pay_types[PayType.DOKU_VISA.value],
+            pay_types[PayType.DOKU_WALLET.value],
             pay_types[PayType.GOOGLE_BILLING.value],
             pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
@@ -292,6 +295,11 @@ def paypal_failed(request):
 
 
 @require_GET
+def close_webview(request):
+    return TemplateResponse(request, 'close_webview.html')
+
+
+@require_GET
 def coda_proxy(request):
     return TemplateResponse(request, 'coda_proxy.html')
 
@@ -427,6 +435,7 @@ def coda_sms_notify(request):
 
 def doku_notify(request):
     try:
+        doku_check_notify(request)
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('Doku Pay notify exception.(%s)' % e)
@@ -438,19 +447,6 @@ def doku_identify(request):
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('Doku Pay notify exception.(%s)' % e)
-        return HttpResponse('N', status=400)
-
-
-@require_GET
-def test(request):
-    try:
-        print 'adsfadsfadsfasdfasdfasdfasdfasdfaf'
-        _LOGGER.error('DOKU TEST')
-        return HttpResponse(doku.doku_create_charge({'id': request.GET['pay_id']}, request.GET['price'], None))
-    except Exception as e:
-        print 'adsfadsfadsfasdfasdfasdfasdfasdfaf', e
-        _LOGGER.error('Coda Pay notify exception.(%s)' % e)
-        _LOGGER.exception('Coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
 

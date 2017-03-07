@@ -489,7 +489,7 @@ class ActivityAnnounceHandler(EventHandler):
             period = random.choice(p_conf['interval'])
             _LOGGER.info('check result detail, total_recharge %s, total_pay: %s, total_win: %s, last_win: %s, used_coupon: %s' % (
                 total_recharge, total_pay, total_win, last_win, used_coupon))
-            if now_ts() - last_win < 3600 * period:
+            if now_ts() - last_win < 3600 * period / 4.0:
                 _LOGGER.info('check result detail, now_ts - last_win < 3600 * period')
                 return False
             numerator = total_recharge if total_recharge > 0 else total_pay

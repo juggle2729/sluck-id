@@ -39,9 +39,6 @@ INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
 
 IOS_DEBUG_CONF = {
     'qg_ios': 4,
-    # 'int_ios_us': 6,
-    # 'int_ios_tw': 6,
-    # 'int_ios_uk': 9,
 }
 
 XINGE_ACCESS_ID = '2200194027'
@@ -58,7 +55,7 @@ SHOW_BANNED_TIDS = []
 MISS_RETURN_TID = 641
 
 # virtual goods IDs, use special strategy
-VIRTUAL_GOODS_IDS = [796, 666, 668, 793, 792, 667, 794, 802]
+VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856]
 
 COIN_TIDS = {
     #    659: 5,
@@ -75,7 +72,7 @@ GP_VERSION_CODE = 130
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = True  # IAP 审核开关
-IAP_VERSION_CODE = [4, ]
+IAP_VERSION_CODE = [1, 3, 4]
 IAP_TEST_ID = []
 
 FRESH_RECOMMEND = [0, 0]
@@ -125,11 +122,11 @@ PAYPAL_API_PASSWORD = "NM9R6AYQ67B4LV84"
 PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31AHfwRGYJfzLcwi-.BLrQMUf3ZxLi"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
-PAYPAL_NOTIFY_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/notify'
-PAYPAL_SUCCESS_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/success'
-PAYPAL_FAILED_URL = 'http://id.lucky-gou.com/api/v1/pay/paypal/failed'
-PAYPAL_RETURN_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
-PAYPAL_CANCEL_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
+PAYPAL_NOTIFY_URL = 'http://121.40.29.144/api/v1/pay/paypal/notify'
+PAYPAL_SUCCESS_URL = 'http://121.40.29.144/api/v1/pay/paypal/success'
+PAYPAL_FAILED_URL = 'http://121.40.29.144/api/v1/pay/paypal/failed'
+PAYPAL_RETURN_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
+PAYPAL_CANCEL_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 
 # NganLuong pay
 NGANLUONG_CHECK_ORDER_URL = 'http://id.lucky-gou.com/api/v1/pay/nganluong/check_order'

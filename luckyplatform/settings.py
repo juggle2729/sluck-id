@@ -46,12 +46,6 @@ ADMIN_ROOT_URL = 'http://120.26.57.89/'
 
 INVITER_SHARE_LINK = 'http://vn.lucky-gou.com/share_app/'
 
-IOS_DEBUG_CONF = {
-    'ios': 3,
-    'ios_pro': 3,
-    'qg_ios': 3,
-}
-
 FRESH_RECOMMEND = [129, 122]
 
 HUAFEI_TIDS = [331, 332, 333, 334, 129, 130,
@@ -82,13 +76,10 @@ MISS_RETURN_TID = 641
 
 ADV_FLAG = False  # GP版开关, 旧版不用放着
 
-GP_FLAG = False  # GP switch, True is on sensor
-GP_VERSION_CODE = 130
-GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
+# GP_FLAG = False  # GP switch, True is on sensor
+# GP_VERSION_CODE = 130
+# GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
 
-# IAP_FLAG = True  # IAP 审核开关
-# IAP_VERSION_CODE = [1, 3,]
-# IAP_TEST_ID = []
 
 ADMIN_ID = 1
 
