@@ -294,7 +294,7 @@ def paypal_failed(request):
     return TemplateResponse(request, 'pay_failed.html', {'return_url': settings.PAYPAL_RETURN_URL})
 
 
-@require_GET
+@require_http_methods(["GET", "POST"])
 def close_webview(request):
     return TemplateResponse(request, 'close_webview.html')
 
