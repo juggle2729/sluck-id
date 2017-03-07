@@ -38,10 +38,9 @@ ADMIN_ROOT_URL = 'http://121.40.29.144/'
 INVITER_SHARE_LINK = 'http://121.40.29.144/share_app2/'
 
 IOS_DEBUG_CONF = {
-    'qg_ios': 1,
-    # 'int_ios_us': 6,
-    # 'int_ios_tw': 6,
-    # 'int_ios_uk': 9,
+    'ios': 3,
+    'ios_pro': 3,
+    'qg_ios': 3,
 }
 
 XINGE_ACCESS_ID = '2200194027'
@@ -70,12 +69,12 @@ COIN_TIDS = {
     #    646: 1000,
 }
 
-GP_FLAG = False  # GP sensor switch, True is on
-GP_VERSION_CODE = 128
-GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
+GP_FLAG = False  # GP switch, True is on sensor
+GP_VERSION_CODE = 130
+GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
 
 IAP_FLAG = True  # IAP 审核开关
-IAP_VERSION_CODE = [1, ]
+IAP_VERSION_CODE = [1, 3]
 IAP_TEST_ID = [298, 18045996]
 
 
