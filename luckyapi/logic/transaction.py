@@ -151,7 +151,7 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
             _LOGGER.info('start pay by google billing, pay_id[%s]' % pay_id)
             return {}
         if pay_type == PayType.DOKU.value:
-            charge = doku.doku_create_charge(pay, pay_amount, None)
+            charge = doku.doku_create_charge(pay, pay_amount)
             _LOGGER.info('start pay by doku, pay_id[%s]' % pay_id)
             return {'charge': charge, 'type': 'html_text'}
         raise ParamError('pay type not support!')

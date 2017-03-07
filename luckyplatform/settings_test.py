@@ -57,6 +57,9 @@ SHOW_BANNED_TIDS = []
 
 MISS_RETURN_TID = 641
 
+# virtual goods IDs, use special strategy
+VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856]
+
 COIN_TIDS = {
     #    659: 5,
     #    641: 10,
@@ -118,9 +121,11 @@ PAYPAL_API_PASSWORD = "E869TNPC95U2Z4JC"
 PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31Aq0XfM5N.PRkiDU4yeS-Fbj7jo0X"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
-PAYPAL_RETURN_URL = 'http://121.40.29.144/api/v1/pay/paypal/return'
-PAYPAL_CANCEL_URL = 'http://121.40.29.144/api/v1/pay/paypal/cancel'
 PAYPAL_NOTIFY_URL = 'http://121.40.29.144/api/v1/pay/paypal/notify'
+PAYPAL_SUCCESS_URL = 'http://121.40.29.144/api/v1/pay/paypal/success'
+PAYPAL_FAILED_URL = 'http://121.40.29.144/api/v1/pay/paypal/failed'
+PAYPAL_RETURN_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
+PAYPAL_CANCEL_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 
 PAYPAL_VERIFY_URL_PROD = 'https://www.paypal.com/cgi-bin/webscr'
 PAYPAL_VERIFY_URL_TEST = 'https://www.sandbox.paypal.com/cgi-bin/webscr'

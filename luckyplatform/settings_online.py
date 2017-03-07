@@ -58,7 +58,7 @@ SHOW_BANNED_TIDS = []
 MISS_RETURN_TID = 641
 
 # virtual goods IDs, use special strategy
-VIRTUAL_GOODS_IDS = [796, 666, 668, 793, 792, 667, 794, 802]
+VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856]
 
 COIN_TIDS = {
     #    659: 5,
