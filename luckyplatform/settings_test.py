@@ -126,9 +126,6 @@ PAYPAL_FAILED_URL = 'http://121.40.29.144/api/v1/pay/paypal/failed'
 PAYPAL_RETURN_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 PAYPAL_CANCEL_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 
-PAYPAL_VERIFY_URL_PROD = 'https://www.paypal.com/cgi-bin/webscr'
-PAYPAL_VERIFY_URL_TEST = 'https://www.sandbox.paypal.com/cgi-bin/webscr'
-
 # NganLuong pay
 NGANLUONG_CHECK_ORDER_URL = 'http://121.40.29.144/api/v1/pay/nganluong/check_order'
 NGANLUONG_RETURN_URL = 'http://121.40.29.144/api/v1/pay/nganluong/return'
