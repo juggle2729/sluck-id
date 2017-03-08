@@ -38,7 +38,7 @@ ADMIN_ROOT_URL = 'http://47.88.214.2/'
 INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
 
 IOS_DEBUG_CONF = {
-    'qg_ios': 4,
+    'qg_ios': 7,
 }
 
 XINGE_ACCESS_ID = '2200194027'
@@ -72,7 +72,7 @@ GP_VERSION_CODE = 131
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = True  # IAP 审核开关
-IAP_VERSION_CODE = [1, 3, 4]
+IAP_VERSION_CODE = [1, 3, 7]
 IAP_TEST_ID = []
 
 FRESH_RECOMMEND = [0, 0]
