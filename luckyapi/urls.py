@@ -49,6 +49,7 @@ urlpatterns = patterns(
     url(r'^pay/(?P<pay_id>[^/]+)/status/?$', 'luckyapi.views.transaction.get_pay_status'),
     url(r'^pay/paypal/notify/?$', 'luckyapi.views.transaction.paypal_notify'),
     url(r'^pay/paypal/success/?$', 'luckyapi.views.transaction.paypal_success'),
+    url(r'^pay/close_webview/?$', 'luckyapi.views.transaction.close_webview'),
     url(r'^pay/paypal/failed/?$', 'luckyapi.views.transaction.paypal_failed'),
     url(r'^pay/coda_pay/proxy/?$', 'luckyapi.views.transaction.coda_proxy'),
     url(r'^pay/coda_pay/gateway/(?P<token>[^/]+)/?$', 'luckyapi.views.transaction.coda_gateway'),
@@ -67,7 +68,6 @@ urlpatterns = patterns(
     url(r'^pay/mimo/notify/?$', 'luckyapi.views.transaction.mimo_notify'),
     url(r'^pay/codasms/notify/?$', 'luckyapi.views.transaction.coda_sms_notify'),
     url(r'^pay/bluepay/notify/?$', 'luckyapi.views.transaction.bluepay_notify'),
-    #url(r'^pay/doku/test/?$', 'luckyapi.views.show.test'),
     url(r'^pay/iap/notify/?$', 'luckyapi.views.transaction.iap_notify'),
     # notification
     url(r'^notifications/?$', 'luckyapi.views.notification.get_notifications'),
