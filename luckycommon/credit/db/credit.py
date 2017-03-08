@@ -246,7 +246,7 @@ def exchange_credit(user_id):
         transaction.id = id_generator.generate_long_id('transaction')
         transaction.user_id = user_id
         transaction.type = TRANSACTION_TYPE.AWARD
-        transaction.title = u"Đổi tiền xu"
+        transaction.title = u"Tukar ke Koin"
         transaction.price = added_price
         transaction.balance = account.balance
         transaction.status = TRANSACTION_STATUS.DONE

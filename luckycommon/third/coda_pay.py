@@ -6,7 +6,7 @@ import logging
 import requests
 from django.conf import settings
 
-from luckycommon.async.async_job import track_one
+from luckycommon.async.async_job import track_one, set_user, increment_user
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -118,6 +118,7 @@ def coda_check_notify(request):
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
         if res:
             track_one.delay('recharge', {'price': float(total_fee), 'channel': 'coda'}, user_id)
+            increment_user.delay(user_id, 'total_recharge', total_fee)
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
                            'price': total_fee,
                            'channel': 'coda'})
@@ -129,7 +130,3 @@ def coda_check_notify(request):
     else:
         add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
         _LOGGER.error('Coda Pay response data show transaction failed, data: %s', request.GET)
-
-
-if __name__ == '__main__':
-    coda_create_charge(7236116293778989056, 66, None)

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+
 import os
 import sys
-from datetime import timedelta
 from datetime import datetime
+from datetime import timedelta
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
@@ -11,12 +12,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache  import redis_cache
 from luckycommon.model.activity import Activity, UserActivity
-from luckycommon.model.account import Account
 from luckycommon.utils.mail import MailSender
-from luckycommon.utils.tz import utc_to_local_str
-
-from django.conf import settings
-
 
 mail_sender = MailSender.getInstance()
 mail_sender.init_conf({

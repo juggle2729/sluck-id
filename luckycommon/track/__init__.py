@@ -2,9 +2,8 @@
 import json
 
 import requests
-from datetime import datetime
 
-from luckyplatform import settings
+from django.conf import settings
 
 
 def collect_event(collection, properties, user_id=None):
@@ -59,11 +58,67 @@ def create_user(user_id, properties):
         return False, response.text
 
 
-def set_user_properties():
-    pass
+def set_user_properties(user_id, properties):
+    url = settings.RAKAM_HOST + "/user/set_properties"
+    headers = {
+        'content-type': 'application/json',
+    }
+    payload = {
+        "id": user_id,
+        "api": {
+            "api_key": settings.WRITE_KEY,
+            "library": {
+                "name": "python",
+                "version": "1.0"
+            },
+            "api_version": "1.0"
+        },
+        "properties": properties
+    }
+    response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+    if response.text == '1':
+        return True, None
+    else:
+        return False, response.text
+
+
+def increment_user_property(user_id, property, value):
+    url = settings.RAKAM_HOST + "/user/increment_property"
+    headers = {
+        'content-type': 'application/json',
+    }
+    payload = {
+        "id": user_id,
+        "api": {
+            "api_key": settings.WRITE_KEY,
+            "library": {
+                "name": "python",
+                "version": "1.0"
+            },
+            "api_version": "1.0"
+        },
+        "property": property,
+        "value": value
+    }
+    response = requests.request("POST", url, data=json.dumps(payload), headers=headers)
+    if response.text == '1':
+        return True, None
+    else:
+        return False, response.text
 
 
 if __name__ == '__main__':
-    # print collect_event('demo', {'click': False, '_user': 123})
-    # print create_user(12345, {'is_virtual': '1', 'recharge': 30})
-    print create_user(123253, {'is_virtual': False, 'channel': 'ofw', 'register_at': datetime.now()})
+    import os
+    import sys
+    sys.path.append('/home/ubuntu/af-env/luckyservice')
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
+
+    from luckycommon.account.model.account import Account
+    for account in Account.query.filter().all():
+        extend = json.loads(account.extend)
+        create_user(account.id, {
+            'balance': account.balance,
+            'register_at': account.created_at.isoformat(),
+            'channel': extend.get('chn'),
+            'is_virtual': True if account.is_virtual else False,
+        })
