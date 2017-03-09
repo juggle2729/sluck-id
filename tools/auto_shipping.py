@@ -36,11 +36,12 @@ from luckycommon.db.goods import get_goods
 from luckycommon.db.activity import get_activity, get_activity_users
 from luckycommon.db.transaction import add_system_award_transaction
 from luckycommon.account.db.account import get_account_status
-#from luckycommon.strategy.handler import is_valid_user
+# from luckycommon.strategy.handler import is_valid_user
 
 from django.conf import settings
 
 _LOGGER = logging.getLogger('lucky')
+
 
 def strip_phone(phone_number):
     phone_number = str(phone_number)
@@ -48,6 +49,7 @@ def strip_phone(phone_number):
     for prefix in prefix_list:
         phone_number = remove_prefix(phone_number, prefix)
     return phone_number
+
 
 _PULSA_XML = """<?xml version='1.0' encoding='utf-8'?>
 <mp><commands>topup</commands> <username>tokoseribu</username><ref_id>%s</ref_id><hp>%s</hp><pulsa_code>%s</pulsa_code><sign>%s</sign>
@@ -67,7 +69,6 @@ _REQ_DATA = '<?xml version="1.0" ?><datacell><perintah>charge</perintah><oprcode
 
 _DATACELL_URL = 'http://117.104.201.18:7712/TokoSeribu.php'
 _STEAM_GATE = "https://www.indomog.com/indomog2/new_core/index.php/h2h_rpc/server"
-
 
 _STEAM_REQ = '''
 <methodCall>
@@ -150,9 +151,10 @@ _STEAM_REQ = '''
   </params>
 </methodCall>'''
 COIN_TIDS = {
-    802:100,
-    856:500,
-    }
+    802: 100,
+    856: 500,
+    860: 20,
+}
 _PULSA_TIDS = {  # 话费 tids
     792: 5000,
     666: 10000,
@@ -162,7 +164,7 @@ _PULSA_TIDS = {  # 话费 tids
     794: 500000,
     796: 1000000,
 }
-_PULSA_ELE_TIDS = { #电费
+_PULSA_ELE_TIDS = {  # 电费
     838: 20000,
     839: 50000,
     840: 100000,
@@ -172,117 +174,118 @@ _PULSA_ELE_TIDS = { #电费
 }
 
 HUAFEI_TIDS = {
-#    667: 50,
-#    668: 100,
+    #    667: 50,
+    #    668: 100,
 }
 
 CARRIER_HUAFEI_TIDS = {
-    728:'TEL.5',
-    738:'TEL.10',
-    737:'TEL.20',
-    736:'TEL.25',
-    735:'TEL.50',
-    734:'TEL.100',
-    726:'XL.5',
-    749:'XL.10',
-    748:'XL.15',
-    747:'XL.25',
-    746:'XL.50',
-    745:'XL.100',
-    725:'SF.5',
-    756:'SF.10',
-    755:'SF.20',
-    754:'SF.25',
-    753:'SF.30',
-    752:'SF.50',
-    751:'SF.60',
-    750:'SF.100',
-    724:'TRI.1',
-    762:'TRI.5',
-    761:'TRI.10',
-    760:'TRI.20',
-    759:'TRI.30',
-    758:'TRI.50',
-    757:'TRI.100',
-    727:'IR.5',
-    744:'IR.10',
-    743:'IR.20',
-    742:'IR.25',
-    741:'IR.30',
-    740:'IR.50',
-    739:'IR.100',
+    728: 'TEL.5',
+    738: 'TEL.10',
+    737: 'TEL.20',
+    736: 'TEL.25',
+    735: 'TEL.50',
+    734: 'TEL.100',
+    726: 'XL.5',
+    749: 'XL.10',
+    748: 'XL.15',
+    747: 'XL.25',
+    746: 'XL.50',
+    745: 'XL.100',
+    725: 'SF.5',
+    756: 'SF.10',
+    755: 'SF.20',
+    754: 'SF.25',
+    753: 'SF.30',
+    752: 'SF.50',
+    751: 'SF.60',
+    750: 'SF.100',
+    724: 'TRI.1',
+    762: 'TRI.5',
+    761: 'TRI.10',
+    760: 'TRI.20',
+    759: 'TRI.30',
+    758: 'TRI.50',
+    757: 'TRI.100',
+    727: 'IR.5',
+    744: 'IR.10',
+    743: 'IR.20',
+    742: 'IR.25',
+    741: 'IR.30',
+    740: 'IR.50',
+    739: 'IR.100',
 }
 
 _STEAM_TIDS = {
-    694:'steam idr12000',
-    695:'steam idr45000',
-    661:'steam idr60000',
-    662:'steam idr90000',
-    663:'steam idr120000',
-    664:'steam idr250000',
-    665:'steam idr400000',
-    696:'steam idr600000',
-    779:'garena v10',
-    778:'garena v20',
-    777:'garena v50',
-    776:'garena v100',
+    694: 'steam idr12000',
+    695: 'steam idr45000',
+    661: 'steam idr60000',
+    662: 'steam idr90000',
+    663: 'steam idr120000',
+    664: 'steam idr250000',
+    665: 'steam idr400000',
+    696: 'steam idr600000',
+    779: 'garena v10',
+    778: 'garena v20',
+    777: 'garena v50',
+    776: 'garena v100',
 }
 
 _CARRIER_PREFIX = {
-        '0812': 'TEL',
-        '0813': 'TEL',
-        '0821': 'TEL',
-        '0822': 'TEL',
-        '0823': 'TEL',
-        '0851': 'TEL',
-        '0852': 'TEL',
-        '0853': 'TEL',
-        '0814': 'IR',
-        '0815': 'IR',
-        '0816': 'IR',
-        '0855': 'IR',
-        '0856': 'IR',
-        '0857': 'IR',
-        '0858': 'IR',
-        '0817': 'XL',
-        '0818': 'XL',
-        '0819': 'XL',
-        '0831': 'XL',
-        '0832': 'XL',
-        '0834': 'XL',
-        '0838': 'XL',
-        '0859': 'XL',
-        '0877': 'XL',
-        '0878': 'XL',
-        '0895': 'TRI',
-        '0896': 'TRI',
-        '0897': 'TRI',
-        '0898': 'TRI',
-        '0899': 'TRI',
-        '0881': 'SF',
-        '0882': 'SF',
-        '0883': 'SF',
-        '0884': 'SF',
-        '0885': 'SF',
-        '0886': 'SF',
-        '0887': 'SF',
-        '0888': 'SF',
-        '0889': 'SF',
+    '0812': 'TEL',
+    '0813': 'TEL',
+    '0821': 'TEL',
+    '0822': 'TEL',
+    '0823': 'TEL',
+    '0851': 'TEL',
+    '0852': 'TEL',
+    '0853': 'TEL',
+    '0814': 'IR',
+    '0815': 'IR',
+    '0816': 'IR',
+    '0855': 'IR',
+    '0856': 'IR',
+    '0857': 'IR',
+    '0858': 'IR',
+    '0817': 'XL',
+    '0818': 'XL',
+    '0819': 'XL',
+    '0831': 'XL',
+    '0832': 'XL',
+    '0834': 'XL',
+    '0838': 'XL',
+    '0859': 'XL',
+    '0877': 'XL',
+    '0878': 'XL',
+    '0895': 'TRI',
+    '0896': 'TRI',
+    '0897': 'TRI',
+    '0898': 'TRI',
+    '0899': 'TRI',
+    '0881': 'SF',
+    '0882': 'SF',
+    '0883': 'SF',
+    '0884': 'SF',
+    '0885': 'SF',
+    '0886': 'SF',
+    '0887': 'SF',
+    '0888': 'SF',
+    '0889': 'SF',
 }
 
 _PULSACODE_FOR_CARRIER = {
-    'TEL' : 'htelkomsel',
+    'TEL': 'htelkomsel',
     'IR': 'hindosat',
     'XL': 'xld',
     'TRI': 'hthree',
     'SF': 'hsmart',
 }
 
-def stringxor(str1,str2):
-    orxstr=""
-    for i in range(0,len(str1)):
-        rst=ord(list(str1)[i])^ord(list(str2)[i])
-        orxstr=orxstr+ chr(rst)
+
+def stringxor(str1, str2):
+    orxstr = ""
+    for i in range(0, len(str1)):
+        rst = ord(list(str1)[i]) ^ ord(list(str2)[i])
+        orxstr = orxstr + chr(rst)
     return orxstr
 
 
@@ -308,7 +311,7 @@ def _delay_delivery(order_id, user_id, delay_hour):
     delay_timestamp = redis_cache.get_delay_timestamp(order_id)
     if not delay_timestamp:
         # gwallet 充值用户
-        timestamp = int(time.time()) + 3600 * int(delay_hour) # 28 Fed. 2017  Delay delivery 48 hours
+        timestamp = int(time.time()) + 3600 * int(delay_hour)  # 28 Fed. 2017  Delay delivery 48 hours
         redis_cache.set_delay_timestamp(order_id, timestamp)
         print 'set order id: %s delay deliver timestamp: %s' % (order_id, timestamp)
         return True
@@ -324,7 +327,7 @@ def shipping_steam(await_order, activity):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
         return
-    #if not is_valid_user(user_id, activity):
+    # if not is_valid_user(user_id, activity):
     #    print 'found invalid user %s' % user_id
     #    _LOGGER.info('found invalid user %s %s', user_id, await_order.order_id)
     #    # update order
@@ -352,9 +355,10 @@ def shipping_steam(await_order, activity):
     pay_id = await_order.order_id
     product_id = _STEAM_TIDS[activity.template_id]
     comment = 'test'
-    sign = sha1('1612414100'+ str(pay_id) + '5003G001T001081388505363' + product_id + '1' + comment + time_t + 'pOyNeinswa61hv').hexdigest()
-    
-    s = requests.post(_STEAM_GATE, data= _STEAM_REQ%(pay_id, product_id, comment, time_t, sign))
+    sign = sha1(
+        '1612414100' + str(pay_id) + '5003G001T001081388505363' + product_id + '1' + comment + time_t + 'pOyNeinswa61hv').hexdigest()
+
+    s = requests.post(_STEAM_GATE, data=_STEAM_REQ % (pay_id, product_id, comment, time_t, sign))
     resp = s.content
     print s.content
     if 'RspCode</name>\n<value><string>00</string>' in resp and 'Success' in resp:
@@ -363,21 +367,20 @@ def shipping_steam(await_order, activity):
         steam_product = 'Rp.' + product_id[9:]
         steam_code = l.xpath('//string')[-2].text
         charge_account = strip_phone(charge_account)
-        send_sms([charge_account,], 'sms_steam', {'steam_product':steam_product, 'steam_code': steam_code})
+        send_sms([charge_account, ], 'sms_steam', {'steam_product': steam_product, 'steam_code': steam_code})
         print 'done', await_order.order_id, charge_account, steam_code
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.DEAL},
+            await_order.order_id,
+            {'status': ORDER_STATUS.DEAL},
         )
         show_order(await_order)
     else:
         print 'beiju', await_order.order_id
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.AWARDED}, None, True
+            await_order.order_id,
+            {'status': ORDER_STATUS.AWARDED}, None, True
         )
         print resp
-    
 
 
 def shipping_phone_charge(await_order, activity, withcarrier=False):
@@ -402,8 +405,8 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
         if not carrier:
             print 'NO CARRIER', charge_account
             order_db.update_order_info(
-                    await_order.order_id,
-                    {'status': ORDER_STATUS.AWARDED}, None, True
+                await_order.order_id,
+                {'status': ORDER_STATUS.AWARDED}, None, True
             )
             return
         product = carrier + '.' + str(recharge_price)
@@ -411,22 +414,24 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
     if check_status:
         print charge_account, ' already charged 15mins before, just wait'
         return
-    req = _REQ_DATA % (product, charge_account, await_order.order_id, base64.b64encode(stringxor(charge_account[-4:]+'145339', '62LF934757')))
+    req = _REQ_DATA % (
+    product, charge_account, await_order.order_id, base64.b64encode(stringxor(charge_account[-4:] + '145339', '62LF934757')))
     resp = requests.post(_DATACELL_URL, data=req)
     if '<resultcode>0</resultcode>' in resp.content:
         print 'done', await_order.order_id
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.DEAL}
+            await_order.order_id,
+            {'status': ORDER_STATUS.DEAL}
         )
         show_order(await_order)
         redis_cache.set_15phone(charge_account)
     else:
         print resp.content, charge_account, product
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.AWARDED}, None, True
+            await_order.order_id,
+            {'status': ORDER_STATUS.AWARDED}, None, True
         )
+
 
 def shipping_pulsa(await_order, activity):
     user_id = await_order.user_id
@@ -473,8 +478,8 @@ def shipping_pulsa(await_order, activity):
     if not carrier:
         print 'NO CARRIER', charge_account
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.AWARDED}, None, True
+            await_order.order_id,
+            {'status': ORDER_STATUS.AWARDED}, None, True
         )
         return
     product_prefix = _PULSACODE_FOR_CARRIER[carrier]
@@ -485,8 +490,9 @@ def shipping_pulsa(await_order, activity):
             print charge_account, ' already charged some mins before, just wait'
             return
     seed = str(randint(100, 99999))
-    req = _PULSA_XML % (str(await_order.order_id) +'#'+seed, charge_account, product, md5('tokoseributokoseribu123*'+str(await_order.order_id) +'#'+ seed).hexdigest())
-    headers = {'Content-Type': 'application/xml'} # set what your server accepts
+    req = _PULSA_XML % (str(await_order.order_id) + '#' + seed, charge_account, product,
+                        md5('tokoseributokoseribu123*' + str(await_order.order_id) + '#' + seed).hexdigest())
+    headers = {'Content-Type': 'application/xml'}  # set what your server accepts
     print req, await_order.order_id
     if get_account_status(await_order.user_id):
         print '[{0}] limit the delivery, account status is banned, ' \
@@ -504,8 +510,8 @@ def shipping_pulsa(await_order, activity):
     if '<status>0</status>' in resp.content:
         print 'done', await_order.order_id
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.DEAL}
+            await_order.order_id,
+            {'status': ORDER_STATUS.DEAL}
         )
         show_order(await_order)
         if carrier in ('TRI', 'IR', 'SF'):
@@ -513,9 +519,10 @@ def shipping_pulsa(await_order, activity):
     else:
         print resp.content, charge_account, product
         order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.AWARDED}, None, True
+            await_order.order_id,
+            {'status': ORDER_STATUS.AWARDED}, None, True
         )
+
 
 # def shipping_ele_pulsa(await_order, activity):
 #     user_id = await_order.user_id
@@ -783,6 +790,7 @@ def start_ex():
         goods_price = float(get_goods(activity.goods_id).price)
         shipping_coin(await_order, activity, recharge_price=goods_price)
 
+
 def start_steam():
     await_orders = get_await_list()
     print 'steam'
@@ -807,10 +815,9 @@ def start_pulsa():
         if activity.template_id in _PULSA_TIDS:
             print 'check pulsa order, %s %s' % (await_order.order_id, activity.template_id)
             shipping_pulsa(await_order, activity)
-        # if  activity.template_id in _PULSA_ELE_TIDS:
-        #     print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
-        #     shipping_ele_pulsa(await_order, activity)
-
+            # if  activity.template_id in _PULSA_ELE_TIDS:
+            #     print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
+            #     shipping_ele_pulsa(await_order, activity)
 
 
 if __name__ == "__main__":
