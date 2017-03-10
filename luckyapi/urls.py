@@ -66,7 +66,6 @@ urlpatterns = patterns(
     url(r'^pay/notify/doku/?$', 'luckyapi.views.transaction.doku_notify'),
     url(r'^pay/identify/doku/?$', 'luckyapi.views.transaction.doku_identify'),
     url(r'^pay/mimo/notify/?$', 'luckyapi.views.transaction.mimo_notify'),
-    url(r'^pay/codasms/notify/?$', 'luckyapi.views.transaction.coda_sms_notify'),
     url(r'^pay/bluepay/notify/?$', 'luckyapi.views.transaction.bluepay_notify'),
     url(r'^pay/iap/notify/?$', 'luckyapi.views.transaction.iap_notify'),
     # notification

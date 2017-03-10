@@ -41,7 +41,6 @@ def indomog_create_charge(pay, pay_amount, currency):
             payload['BMod']) + '123456').hexdigest()
     payload.update({'Signature': signature})
 
-    _LOGGER.info("post data: %s" % payload)
     response = requests.post(ORDER_URL,
                              data=payload)
     print response.content
