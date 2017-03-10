@@ -719,8 +719,9 @@ def shipping_coin(await_order, activity, recharge_price=None):
     user_id = await_order.user_id
     if redis_cache.is_virtual_account(user_id):
         return
-    if _delay_delivery(await_order.order_id, user_id, 72):
-        return
+    # 10 Mar. 2017 Remove delay delivery logic
+    # if _delay_delivery(await_order.order_id, user_id, 72):
+    #     return
     if not recharge_price:
         recharge_price = COIN_TIDS[activity.template_id]
     print('begin recharge, %s, price %s', await_order.order_id, recharge_price)
