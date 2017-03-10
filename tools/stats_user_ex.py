@@ -14,7 +14,7 @@ from luckycommon.cache import redis_cache
 from luckycommon.model import orm
 from luckycommon.model.pay import Pay, PAY_TYPE
 from luckycommon.model.transaction import Transaction, TRANSACTION_TYPE
-from luckycommon.model.account import Account, AccountThird, AccountToken
+from luckycommon.account.model.account import Account, AccountThird, AccountToken
 from luckycommon.db import account as account_db
 from luckycommon.db import activity as activity_db
 from luckycommon.utils.tz import utc_to_local, utc_to_local_str, local_to_utc

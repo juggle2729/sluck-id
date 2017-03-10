@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.db.account import get_account
-from luckycommon.model.account import Account
+from luckycommon.account.model.account import Account
 from luckycommon.stats import MG as mg
 from luckycommon.db.missed_vips import batch_insert_missed_vips
 from luckycommon.model.missed_vips import MissedVips

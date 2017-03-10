@@ -13,7 +13,7 @@ from datetime import datetime
 from luckyapi.logic.crowdfunding import start_next_activity
 
 from luckycommon.cache import redis_cache
-from luckycommon.async.async_job import stats_announce, track_one
+from luckycommon.async.async_job import stats_announce, track_one, increment_user
 
 from luckycommon.campaign import god_campaign
 
@@ -718,6 +718,12 @@ class ActivityAnnounceHandler(EventHandler):
                                   activity.goods_id).price),
                               'activity_name': activity.name,
                               'term_number': activity.term_number}
+                increment_user.delay(lucky_order.buyer, 'total_win', float(get_goods(activity.goods_id).price))
+                track_one.delay(collection='win', properties={
+                    'activity_id': lucky_order.activity_id,
+                    'activity_target': float(get_goods(activity.goods_id).price),
+                    'activity_name': activity.name,
+                    'term_number': activity.term_number}, user_id=lucky_order.buyer)
                 winned_activitys = redis_cache.get_winn_list(lucky_order.buyer)
                 if len(winned_activitys) == 1:
                     cached_winner = redis_cache.get_activity_winner(

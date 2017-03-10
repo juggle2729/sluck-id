@@ -25,7 +25,7 @@ from luckycommon.activity.auto_shipping import shipping_coin
 from luckycommon.mission import fresh_mission
 
 from luckycommon.cache import redis_cache
-from luckycommon.track import collect_event, create_user
+from luckycommon.track import collect_event, create_user, set_user_properties, increment_user_property
 from luckycommon.utils import id_generator
 from luckycommon.order.db.order import get_order
 from luckycommon.db.pay import get_pay
@@ -265,6 +265,22 @@ def track_new_user(user_id, properties):
     status, error_message = create_user(user_id, properties)
     if not status:
         _LOGGER.info('track failed, user_id: %s, properties: %s, reason: %s' % (user_id, properties, error_message))
+
+
+@app.task(name='utils.set_user_properties')
+def set_user(user_id, properties):
+    _LOGGER.info('set user properties %s, %s' % (user_id, properties))
+    status, error_message = set_user_properties(user_id, properties)
+    if not status:
+        _LOGGER.info('track failed, user_id: %s, properties: %s, reason: %s' % (user_id, properties, error_message))
+
+
+@app.task(name='utils.increment_user_property')
+def increment_user(user_id, property, value):
+    _LOGGER.info('increment user property %s, %s, %s' % (user_id, property, value))
+    status, error_message = increment_user_property(user_id, property, value)
+    if not status:
+        _LOGGER.info('track failed, user_id: %s, property: %s, reason: %s' % (user_id, property, error_message))
 
 
 if __name__ == "__main__":

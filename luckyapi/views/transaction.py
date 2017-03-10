@@ -157,6 +157,10 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.CODA_PAY.value],
             pay_types[PayType.APPLE_IAP.value],
         ]
+    if platform == 'web':
+        return [
+            pay_types[PayType.CODA_PAY.value],
+        ]
     return [
         pay_types[PayType.MOGPLAY.value],
         pay_types[PayType.GAME_ON.value],
