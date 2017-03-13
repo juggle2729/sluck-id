@@ -31,7 +31,7 @@ from luckycommon.order.db.order import get_order
 from luckycommon.db.pay import get_pay
 from luckycommon.db import activity as activity_db
 from luckycommon.db import partner as partner_db
-from luckycommon.credit.db.credit import check_consume_credit
+from luckycommon.credit.db.credit import add_consume_credit
 from luckycommon.third.sms.helper import send_sms
 from luckycommon.async.celery import app
 
@@ -203,7 +203,7 @@ def stats_consume(user_id, total_amount, coupon_amount=0):
     if not redis_cache.is_virtual_account(user_id):
         if consume_amount > 0:
             try:
-                check_consume_credit(user_id, consume_amount)
+                add_consume_credit(user_id, consume_amount)
             except Exception as e:
                 _LOGGER.exception('check_consume_credit exception:%s', e)
         strategy_handler.add_new_amount(user_id, total_amount)

@@ -24,7 +24,6 @@ def push_fresh_award(user_id, is_coupon=False):
     """
     通知系统奖励
     """
-    return
     if redis_cache.is_virtual_account(user_id):
         return
     if not is_coupon:
