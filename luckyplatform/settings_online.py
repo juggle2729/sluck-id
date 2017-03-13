@@ -37,10 +37,6 @@ ADMIN_ROOT_URL = 'http://47.88.214.2/'
 
 INVITER_SHARE_LINK = 'http://id.lucky-gou.com/share_app2/'
 
-IOS_DEBUG_CONF = {
-    'qg_ios': 4,
-}
-
 XINGE_ACCESS_ID = '2200194027'
 XINGE_SECRET = 'a24df2ea34f4ef67021a22a1ba41a032'
 APNS_ENV = 1
@@ -68,12 +64,15 @@ COIN_TIDS = {
 }
 
 GP_FLAG = False  # GP switch, True is on sensor
-GP_VERSION_CODE = 130
+GP_VERSION_CODE = 131
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
-IAP_FLAG = True  # IAP 审核开关
-IAP_VERSION_CODE = [1, 3, 4]
+IAP_FLAG = False  # IAP 审核开关
+IAP_VERSION_CODE = [1, 3, 7, 8]
 IAP_TEST_ID = []
+IOS_DEBUG_CONF = {
+    'qg_ios': 8,
+}
 
 FRESH_RECOMMEND = [0, 0]
 
@@ -137,6 +136,8 @@ NGANLUONG_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview'
 # Coda pay
 CODA_PAY_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/coda_pay/gateway/%s/'
 CODA_PAY_ORDER_URL = 'https://airtime.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
+CODA_PAY_CSS = 'https://airtime.codapayments.com/airtime/css/airtime_v1.0.css'
+CODA_PAY_JS = 'https://airtime.codapayments.com/airtime/js/airtime_v1.0.js'
 CODA_API_KEY_DICT = {
     'TWD': '66180937d31a768a62bf463b3d5e5547',
     'IDR': '3d808b4a286535ad0ad2603620232b60',

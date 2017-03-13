@@ -143,6 +143,8 @@ NGANLUONG_CLOSE_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 # Coda pay
 CODA_PAY_GATEWAY_URL = 'http://121.40.29.144/api/v1/pay/coda_pay/gateway/%s/'
 CODA_PAY_ORDER_URL = 'https://sandbox.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
+CODA_PAY_CSS = 'https://sandbox.codapayments.com/airtime/css/airtime_v1.0.css'
+CODA_PAY_JS = '	https://sandbox.codapayments.com/airtime/js/airtime_v1.0.js'
 CODA_API_KEY_DICT = {
     'TWD': '66180937d31a768a62bf463b3d5e5547',
     'IDR': '3d808b4a286535ad0ad2603620232b60',

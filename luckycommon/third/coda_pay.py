@@ -41,7 +41,7 @@ CURRENCY_CODES = {
     'LKR': '144',
 }
 
-_EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+_EXCHANGE_RATIO = 1100
 
 
 def coda_create_charge(pay, pay_amount, currency):
@@ -64,12 +64,10 @@ def coda_create_charge(pay, pay_amount, currency):
     headers['Content-Type'] = 'application/json'
     headers['Accept'] = 'application/json'
 
-    _LOGGER.info("post data: %s" % payload)
     response = requests.post(ORDER_URL, headers=headers,
                              data=json.dumps(payload))
     response_dict = json.loads(response.text)
     if response.status_code == 200 and response_dict['initResult']['resultCode'] == 0:
-        _LOGGER.error("response 200 data: %s, %s ", response_dict, payload)
         return settings.CODA_PAY_GATEWAY_URL % response_dict['initResult']['txnId']
     else:
         _LOGGER.error("response data: %s" % response_dict)
