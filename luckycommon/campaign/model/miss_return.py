@@ -6,7 +6,7 @@ from django.conf import settings
 
 
 TEMPLATE_ID = settings.MISS_RETURN_TID
-MAX_CONSUME_AMOUNT = 11
+MAX_CONSUME_AMOUNT = 14
 COUPON_TIDS = [209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219]
 
 

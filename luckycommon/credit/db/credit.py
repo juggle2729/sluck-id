@@ -244,6 +244,11 @@ def add_show_credit(user_id, show_id):
     _LOGGER.info('add show award credit: %s', credit_amount)
 
 
+def add_miss_return_credit(user_id, amount):
+    add_credit(user_id, amount, u"不中包赔积分")
+    _LOGGER.info('add miss return credit: %s', amount)
+
+
 @sql_wrapper
 def exchange_credit(user_id):
     account = Account.query.filter(
