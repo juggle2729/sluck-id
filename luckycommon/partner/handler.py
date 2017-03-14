@@ -6,6 +6,7 @@ from luckyapi.logic import coupon as coupon_handler
 
 from luckycommon.cache import redis_cache
 from luckycommon.campaign import fortune_wheel
+from luckycommon.credit.db.credit import add_invitation_credit
 
 from luckycommon.db import partner as partner_db
 from luckycommon.account.db import account as account_db
@@ -76,7 +77,8 @@ def bind_inviter(user_id, inviter_id):
     # check circle
     my_item = partner_db.get_user_inviter(user_id)
     if my_item:
-        raise ParamError('duplicate set')
+        raise ParamError('already invited')
+
     try:
         inviter_id = int(inviter_id)
     except:
@@ -92,14 +94,8 @@ def bind_inviter(user_id, inviter_id):
             _LOGGER.warn('found inviter circle, %s, %s', user_id, inviter_id)
             raise ParamError('circle invite')
     async_job.create_partner_relation.delay(user_id, invite_list)
-    # award coupon
-    coupon_handler.send_coupon_to_user(user_id, 136, 1)  # 拜师红包，满5减1
-    coupon_handler.send_coupon_to_user(user_id, 137, 1)  # 拜师红包，满10减2
-    fortune_wheel.callback_task(inviter_id, 4)
-    try:
-        partner_db.update_coupon_status(inviter_id)
-    except:
-        pass
+    # award
+    add_invitation_credit(user_id)
 
 
 def bind_inviter_by_track(user_id, track_key):

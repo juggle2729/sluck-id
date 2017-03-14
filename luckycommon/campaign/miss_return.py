@@ -2,12 +2,12 @@
 import json
 import logging
 
-from django.utils.translation import ugettext as _
-
+from django.conf import settings
 from luckycommon.account.db import account as account_db
 from luckycommon.cache import redis_cache
 from luckycommon.campaign.db import miss_return as return_db
 from luckycommon.campaign.model.miss_return import *
+from luckycommon.credit.db.credit import add_miss_return_credit
 from luckycommon.db import activity as activity_db
 from luckycommon.utils.tz import now_ts
 
@@ -56,10 +56,10 @@ def get_status(user_id):
 def _spread(user_id, award_price=None, is_winner=False):
     account = account_db.get_account(user_id)
     if is_winner:
-        #award_title = '10 Lucky Coins'
+        # award_title = '10 Lucky Coins'
         award_title = u"10 đồng xu"
     else:
-        #award_title = '%s Sure to Win Coupon' % award_price
+        # award_title = '%s Sure to Win Coupon' % award_price
         award_title = u"%s Bồi thường nếu không trúng Lì xì" % award_price
     ts = now_ts()
     scrolling_dict = {
@@ -94,7 +94,8 @@ def announce_callback(activity, winner):
                 continue
             item = return_db.check_return(user_id, activity_id, consume_amount)
             if item:
-                _spread(user_id, award_price=consume_amount)
+                add_miss_return_credit(user_id, consume_amount * settings.EXCHANGE_RATIO)
+                # _spread(user_id, award_price=consume_amount)
                 _LOGGER.info('miss return, activity %s return %s to %s success', activity_id, consume_amount, user_id)
     except Exception as e:
         _LOGGER.exception('miss return, announce_callback exception:%s', e)

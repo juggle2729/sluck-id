@@ -66,7 +66,6 @@ urlpatterns = patterns(
     url(r'^pay/notify/doku/?$', 'luckyapi.views.transaction.doku_notify'),
     url(r'^pay/identify/doku/?$', 'luckyapi.views.transaction.doku_identify'),
     url(r'^pay/mimo/notify/?$', 'luckyapi.views.transaction.mimo_notify'),
-    url(r'^pay/codasms/notify/?$', 'luckyapi.views.transaction.coda_sms_notify'),
     url(r'^pay/bluepay/notify/?$', 'luckyapi.views.transaction.bluepay_notify'),
     url(r'^pay/iap/notify/?$', 'luckyapi.views.transaction.iap_notify'),
     # notification
@@ -153,6 +152,7 @@ urlpatterns = patterns(
     # partner
     url(r'^inviter/track/?$', 'luckyapi.views.partner.track_inviter'),
     url(r'^inviter/add/?$', 'luckyapi.views.partner.add_inviter'),
+    url(r'^inviter/entry/?$', 'luckyapi.views.partner.get_entry'),
     url(r'^partner/reward/records/?$', 'luckyapi.views.partner.reward_record'),
     url(r'^partner/reward/?$', 'luckyapi.views.partner.reward_status'),
     url(r'^partner/accu/?$', 'luckyapi.views.partner.current_accumulation'),

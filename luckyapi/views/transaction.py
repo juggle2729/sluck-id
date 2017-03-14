@@ -108,7 +108,6 @@ def get_pay_types(request):
 def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
     if platform == 'android' and 122 <= int(version_code) < 126 and locale == 'id':
         return [
-            pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
@@ -119,7 +118,6 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
     if platform == 'android' and 126 <= int(version_code) < 131 and locale == 'id':
         return [
             pay_types[PayType.GOOGLE_BILLING.value],
-            pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
@@ -132,7 +130,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.DOKU_VISA.value],
             pay_types[PayType.DOKU_WALLET.value],
             pay_types[PayType.GOOGLE_BILLING.value],
-            pay_types[PayType.CODA_SMS.value],
+            pay_types[PayType.CODA_PAY.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
@@ -142,7 +140,6 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and locale == 'id':
         return [
-            pay_types[PayType.CODA_SMS.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
@@ -151,11 +148,10 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.ATM.value],
         ]
     if platform == 'ios' and locale == 'id':
-        if settings.IAP_FLAG:
-            return [pay_types[PayType.CODA_PAY.value], ]
         return [
+            pay_types[PayType.DOKU_VISA.value],
+            pay_types[PayType.DOKU_WALLET.value],
             pay_types[PayType.CODA_PAY.value],
-            pay_types[PayType.APPLE_IAP.value],
         ]
     if platform == 'web':
         return [
@@ -298,7 +294,7 @@ def paypal_failed(request):
     return TemplateResponse(request, 'pay_failed.html', {'return_url': settings.PAYPAL_RETURN_URL})
 
 
-@require_GET
+@require_http_methods(["GET", "POST"])
 def close_webview(request):
     return TemplateResponse(request, 'close_webview.html')
 
@@ -310,7 +306,10 @@ def coda_proxy(request):
 
 @require_GET
 def coda_gateway(request, token):
-    return TemplateResponse(request, 'coda_pay_gate.html', {'token': token})
+    return TemplateResponse(request, 'coda_pay_gate.html',
+                            {'token': token,
+                             'css': settings.CODA_PAY_CSS,
+                             'js': settings.CODA_PAY_JS})
 
 
 @require_GET
@@ -426,14 +425,6 @@ def mimo_notify(request):
         return HttpResponse('ResultCode=0', status=200)
     except Exception as e:
         _LOGGER.exception('MIMO Pay notify exception.(%s)' % e)
-        return HttpResponse('N', status=400)
-
-
-def coda_sms_notify(request):
-    try:
-        return HttpResponse('ResultCode=0', status=200)
-    except Exception as e:
-        _LOGGER.exception('coda Pay notify exception.(%s)' % e)
         return HttpResponse('N', status=400)
 
 

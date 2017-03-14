@@ -19,6 +19,7 @@ from luckycommon.account.db.account import has_password, get_third_account_by_ui
 from luckycommon.account.handler import check_auth_code
 from luckycommon.account.model.account import ThirdAccountType
 from luckycommon.cache import account as cache
+from luckycommon.credit.db.credit import add_register_credit
 from luckycommon.partner import handler as partner_handler
 from luckycommon.push import handler as push_handler
 from luckycommon.third import facebook_login
@@ -97,8 +98,9 @@ def register(request):
     account_dct.update({'country': tracks.get('code')})
     account = account_internal_handler.create_account(account_dct, channel=tracks.get('chn', 'none'), package=tracks.get('pkg', 'none'))
     try:
-        account_handler.add_fresh_coupon(account.id)
-        push_handler.push_fresh_award(account.id, is_coupon=True)
+        # account_handler.add_fresh_coupon(account.id)
+        add_register_credit(account.id)
+        # push_handler.push_fresh_award(account.id, is_coupon=True)
     except Exception as e:
         _LOGGER.error('add award error.(%s)' % e)
     inviter_id = query_dct.get('inviter_id')
@@ -180,8 +182,9 @@ def third_login(request):
         # auto login user, reduce one api call
         account, logon = account_internal_handler.login_third_account(third_id, third_account_type, extend)
         try:
-            account_handler.add_fresh_coupon(account.id)
-            push_handler.push_fresh_award(account.id, is_coupon=True)
+            # account_handler.add_fresh_coupon(account.id)
+            add_register_credit(account.id)
+            # push_handler.push_fresh_award(account.id, is_coupon=True)
         except Exception as e:
             _LOGGER.error('add award error.(%s)' % e)
         if inviter_id:

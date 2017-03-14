@@ -57,7 +57,7 @@ APPLE_TIDS = [647, 648, 650, 659, 660, 669, 670, 671, 672, 687, 693, 701, 702, 7
 #                    649, 650, 651, 659, 654, 656, 657, 658]
 SHOW_BANNED_TIDS = []
 
-MISS_RETURN_TID = 641
+MISS_RETURN_TID = 666
 
 # virtual goods IDs, use special strategy
 VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856]
@@ -143,6 +143,8 @@ NGANLUONG_CLOSE_URL = 'http://121.40.29.144/api/v1/pay/close_webview'
 # Coda pay
 CODA_PAY_GATEWAY_URL = 'http://121.40.29.144/api/v1/pay/coda_pay/gateway/%s/'
 CODA_PAY_ORDER_URL = 'https://sandbox.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
+CODA_PAY_CSS = 'https://sandbox.codapayments.com/airtime/css/airtime_v1.0.css'
+CODA_PAY_JS = '	https://sandbox.codapayments.com/airtime/js/airtime_v1.0.js'
 CODA_API_KEY_DICT = {
     'TWD': '66180937d31a768a62bf463b3d5e5547',
     'IDR': '3d808b4a286535ad0ad2603620232b60',

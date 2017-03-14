@@ -14,7 +14,6 @@ from luckycommon.utils.exceptions import ParamError
 
 from django.views.decorators.http import require_GET, require_POST
 
-
 _LOGGER = logging.getLogger('lucky')
 
 
@@ -42,17 +41,26 @@ def track_inviter(request):
 @response_wrapper
 @token_required
 def add_inviter(request):
-    """
-    添加邀请者
-    """
-    try:
-        inviter_id = int(request.POST.get('uid', None))
-        if not inviter_id:
-            raise ParamError('inviter id invalid')
-    except:
+    inviter_id = request.POST.get('inviter_id', None)
+    if not inviter_id:
         raise ParamError('inviter id invalid')
     partner_handler.bind_inviter(request.user_id, inviter_id)
     return {}
+
+
+@require_GET
+@response_wrapper
+@token_required
+def get_entry(request):
+    user_id = request.user_id
+    first_partners, _ = partner_handler.get_partners(user_id)
+    first_reward, _ = partner_handler.get_partner_reward_by_level(user_id)
+    data = {
+        'invitation_code': str(user_id),
+        'invitation_count': len(first_partners),
+        'invitation_reward': first_reward
+    }
+    return data
 
 
 @require_GET
@@ -69,14 +77,14 @@ def reward_status(request):
         'total': first_reward + second_reward,
         'partner_count': len(first_partners) + len(second_partners),
         'level_list': [{
-                'level': 1,
-                'member_count': len(first_partners),
-                # 'credit_amount': first_reward,
-            },{
-                'level': 2,
-                'member_count': len(second_partners),
-                # 'credit_amount': second_reward,
-            }
+            'level': 1,
+            'member_count': len(first_partners),
+            # 'credit_amount': first_reward,
+        }, {
+            'level': 2,
+            'member_count': len(second_partners),
+            # 'credit_amount': second_reward,
+        }
         ]
     }
     redis_cache.clear_user_pending(user_id, 'partner_reward')
@@ -157,7 +165,7 @@ def activate_level(request, level_id):
     coupon = partner_handler.activate_coupon(user_id, level_id)
     return {
         'id': coupon.id,
-        'title': coupon.title, 
-        'desc': coupon.desc, 
+        'title': coupon.title,
+        'desc': coupon.desc,
         'price': coupon.price
     }

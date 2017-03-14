@@ -18,9 +18,6 @@ from luckycommon.utils.decorator import sql_wrapper
 
 @sql_wrapper
 def get_direct_partners(user_id):
-    """
-    获取一层好友列表
-    """
     partner_list = []
     items = Partner.query.filter(Partner.inviter_id == user_id).all()
     for item in items:

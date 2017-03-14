@@ -307,7 +307,7 @@ class ActivityAnnounceHandler(EventHandler):
             _LOGGER.info(
                 'check result detail <%s, %s>, rand: %s, rand_limit: %s' % (activity.template_id, activity.term_number, rand, rand_limit))
 
-        if activity.template_id in settings.VIRTUAL_GOODS_IDS and rand < 15:
+        if activity.template_id in settings.VIRTUAL_GOODS_IDS and rand < 20:
             need_virtual = True
             _LOGGER.info(
                 'check result detail <%s, %s>, virtual goods strategy applied' % (activity.template_id, activity.term_number))
@@ -489,7 +489,7 @@ class ActivityAnnounceHandler(EventHandler):
             period = random.choice(p_conf['interval'])
             _LOGGER.info('check result detail, total_recharge %s, total_pay: %s, total_win: %s, last_win: %s, used_coupon: %s' % (
                 total_recharge, total_pay, total_win, last_win, used_coupon))
-            if now_ts() - last_win < 3600 * period / 4.0:
+            if now_ts() - last_win < 3600 * period / 8.0:
                 _LOGGER.info('check result detail, now_ts - last_win < 3600 * period')
                 return False
             numerator = total_recharge if total_recharge > 0 else total_pay
