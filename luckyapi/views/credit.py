@@ -79,18 +79,18 @@ def get_my_credit(request):
     })
     credit_activity.append({
         'icon': ICON_BUY,
-        'title': u"邀请好友",
-        'content': u"好友充值，获取 10X Poin",
+        'title': u"Undang Teman",
+        'content': u"Dapat 10x poin dari jumlah topup teman",
         'tips': u"Ikut",
-        'command': '0#',
+        'command': '334#',
         'enable': 1
     })
     credit_activity.append({
         'icon': ICON_BUY,
-        'title': u"被好友邀请",
-        'content': u"填写邀请码，立即获得 3000 Poin",
+        'title': u"Diundang oleh Teman",
+        'content': u"Masukkan kode undangan, dapat 3000 poin gratis",
         'tips': u"Ikut",
-        'command': '0#',
+        'command': '335#',
         'enable': 1
     })
     data['category'].append({

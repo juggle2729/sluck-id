@@ -233,7 +233,7 @@ def add_special_recharge_award_credit(user_id, amount):
 
 
 def add_register_credit(user_id):
-    add_credit(user_id, _REGISTER_CREDIT_AMOUNT, u"注册积分")
+    add_credit(user_id, _REGISTER_CREDIT_AMOUNT, u"Daftar Poin")
     _LOGGER.info('add register award credit: %s', _REGISTER_CREDIT_AMOUNT)
 
 
@@ -241,22 +241,22 @@ def add_show_credit(user_id, show_id):
     show = get_show_by_id(show_id)
     activity = get_activity(None, show.template_id, show.term_number)
     credit_amount = activity.target_amount * _SHOW_AWARD_RATIO
-    add_credit(user_id, credit_amount, u"晒单积分")
+    add_credit(user_id, credit_amount, u"Testimonial Poin")
     _LOGGER.info('add show award credit: %s', credit_amount)
 
 
 def add_miss_return_credit(user_id, amount):
-    add_credit(user_id, amount, u"不中包赔积分")
+    add_credit(user_id, amount, u"Tidak menang, koin dikembalikan")
     _LOGGER.info('add miss return credit: %s', amount)
 
 
 def add_invitation_credit(user_id):
-    add_credit(user_id, _INVITATION_CREDIT_AMOUNT, u"邀请积分")
+    add_credit(user_id, _INVITATION_CREDIT_AMOUNT, u"Undang Teman")
     _LOGGER.info('add invitation credit: %s', _INVITATION_CREDIT_AMOUNT)
 
 
 def add_referrer_credit(user_id, amount):
-    add_credit(user_id, amount, u"好友充值返利")
+    add_credit(user_id, amount, u"Dapat 10x poin dari jumlah topup teman")
     _LOGGER.info('add referrer credit: %s', amount)
 
 
