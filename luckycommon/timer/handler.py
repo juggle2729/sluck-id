@@ -307,7 +307,7 @@ class ActivityAnnounceHandler(EventHandler):
             _LOGGER.info(
                 'check result detail <%s, %s>, rand: %s, rand_limit: %s' % (activity.template_id, activity.term_number, rand, rand_limit))
 
-        if activity.template_id in settings.VIRTUAL_GOODS_IDS and rand < 15:
+        if activity.template_id in settings.VIRTUAL_GOODS_IDS and rand < 20:
             need_virtual = True
             _LOGGER.info(
                 'check result detail <%s, %s>, virtual goods strategy applied' % (activity.template_id, activity.term_number))

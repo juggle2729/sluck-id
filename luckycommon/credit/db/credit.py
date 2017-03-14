@@ -19,7 +19,8 @@ from luckycommon.utils.tz import utc_to_local, utc_to_local_str, local_now
 
 _LOGGER = logging.getLogger('lucky')
 
-_REGISTER_CREDIT_AMOUNT = 300
+_REGISTER_CREDIT_AMOUNT = 250
+_INVITATION_CREDIT_AMOUNT = 3000
 _SHOW_AWARD_RATIO = 10
 
 
@@ -247,6 +248,16 @@ def add_show_credit(user_id, show_id):
 def add_miss_return_credit(user_id, amount):
     add_credit(user_id, amount, u"不中包赔积分")
     _LOGGER.info('add miss return credit: %s', amount)
+
+
+def add_invitation_credit(user_id):
+    add_credit(user_id, _INVITATION_CREDIT_AMOUNT, u"邀请积分")
+    _LOGGER.info('add invitation credit: %s', _INVITATION_CREDIT_AMOUNT)
+
+
+def add_referrer_credit(user_id, amount):
+    add_credit(user_id, amount, u"好友充值返利")
+    _LOGGER.info('add referrer credit: %s', amount)
 
 
 @sql_wrapper
