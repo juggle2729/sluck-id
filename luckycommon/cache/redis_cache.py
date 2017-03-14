@@ -1020,3 +1020,68 @@ def get_gp_delivery_timestamp(userid):
     return ProxyAgent().get(key)
 
 
+@cache_wrapper
+def add_borong_user(userid):
+    """
+    add userid in to borong UID set
+    :return: None
+    """
+    key = prefix_key('borong:userset')
+    ProxyAgent().sadd(key, userid)
+
+
+@cache_wrapper
+def del_borong_user(userid):
+    """
+    delete userid from borong UID set
+    :param userid:
+    :return:
+    """
+    key = prefix_key('borong:userset')
+    ProxyAgent().srem(key, userid)
+
+
+@cache_wrapper
+def ismember_borong_user(userid):
+    """
+
+    :param userid:
+    :return:
+    """
+    key = prefix_key('borong:userset')
+    return ProxyAgent().sismember(key, userid)
+
+
+@cache_wrapper
+def get_borong_user():
+    """
+    get all members from borong UID set
+    :return:
+    """
+    key = prefix_key('borong:userset')
+    return ProxyAgent().smembers(key)
+
+
+@cache_wrapper
+def set_borong_info(userid, num, amount):
+    """
+
+    :param userid:
+    :param num:
+    :param amount:
+    :return:
+    """
+    key = prefix_key('borong:info:%s' % userid)
+    info = {'num': num, 'amount': amount}
+    ProxyAgent().hmset(key,info)
+
+
+@cache_wrapper
+def get_borong_info(userid):
+    """
+
+    :param userid:
+    :return:
+    """
+    key = prefix_key('borong:info:%s' % userid)
+    return ProxyAgent().hgetall(key)
