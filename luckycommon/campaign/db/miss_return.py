@@ -36,11 +36,6 @@ def check_return(user_id, activity_id, consume_amount):
     item.user_id = user_id
     item.activity_id = activity_id
     item.consume_amount = consume_amount
-    coupon_tid = COUPON_TIDS[consume_amount-1]
-    local_today = local_now().replace(hour=0, minute=0, second=0)
-    start_date = local_today + timedelta(1)  # 第二天才能使用
-    start_ts = to_local_ts(start_date)
-    coupon = award_coupon_in_transaction(user_id, coupon_tid, start_ts=start_ts)
-    item.coupon = coupon.id
+    item.coupon = ''
     item.save()
     return item

@@ -8,10 +8,10 @@ from datetime import datetime
 from future.utils import raise_with_traceback
 from sqlalchemy.exc import IntegrityError
 
+from luckycommon.account.model.account import AccountStatus
 from luckycommon.model import orm
 from luckycommon.model.pay import Pay, PayStatus
-from luckycommon.model.account import (ACCOUNT_STATUS, Account, AccountToken,
-                                       AccountThird, THIRD_ACCOUNT_TYPE)
+from luckycommon.account.model.account import (Account, AccountToken, AccountThird)
 from luckycommon.model.transaction import (Transaction, TRANSACTION_TYPE,
                                            TRANSACTION_STATUS)
 
@@ -159,7 +159,7 @@ def login_account(phone, password, device_type='', os_version='', extend=None):
     if not user:
         raise_with_traceback(err.AuthenticateError(
             status=StatusCode.INVALID_USER))
-    if user.status == ACCOUNT_STATUS.BANNED:
+    if user.status == AccountStatus.BANNED.value:
         raise err.PermissionError('forbidden')
 
     if _BAN_VIRTUAL_LOGIN:
@@ -239,9 +239,9 @@ def third_account_login(user_id, device_type='', os_version='', extend=None):
 def logout_device(user_id, token):
     AccountToken.query.filter(AccountToken.user_id == user_id).filter(
         AccountToken.token == token).update({
-            'deleted': 1,
-            'updated_at': datetime.utcnow()
-        })
+        'deleted': 1,
+        'updated_at': datetime.utcnow()
+    })
     orm.session.commit()
 
 
@@ -268,35 +268,6 @@ def get_online_info(user_id, token=None):
 
 
 @sql_wrapper
-def get_third_account(login_type=THIRD_ACCOUNT_TYPE.UXIN, phone_number=0):
-    account = exists_phone(phone_number)
-    if account:
-        return AccountThird.query.filter(
-            AccountThird.user_id == account.id).filter(
-            AccountThird.login_type == login_type).first()
-    return None
-
-
-@sql_wrapper
-def register_third_account(account_info, login_type, login_id):
-    account = Account()
-    account.phone = account_info['phone']
-
-    for k in 'email', 'country', 'nick_name', 'avatar_id':
-        setattr(account, k, account_info[k])
-    chn = THIRD_ACCOUNT_TYPE.get_label(login_type)
-    account.extend = json.dumps({'logon': False, 'chn': chn})
-    account.save(auto_commit=False)
-    orm.session.flush()
-    account_third = AccountThird()
-    account_third.user_id = account.id
-    account_third.login_type = login_type
-    account_third.login_id = login_id
-    account_third.save()
-    return account_third
-
-
-@sql_wrapper
 def add_account_balance(user_id, pay_id, added_balance, extend):
     """
     充值
@@ -307,15 +278,15 @@ def add_account_balance(user_id, pay_id, added_balance, extend):
     # update pay record status
     res = Pay.query.filter(Pay.id == pay_id).filter(
         Pay.status == PayStatus.SUBMIT.value).update({
-            'status': PayStatus.DONE.value,
-            'price': added_balance,
-            'updated_at': datetime.utcnow()
-        })
+        'status': PayStatus.DONE.value,
+        'price': added_balance,
+        'updated_at': datetime.utcnow()
+    })
     if res:
         account = Account.query.filter(
             Account.id == user_id).with_lockmode('update').first()
         account.balance = account.balance + \
-            (0 if not added_balance else Decimal(added_balance))
+                          (0 if not added_balance else Decimal(added_balance))
         account.save(auto_commit=False)
         # add or modify transaction
         transaction = Transaction.query.filter(

@@ -18,17 +18,17 @@ def reward_inviters(user_id, recharge_amount):
              second_inviter) = valid_list + (2 - len(valid_list)) * [None]
             if first_inviter:
                 # 40
-                award_credit = 40 * recharge_amount
-                credit_db.add_credit(first_inviter, award_credit, u"Đối tác nhận thưởng")
+                award_credit = 10 * recharge_amount
+                credit_db.add_referrer_credit(first_inviter, award_credit)
                 partner_db.add_reward_record(first_inviter, user_id, 1, award_credit)
                 _LOGGER.info('reward inviter %s %s credit', first_inviter, award_credit)
                 redis_cache.set_user_pending(first_inviter, 'partner_reward', 1)
-            if second_inviter:
-                # 20
-                award_credit = 20 * recharge_amount
-                credit_db.add_credit(second_inviter, award_credit, u"Đối tác nhận thưởng")
-                partner_db.add_reward_record(second_inviter, user_id, 2, award_credit)
-                _LOGGER.info('reward inviter %s %s credit', second_inviter, award_credit)
-                redis_cache.set_user_pending(second_inviter, 'partner_reward', 1)
+            # if second_inviter:
+            #     # 20
+            #     award_credit = 5 * recharge_amount
+            #     credit_db.add_referrer_credit(second_inviter, award_credit)
+            #     partner_db.add_reward_record(second_inviter, user_id, 2, award_credit)
+            #     _LOGGER.info('reward inviter %s %s credit', second_inviter, award_credit)
+            #     redis_cache.set_user_pending(second_inviter, 'partner_reward', 1)
     except Exception as e:
         _LOGGER.exception('reward_inviters exception:%s', e)

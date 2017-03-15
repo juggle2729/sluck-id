@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+
 import os
 import sys
 
@@ -9,7 +10,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache  import redis_cache
 from luckycommon.model.activity import Activity, ActivityWin
-from luckycommon.model.account import Account
 
 from django.conf import settings
 

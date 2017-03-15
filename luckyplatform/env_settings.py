@@ -57,7 +57,7 @@ APPLE_TIDS = [647, 648, 650, 659, 660, 669, 670, 671, 672, 687, 693, 701, 702, 7
 #                    649, 650, 651, 659, 654, 656, 657, 658]
 SHOW_BANNED_TIDS = []
 
-MISS_RETURN_TID = 641
+MISS_RETURN_TID = 666
 
 # virtual goods IDs, use special strategy
 VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856]

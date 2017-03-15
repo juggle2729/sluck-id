@@ -184,7 +184,7 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
                 return {'status': 2, 'msg': 'Delivery error, please retry.'}
     else:
         # 创建订单
-        pay = create_pay(user_id, PayType.APPLE_IAP.value)
+        pay = create_pay(user_id, PayType.APPLE_IAP)
         pay.status = 1
         pay.save()
         _LOGGER.info("IAP receipt check success and provide, user id: %s, transaction id: %s, pay id: %s" %(

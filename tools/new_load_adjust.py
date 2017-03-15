@@ -3,7 +3,6 @@ from __future__ import absolute_import
 import os
 import re
 import sys
-import json
 import tablib
 from datetime import datetime, timedelta
 
@@ -13,8 +12,6 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache import redis_cache
 
-from luckycommon.model.account import Account, AccountThird
-from luckycommon.model.strategy import StrategyPrivilege, PRIVILEGE_TYPE
 from luckycommon.model.pay import Pay
 from luckycommon.db import activity as activity_db
 from luckycommon.stats import MG as mg

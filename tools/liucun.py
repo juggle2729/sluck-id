@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+
+import datetime
 import os
 import sys
-import datetime
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from pymongo import MongoClient
-from luckycommon.cache import redis_cache
-from luckycommon.model.account import AccountThird
-from luckycommon.utils.tz import utc_to_local
 
 db = MongoClient('10.168.5.23').lucky
 
@@ -34,9 +32,6 @@ if __name__ == "__main__":
             if not item.get('first_login_at'):
                 continue
             user_id = item['_id']
-            account_third = AccountThird.query.filter(AccountThird.user_id == user_id).first()
-            if account_third:
-                continue
             count += 1
             created_at = item['created_at']
             updated_at = item['updated_at']

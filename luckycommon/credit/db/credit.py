@@ -7,6 +7,8 @@ from sqlalchemy import func
 from luckycommon.account.model.account import Account
 from luckycommon.credit.model.check import *
 from luckycommon.credit.model.credit import *
+from luckycommon.db.activity import get_activity
+from luckycommon.db.show import get_show_by_id
 from luckycommon.model.transaction import *
 from luckycommon.utils import id_generator
 from luckycommon.utils.decorator import sql_wrapper
@@ -16,6 +18,10 @@ from luckycommon.utils.respcode import StatusCode
 from luckycommon.utils.tz import utc_to_local, utc_to_local_str, local_now
 
 _LOGGER = logging.getLogger('lucky')
+
+_REGISTER_CREDIT_AMOUNT = 250
+_INVITATION_CREDIT_AMOUNT = 3000
+_SHOW_AWARD_RATIO = 10
 
 
 @sql_wrapper
@@ -215,7 +221,7 @@ def add_credit_in_transaction(user_id, added_credit, title):
     credit_record.save(auto_commit=False)
 
 
-def check_consume_credit(user_id, consume_amount):
+def add_consume_credit(user_id, consume_amount):
     added_credit = int(consume_amount) * AWARD_CREDIT_UNIT
     add_credit(user_id, added_credit, u"Pakai Poin")
     _LOGGER.info('check consume credit, add credit %s', added_credit)
@@ -224,6 +230,34 @@ def check_consume_credit(user_id, consume_amount):
 def add_special_recharge_award_credit(user_id, amount):
     add_credit(user_id, amount, u"Isi Ulang")
     _LOGGER.info('add special recharge award credit: %s', amount)
+
+
+def add_register_credit(user_id):
+    add_credit(user_id, _REGISTER_CREDIT_AMOUNT, u"Daftar Poin")
+    _LOGGER.info('add register award credit: %s', _REGISTER_CREDIT_AMOUNT)
+
+
+def add_show_credit(user_id, show_id):
+    show = get_show_by_id(show_id)
+    activity = get_activity(None, show.template_id, show.term_number)
+    credit_amount = activity.target_amount * _SHOW_AWARD_RATIO
+    add_credit(user_id, credit_amount, u"Testimonial Poin")
+    _LOGGER.info('add show award credit: %s', credit_amount)
+
+
+def add_miss_return_credit(user_id, amount):
+    add_credit(user_id, amount, u"Tidak menang, koin dikembalikan")
+    _LOGGER.info('add miss return credit: %s', amount)
+
+
+def add_invitation_credit(user_id):
+    add_credit(user_id, _INVITATION_CREDIT_AMOUNT, u"Undang Teman")
+    _LOGGER.info('add invitation credit: %s', _INVITATION_CREDIT_AMOUNT)
+
+
+def add_referrer_credit(user_id, amount):
+    add_credit(user_id, amount, u"Dapat 10x poin dari jumlah topup teman")
+    _LOGGER.info('add referrer credit: %s', amount)
 
 
 @sql_wrapper
@@ -246,7 +280,7 @@ def exchange_credit(user_id):
         transaction.id = id_generator.generate_long_id('transaction')
         transaction.user_id = user_id
         transaction.type = TRANSACTION_TYPE.AWARD
-        transaction.title = u"Đổi tiền xu"
+        transaction.title = u"Tukar ke Koin"
         transaction.price = added_price
         transaction.balance = account.balance
         transaction.status = TRANSACTION_STATUS.DONE

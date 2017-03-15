@@ -72,7 +72,7 @@ COIN_TIDS = {
     646: 1000,
 }
 
-MISS_RETURN_TID = 641
+MISS_RETURN_TID = 666
 
 ADV_FLAG = False  # GP版开关, 旧版不用放着
 

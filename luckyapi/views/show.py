@@ -5,6 +5,7 @@ import logging
 from luckyapi.logic.show import (view_my_shows, view_show_detail,
                                  view_other_shows,
                                  view_shows_timeline, view_my_show_detail)
+from luckycommon.credit.db.credit import add_show_credit
 
 from luckycommon.model.show import AnnounceShow 
 from luckycommon.db.show import get_show_by_template, update_show, verify_show
@@ -129,7 +130,8 @@ def edit(request, show_id):
     user_id = request.user_id
 
     update_show(user_id, show_id, title, content, images)
-    fortune_wheel.callback_task(user_id, 6)
+    add_show_credit(user_id, show_id)
+    # fortune_wheel.callback_task(user_id, 6)
     return {}
 
 

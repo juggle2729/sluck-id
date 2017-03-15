@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+
+import json
 import os
 import sys
-import json
 from datetime import datetime
 
 # add up one level dir into sys path
@@ -10,9 +11,6 @@ sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.cache import redis_cache
-from luckycommon.model.pay import Pay
-from luckycommon.model.account import Account
-from luckycommon.db.activity import get_activity
 from pymongo import MongoClient
 
 
