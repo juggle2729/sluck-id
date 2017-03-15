@@ -63,8 +63,8 @@ COIN_TIDS = {
     #    646: 1000,
 }
 
-GP_FLAG = False  # GP switch, True is on sensor
-GP_VERSION_CODE = 131
+GP_FLAG = True  # GP switch, True is on sensor
+GP_VERSION_CODE = 132
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = False  # IAP 审核开关
