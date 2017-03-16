@@ -4,7 +4,6 @@ import os
 import sys
 import datetime
 
-
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
@@ -19,31 +18,33 @@ from luckycommon.utils.mail import MailSender
 
 mail_sender = MailSender.getInstance()
 mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@zhuohan-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
+    'server':
+    'smtp.mxhichina.com:25',
+    'user':
+    'ops@zhuohan-tech.com',
+    'passwd':
+    'madP@ssw0rd',
+    'from':
+    'Adsquare Service Statistics<ops@zhuohan-tech.com>',
     'to': [
-        'zhulei@zhuohan-tech.com',
-        'mahongli@zhuohan-tech.com',
-        'liuyu@zhuohan-tech.com',
-        'sstong@zhuohan-tech.com',
-        'taocheng@zhuohan-tech.com',
-        'chenweiran@zhuohan-tech.com',
+        'zhulei@zhuohan-tech.com', 'mahongli@zhuohan-tech.com',
+        'liuyu@zhuohan-tech.com', 'sstong@zhuohan-tech.com',
+        'taocheng@zhuohan-tech.com', 'chenweiran@zhuohan-tech.com',
         'lichang@zhuohan-tech.com'
     ]
 })
 
 today = datetime.datetime.utcnow().strftime('%Y-%m-%d')
 html_str = u'<html><head></head><body><h2> VIP用户信息（%s）</h2>' % today
-html_str += u'<table border="1"><tr><td>UID</td><td>Phone</td><td>总充值金额</td>' \
-            u'<td>包场购买次数</td><td>包场中奖金额</td></tr>'
+html_str += u'<table border="1"><tr><th>UID</th><th>Phone</th><th>总充值金额</th>' \
+            u'<th>包场购买次数</th><th>包场中奖金额</th></tr>'
 
 
 def _get_pay_count(user_id=None, pay_type=None):
     if user_id is None:
         return 0
-    all_pays = Pay.query.filter(Pay.user_id == user_id).filter(Pay.status == 2).all()
+    all_pays = Pay.query.filter(Pay.user_id == user_id).filter(
+        Pay.status == 2).all()
     if pay_type is not None:
         all_pays.filter(Pay.pay_type == pay_type).all()
     all_amount = 0
@@ -55,9 +56,11 @@ def _get_pay_count(user_id=None, pay_type=None):
 
 def _borong_user(start_time, end_time):
     activity_win_query = ActivityWin.query.filter(
-        ActivityWin.updated_at  >=  start_time.strftime('%Y-%m-%d %H:%M:%S')).filter(
-        ActivityWin.updated_at  <=  end_time.strftime('%Y-%m-%d %H:%M:%S')).order_by(
-        ActivityWin.updated_at.desc()).all()
+        ActivityWin.updated_at >=
+        start_time.strftime('%Y-%m-%d %H:%M:%S')).filter(
+            ActivityWin.updated_at <=
+            end_time.strftime('%Y-%m-%d %H:%M:%S')).order_by(
+                ActivityWin.updated_at.desc()).all()
     for item in activity_win_query:
         user_id = item.winner
         if redis_cache.is_virtual_account(user_id):  # 排除自有用户
@@ -65,8 +68,9 @@ def _borong_user(start_time, end_time):
         if get_account_status(user_id):  # 排除黑名单用户
             continue
         activity_id = item.activity_id
-        user_activity = UserActivity.query.filter(UserActivity.user_id == user_id).filter(
-            UserActivity.activity_id == activity_id).first()
+        user_activity = UserActivity.query.filter(
+            UserActivity.user_id == user_id).filter(
+                UserActivity.activity_id == activity_id).first()
         user_numbers = user_activity.numbers.split(',')
         activity = Activity.query.filter(Activity.id == activity_id).first()
         if not activity:
@@ -77,7 +81,8 @@ def _borong_user(start_time, end_time):
             borong_num = borong_info.get('num', 0)
             borong_amount = borong_info.get('amount', 0)
             borong_num = int(borong_num) + 1
-            borong_amount = Decimal(borong_amount) + activity.target_amount * activity.price
+            borong_amount = Decimal(
+                borong_amount) + activity.target_amount * activity.price
             redis_cache.set_borong_info(user_id, borong_num, borong_amount)
 
 
@@ -97,19 +102,19 @@ def _get_vip_user(size, offset, borong_users, borong_limit_num):
                 borong_num = borong_info.get('num', 0)
                 borong_amount = borong_info.get('amount', 0)
                 if int(borong_num) < borong_limit_num:
-                    print str(user_id), account.phone, str(a_all_amount), borong_num, str(borong_amount)
-                    html_str +=u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
-                        str(user_id), account.phone, str(a_all_amount), borong_num, str(borong_amount)
-                    )
+                    print str(user_id), account.phone, str(
+                        a_all_amount), borong_num, str(borong_amount)
+                    html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
+                        str(user_id), account.phone, str(a_all_amount),
+                        borong_num, str(borong_amount))
             else:
                 print str(user_id), account.phone, str(a_all_amount), 0, 0
                 html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>0</td><td>0</td></tr>' % (
-                    str(user_id), account.phone, str(a_all_amount)
-                )
+                    str(user_id), account.phone, str(a_all_amount))
 
 
 if __name__ == '__main__':
-    start_time = '%s 00:00:01' % today
+    start_time = '%s 00:00:00' % today
     end_time = '%s 23:59:59' % today
     print today, start_time, end_time
     start_time = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
@@ -119,18 +124,10 @@ if __name__ == '__main__':
     users = redis_cache.get_borong_user()
     SIZE = 100
     user_num = Account.query.count()
-    loop_num = user_num/SIZE + 1
+    loop_num = user_num / SIZE + 1
     for n in range(loop_num):
         offset = n * SIZE
         _get_vip_user(SIZE, offset, users, 5)
     html_str += u'</table></body></html>'
     mail_sender.send(u"%s -- VIP用户信息" % today, html_str)
     print 'end job.'
-
-
-
-
-
-
-
-
