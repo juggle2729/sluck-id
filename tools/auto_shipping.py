@@ -311,12 +311,14 @@ def _delay_delivery(order_id, user_id, delay_hour):
     delay_timestamp = redis_cache.get_delay_timestamp(order_id)
     if not delay_timestamp:
         # gwallet 充值用户
-        timestamp = int(time.time()) + 3600 * int(delay_hour)  # 28 Fed. 2017  Delay delivery 48 hours
+        timestamp = int(time.time()) + 3600 * int(
+            delay_hour)    # 28 Fed. 2017  Delay delivery 48 hours
         redis_cache.set_delay_timestamp(order_id, timestamp)
-        print 'set order id: %s delay deliver timestamp: %s' % (order_id, timestamp)
+        print 'set order id: %s delay deliver timestamp: %s' % (order_id,
+                                                                timestamp)
         return True
     else:
-        if int(delay_timestamp) >= int(time.time()):  # 未到发货时间
+        if int(delay_timestamp) >= int(time.time()):    # 未到发货时间
             print 'order id: %s delay deliver timestamp: %s >= current timestamp' % (
                 order_id, delay_timestamp)
             return True
@@ -355,10 +357,13 @@ def shipping_steam(await_order, activity):
     pay_id = await_order.order_id
     product_id = _STEAM_TIDS[activity.template_id]
     comment = 'test'
-    sign = sha1(
-        '1612414100' + str(pay_id) + '5003G001T001081388505363' + product_id + '1' + comment + time_t + 'pOyNeinswa61hv').hexdigest()
+    sign = sha1('1612414100' + str(
+        pay_id) + '5003G001T001081388505363' + product_id + '1' + comment +
+                time_t + 'pOyNeinswa61hv').hexdigest()
 
-    s = requests.post(_STEAM_GATE, data=_STEAM_REQ % (pay_id, product_id, comment, time_t, sign))
+    s = requests.post(
+        _STEAM_GATE,
+        data=_STEAM_REQ % (pay_id, product_id, comment, time_t, sign))
     resp = s.content
     print s.content
     if 'RspCode</name>\n<value><string>00</string>' in resp and 'Success' in resp:
@@ -367,19 +372,20 @@ def shipping_steam(await_order, activity):
         steam_product = 'Rp.' + product_id[9:]
         steam_code = l.xpath('//string')[-2].text
         charge_account = strip_phone(charge_account)
-        send_sms([charge_account, ], 'sms_steam', {'steam_product': steam_product, 'steam_code': steam_code})
+        send_sms([
+            charge_account,
+        ], 'sms_steam',
+                 {'steam_product': steam_product,
+                  'steam_code': steam_code})
         print 'done', await_order.order_id, charge_account, steam_code
         order_db.update_order_info(
             await_order.order_id,
-            {'status': ORDER_STATUS.DEAL},
-        )
+            {'status': ORDER_STATUS.DEAL}, )
         show_order(await_order)
     else:
         print 'beiju', await_order.order_id
         order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.AWARDED}, None, True
-        )
+            await_order.order_id, {'status': ORDER_STATUS.AWARDED}, None, True)
         print resp
 
 
@@ -404,10 +410,9 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
         carrier = _get_carrier(charge_account)
         if not carrier:
             print 'NO CARRIER', charge_account
-            order_db.update_order_info(
-                await_order.order_id,
-                {'status': ORDER_STATUS.AWARDED}, None, True
-            )
+            order_db.update_order_info(await_order.order_id,
+                                       {'status': ORDER_STATUS.AWARDED}, None,
+                                       True)
             return
         product = carrier + '.' + str(recharge_price)
     check_status = redis_cache.exists_15phone(charge_account)
@@ -415,22 +420,19 @@ def shipping_phone_charge(await_order, activity, withcarrier=False):
         print charge_account, ' already charged 15mins before, just wait'
         return
     req = _REQ_DATA % (
-    product, charge_account, await_order.order_id, base64.b64encode(stringxor(charge_account[-4:] + '145339', '62LF934757')))
+        product, charge_account, await_order.order_id, base64.b64encode(
+            stringxor(charge_account[-4:] + '145339', '62LF934757')))
     resp = requests.post(_DATACELL_URL, data=req)
     if '<resultcode>0</resultcode>' in resp.content:
         print 'done', await_order.order_id
-        order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.DEAL}
-        )
+        order_db.update_order_info(await_order.order_id,
+                                   {'status': ORDER_STATUS.DEAL})
         show_order(await_order)
         redis_cache.set_15phone(charge_account)
     else:
         print resp.content, charge_account, product
         order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.AWARDED}, None, True
-        )
+            await_order.order_id, {'status': ORDER_STATUS.AWARDED}, None, True)
 
 
 def shipping_pulsa(await_order, activity):
@@ -478,9 +480,7 @@ def shipping_pulsa(await_order, activity):
     if not carrier:
         print 'NO CARRIER', charge_account
         order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.AWARDED}, None, True
-        )
+            await_order.order_id, {'status': ORDER_STATUS.AWARDED}, None, True)
         return
     product_prefix = _PULSACODE_FOR_CARRIER[carrier]
     product = product_prefix + str(recharge_price)
@@ -490,9 +490,12 @@ def shipping_pulsa(await_order, activity):
             print charge_account, ' already charged some mins before, just wait'
             return
     seed = str(randint(100, 99999))
-    req = _PULSA_XML % (str(await_order.order_id) + '#' + seed, charge_account, product,
-                        md5('tokoseributokoseribu123*' + str(await_order.order_id) + '#' + seed).hexdigest())
-    headers = {'Content-Type': 'application/xml'}  # set what your server accepts
+    req = _PULSA_XML % (str(await_order.order_id) + '#' + seed, charge_account,
+                        product, md5('tokoseributokoseribu123*' + str(
+                            await_order.order_id) + '#' + seed).hexdigest())
+    headers = {
+        'Content-Type': 'application/xml'
+    }    # set what your server accepts
     print req, await_order.order_id
     if get_account_status(await_order.user_id):
         print '[{0}] limit the delivery, account status is banned, ' \
@@ -500,28 +503,22 @@ def shipping_pulsa(await_order, activity):
               'activity id: {6}, tid: {7}, term number: {8}, activity price: {9}'.format(
             datetime.now().strftime('%Y-%m-%d %H:%M:%S'), user_id, await_order.order_id, product, charge_account, name,
             activity.id, activity.template_id, activity.term_number, activity.price)
-        order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.DEAL}
-        )
+        order_db.update_order_info(await_order.order_id,
+                                   {'status': ORDER_STATUS.DEAL})
         return
     resp = requests.post(_PULSA_URL, data=req, headers=headers)
     print resp.content, await_order.order_id
     if '<status>0</status>' in resp.content:
         print 'done', await_order.order_id
-        order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.DEAL}
-        )
+        order_db.update_order_info(await_order.order_id,
+                                   {'status': ORDER_STATUS.DEAL})
         show_order(await_order)
         if carrier in ('TRI', 'IR', 'SF'):
             redis_cache.set_phone_limit(charge_account, carrier)
     else:
         print resp.content, charge_account, product
         order_db.update_order_info(
-            await_order.order_id,
-            {'status': ORDER_STATUS.AWARDED}, None, True
-        )
+            await_order.order_id, {'status': ORDER_STATUS.AWARDED}, None, True)
 
 
 # def shipping_ele_pulsa(await_order, activity):
@@ -605,13 +602,13 @@ def shipping(recharge_type, await_order, activity):
         print 'found invalid user %s' % user_id
         _LOGGER.info('found invalid user %s %s', user_id, await_order.order_id)
         # update order
-        order_db.update_order_by_id(
-            await_order.order_id,
-            {
-                'status': ORDER_STATUS.DEAL,
-                'ship_status': SHIP_STATUS.ILLEGAL,
-                'extend': json.dumps({'illegal': 1})
+        order_db.update_order_by_id(await_order.order_id, {
+            'status': ORDER_STATUS.DEAL,
+            'ship_status': SHIP_STATUS.ILLEGAL,
+            'extend': json.dumps({
+                'illegal': 1
             })
+        })
         # black it
         account_db.black_account(user_id)
         return
@@ -634,9 +631,9 @@ def shipping(recharge_type, await_order, activity):
                 recharge_price = 200
         else:
             recharge_price = HUAFEI_TIDS[activity.template_id]
-        success_status = ofpay.tele_charge(
-            await_order.order_id, activity.template_id,
-            user_id, charge_account, recharge_price)
+        success_status = ofpay.tele_charge(await_order.order_id,
+                                           activity.template_id, user_id,
+                                           charge_account, recharge_price)
     elif recharge_type == 'qq':
         charge_account = receipt_address.get('name')
         if charge_account == 'QQ':
@@ -644,31 +641,31 @@ def shipping(recharge_type, await_order, activity):
         if not charge_account:
             return
         recharge_price = QQ_TIDS[activity.template_id]
-        success_status = ofpay.qq_charge(
-            await_order.order_id, activity.template_id,
-            user_id, charge_account, recharge_price)
+        success_status = ofpay.qq_charge(await_order.order_id,
+                                         activity.template_id, user_id,
+                                         charge_account, recharge_price)
     elif recharge_type == 'zhifubao':
         charge_account = receipt_address.get('name')
         if not charge_account:
             return
         recharge_price = ZHIFUBAO_TIDS[activity.template_id]
-        success_status = ofpay.ali_charge(
-            await_order.order_id, activity.template_id,
-            user_id, charge_account, recharge_price)
+        success_status = ofpay.ali_charge(await_order.order_id,
+                                          activity.template_id, user_id,
+                                          charge_account, recharge_price)
     else:
         _LOGGER.info('charge type not support')
         return
-    _LOGGER.info('finish recharge %s %s for %s, success:%s',
-                 recharge_type, await_order.order_id, user_id, success_status)
+    _LOGGER.info('finish recharge %s %s for %s, success:%s', recharge_type,
+                 await_order.order_id, user_id, success_status)
     if success_status == 0:
         # update order
-        order_db.update_order_by_id(
-            await_order.order_id,
-            {
-                'status': ORDER_STATUS.WAIT_SHIP,
-                'ship_status': SHIP_STATUS.CHARGING,
-                'extend': json.dumps({'by_juhe': 0})
+        order_db.update_order_by_id(await_order.order_id, {
+            'status': ORDER_STATUS.WAIT_SHIP,
+            'ship_status': SHIP_STATUS.CHARGING,
+            'extend': json.dumps({
+                'by_juhe': 0
             })
+        })
     elif success_status == 2:
         order = order_db.get_awarded_order(await_order.order_id)
         activity = activity_db.get_activity(order.activity_id)
@@ -677,33 +674,40 @@ def shipping(recharge_type, await_order, activity):
         if coupon_price:
             number = coupon_price / 10
             try:
-                order_db.update_order_by_id(
-                    await_order.order_id,
-                    {
-                        'status': ORDER_STATUS.WAIT_RECEIPT,
-                        'ship_status': SHIP_STATUS.CHARGE_FAILED,
-                        'extend': json.dumps({
-                            'by_juhe': 2,
-                            'express': 'coupon'
-                        })
+                order_db.update_order_by_id(await_order.order_id, {
+                    'status':
+                    ORDER_STATUS.WAIT_RECEIPT,
+                    'ship_status':
+                    SHIP_STATUS.CHARGE_FAILED,
+                    'extend':
+                    json.dumps({
+                        'by_juhe': 2,
+                        'express': 'coupon'
                     })
-                coupon_extend = {"add_by": "auto_shipping",
-                                 "order_id": await_order.order_id}
+                })
+                coupon_extend = {
+                    "add_by": "auto_shipping",
+                    "order_id": await_order.order_id
+                }
                 coupon_extend = json.dumps(coupon_extend, ensure_ascii=False)
-                send_coupon_to_user(order.user_id, COUPON_TID,
-                                    number, extend=coupon_extend, coupon_from=u'话费充值')
-                push_handler.push_shipping(
-                    await_order.order_id, {'express': 'coupon'})
+                send_coupon_to_user(
+                    order.user_id,
+                    COUPON_TID,
+                    number,
+                    extend=coupon_extend,
+                    coupon_from=u'话费充值')
+                push_handler.push_shipping(await_order.order_id,
+                                           {'express': 'coupon'})
                 return
             except Exception as e:
                 _LOGGER.exception('send coupon to user exception, %s', e)
-        order_db.update_order_by_id(
-            await_order.order_id,
-            {
-                'status': ORDER_STATUS.WAIT_SHIP,
-                'ship_status': SHIP_STATUS.CHARGE_FAILED,
-                'extend': json.dumps({'by_juhe': 2})
+        order_db.update_order_by_id(await_order.order_id, {
+            'status': ORDER_STATUS.WAIT_SHIP,
+            'ship_status': SHIP_STATUS.CHARGE_FAILED,
+            'extend': json.dumps({
+                'by_juhe': 2
             })
+        })
 
 
 def get_await_list():
@@ -718,7 +722,7 @@ def get_await_coin_list():
     """
     items = AwardedOrder.query.filter(
         AwardedOrder.status == ORDER_STATUS.WAIT_SHIP).filter(
-        AwardedOrder.shipping_coin == 1).all()
+            AwardedOrder.shipping_coin == 1).all()
     return items
 
 
@@ -736,7 +740,7 @@ def shipping_coin(await_order, activity, recharge_price=None):
         # 加锁
         item = AutoShipping.query.filter(
             AutoShipping.order_id == await_order.order_id).with_lockmode(
-            'update').first()
+                'update').first()
         if not item:
             item = AutoShipping()
             item.order_id = await_order.order_id
@@ -747,22 +751,22 @@ def shipping_coin(await_order, activity, recharge_price=None):
             item.status = 0
             item.shipping_type = SHIPPING_TYPE.COIN
             item.save()
-            order_db.update_order_info(
-                await_order.order_id,
-                {
-                    'status': ORDER_STATUS.DEAL,
-                })
+            order_db.update_order_info(await_order.order_id, {
+                'status': ORDER_STATUS.DEAL,
+            })
             add_system_award_transaction(
                 user_id, award_amount=recharge_price, title=u'đồng xu')
             item.status = 1
             item.save()
-            push_handler.push_shipping(
-                await_order.order_id, {'express': 'coin'})
+            push_handler.push_shipping(await_order.order_id,
+                                       {'express': 'coin'})
             # show_order(await_order)
-            print('finish recharge %s coin %s for %s', recharge_price, await_order.order_id, user_id)
+            print('finish recharge %s coin %s for %s', recharge_price,
+                  await_order.order_id, user_id)
             return
     except Exception as e:
-        print('send coin to user exception, %s-%s, %s', user_id, await_order.order_id, e)
+        print('send coin to user exception, %s-%s, %s', user_id,
+              await_order.order_id, e)
 
 
 def start():
@@ -775,10 +779,12 @@ def start():
         if activity.template_id in COIN_TIDS:
             shipping_coin(await_order, activity)
         if activity.template_id in HUAFEI_TIDS:
-            print 'check order, %s %s' % (await_order.order_id, activity.template_id)
+            print 'check order, %s %s' % (await_order.order_id,
+                                          activity.template_id)
             shipping_phone_charge(await_order, activity)
         if activity.template_id in CARRIER_HUAFEI_TIDS:
-            print 'check order, %s %s' % (await_order.order_id, activity.template_id)
+            print 'check order, %s %s' % (await_order.order_id,
+                                          activity.template_id)
             shipping_phone_charge(await_order, activity, withcarrier=True)
 
 
@@ -787,7 +793,8 @@ def start_ex():
     for await_order in await_orders:
         activity_id = await_order.activity_id
         activity = get_activity(activity_id)
-        print 'check coin order, %s %s' % (await_order.order_id, activity.template_id)
+        print 'check coin order, %s %s' % (await_order.order_id,
+                                           activity.template_id)
         goods_price = float(get_goods(activity.goods_id).price)
         shipping_coin(await_order, activity, recharge_price=goods_price)
 
@@ -801,7 +808,8 @@ def start_steam():
         if not activity:
             continue
         if activity.template_id in _STEAM_TIDS:
-            print 'check steam order, %s %s' % (await_order.order_id, activity.template_id)
+            print 'check steam order, %s %s' % (await_order.order_id,
+                                                activity.template_id)
             shipping_steam(await_order, activity)
 
 
@@ -814,7 +822,8 @@ def start_pulsa():
         if not activity:
             continue
         if activity.template_id in _PULSA_TIDS:
-            print 'check pulsa order, %s %s' % (await_order.order_id, activity.template_id)
+            print 'check pulsa order, %s %s' % (await_order.order_id,
+                                                activity.template_id)
             shipping_pulsa(await_order, activity)
             # if  activity.template_id in _PULSA_ELE_TIDS:
             #     print 'check pulsa electricity bill order, %s %s' % (await_order.order_id, activity.template_id)
