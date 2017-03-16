@@ -43,7 +43,7 @@ def track_inviter(request):
 def add_inviter(request):
     inviter_id = request.POST.get('inviter_id', None)
     if not inviter_id:
-        raise ParamError('inviter id invalid')
+        raise ParamError('parameter inviter_id not found')
     partner_handler.bind_inviter(request.user_id, inviter_id)
     return {}
 
