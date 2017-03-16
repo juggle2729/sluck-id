@@ -78,21 +78,20 @@ def bind_inviter(user_id, inviter_id):
     my_item = partner_db.get_user_inviter(user_id)
     if my_item:
         raise ParamError('already invited')
-
     try:
         inviter_id = int(inviter_id)
     except:
-        raise ParamError('inviter id invalid')
+        raise ParamError('inviter_id format wrong')
     inviter_account = account_db.get_account(inviter_id)
     if inviter_id == user_id or not inviter_account:
-        raise ParamError('invalid inviter')
+        raise ParamError('inviter invalid')
     inviter_item = partner_db.get_user_inviter(inviter_id)
     invite_list = [str(inviter_id)]
     if inviter_item:
         invite_list.extend(inviter_item.invite_list.split(','))
         if str(user_id) in invite_list:
             _LOGGER.warn('found inviter circle, %s, %s', user_id, inviter_id)
-            raise ParamError('circle invite')
+            raise ParamError('circular invitation')
     async_job.create_partner_relation.delay(user_id, invite_list)
     # award
     add_invitation_credit(user_id)
