@@ -144,7 +144,7 @@ def _create_show_detail(show):
     detail.term = show.term_number
     activity = get_activity(None, detail.gid, detail.term)
     detail.unit = activity.unit
-    detail.price = activity.price
+    detail.price = activity.target_amount
     detail.goods = {
         'name': activity.name,
         'desc': activity.desc,

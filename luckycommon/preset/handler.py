@@ -2,24 +2,23 @@
 import json
 import logging
 
-from luckycommon.preset.model import CMD_MODULES
-from luckycommon.preset.model.preset import DEVICE_TYPE
-from luckycommon.preset.db.preset import get_preset
-from luckycommon.preset.db.discovery import get_discovery
 from luckycommon.preset.db.banner import get_banner
-from luckycommon.preset.db.shortcut import get_shortcut
+from luckycommon.preset.db.discovery import get_discovery
 from luckycommon.preset.db.loading import get_loading
+from luckycommon.preset.db.preset import get_preset
+from luckycommon.preset.db.shortcut import get_shortcut
+from luckycommon.preset.model import COMPLETE_DISMISS_COMMANDS, ONLY_FOR_NEWBIE_COMMANDS
+from luckycommon.preset.model.preset import DEVICE_TYPE
+from luckycommon.stats import MG
+from luckycommon.utils.exceptions import ResourceNotFound
 from luckycommon.utils.limit import check_abtest
-from luckycommon.utils.exceptions import ResourceNotModified, ResourceNotFound
 from luckycommon.utils.tz import now_ts
 
 _LOGGER = logging.getLogger(__name__)
 
 
 def _chn2type(chn):
-    if chn == 'gp_ios':
-        return DEVICE_TYPE.QG_IOS
-    elif chn == 'int_ios_us':
+    if chn == 'int_ios_us':
         return DEVICE_TYPE.INT_IOS_US
     elif chn == 'int_ios_tw':
         return DEVICE_TYPE.INT_IOS_TW
@@ -74,11 +73,27 @@ def _check_complete(user_id, cmd):
     """
     if not user_id:
         return False
-    relation_module = CMD_MODULES.get(cmd)
+    relation_module = COMPLETE_DISMISS_COMMANDS.get(cmd)
     if relation_module:
         check_complete = getattr(relation_module, 'check_complete')
         if check_complete:
-            return check_complete(user_id) 
+            return check_complete(user_id)
+    return False
+
+
+def _check_newbie(user_id, cmd):
+    """
+    检查是否需要去掉这个 cmd，false 不去掉，true 去掉
+    """
+    if cmd not in ONLY_FOR_NEWBIE_COMMANDS:
+        return False
+
+    active_count = MG.daily_stats.aggregate([
+        {"$match": {"user_id": user_id}},
+        {"$group": {"_id": None, "count": {"$sum": 1}}}
+    ])
+    if active_count > 7:
+        return True
     return False
 
 
@@ -131,6 +146,8 @@ def view_banner(app_version, chn, user_id):
                 continue
             cmd = item['cmd']
             if _check_complete(user_id, cmd):
+                continue
+            if _check_newbie(user_id, cmd):
                 continue
             resp.append({
                 'image': item['image'],
