@@ -6,7 +6,7 @@ TEMPLATE_DEBUG = False
 ALLOWED_HOSTS = ['*']
 
 QINIU_KEY_PAIR = ('sVc1BlAXhHDHYHJ7gjW4VD6iqP5zo7iC2pf9c3n8',
-                  'Cixqb8jq6esZjzhHonc8OkFY3mGIIAQlOK08DCm0')
+        'Cixqb8jq6esZjzhHonc8OkFY3mGIIAQlOK08DCm0')
 QINIU_DOMAIN = 'http://a.lucky-gou.com/'
 USER_BUCKET_NAME = 'en-lucky-avatars'
 ADMIN_BUCKET_NAME = 'en-lucky-pics'
@@ -54,25 +54,25 @@ MISS_RETURN_TID = 0  # pulsa 10000
 VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856, 699, 697, 698, 700, 793, 777, 665, 776, 662, 696, 663, 661, 664, 695]
 
 COIN_TIDS = {
-    #    659: 5,
-    #    641: 10,
-    #    642: 50,
-    #    643: 100,
-    #    644: 200,
-    #    645: 500,
-    #    646: 1000,
-}
+        #    659: 5,
+        #    641: 10,
+        #    642: 50,
+        #    643: 100,
+        #    644: 200,
+        #    645: 500,
+        #    646: 1000,
+        }
 
 GP_FLAG = True  # GP switch, True is on sensor
 GP_VERSION_CODE = 133
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = False  # IAP 审核开关
-IAP_VERSION_CODE = [1, 3, 7, 8]
+IAP_VERSION_CODE = [1, 3, 7, 8, 9]
 IAP_TEST_ID = []
 IOS_DEBUG_CONF = {
-    'qg_ios': 8,
-}
+        'qg_ios': 9,
+        }
 
 FRESH_RECOMMEND = [0, 0]
 
@@ -85,19 +85,19 @@ JPUSH_ENV = 'prod'
 MONGO_ADDR = "mongodb://10.25.164.238/"
 
 MYSQL_CONF = {
-    'db': 'mysql://lucky:P@55word@10.25.164.238:3306/lucky?charset=utf8',
-    'DEBUG': DEBUG
-}
+        'db': 'mysql://lucky:P@55word@10.25.164.238:3306/lucky?charset=utf8',
+        'DEBUG': DEBUG
+        }
 
 SLAVE_CONF = {
-    'db': 'mysql://lucky:P@55word@10.25.164.238:3306/lucky?charset=utf8',
-    'DEBUG': DEBUG
-}
+        'db': 'mysql://lucky:P@55word@10.25.164.238:3306/lucky?charset=utf8',
+        'DEBUG': DEBUG
+        }
 
 ADMIN_CONF = {
-    'db': 'mysql://lucky:P@55word@10.25.164.238:3306/admin?charset=utf8',
-    'DEBUG': DEBUG
-}
+        'db': 'mysql://lucky:P@55word@10.25.164.238:3306/admin?charset=utf8',
+        'DEBUG': DEBUG
+        }
 
 REDIS_HOST = '10.25.164.238'
 REDIS_PORT = 6379
@@ -139,9 +139,9 @@ CODA_PAY_ORDER_URL = 'https://airtime.codapayments.com/airtime/api/restful/v1.0/
 CODA_PAY_CSS = 'https://airtime.codapayments.com/airtime/css/airtime_v1.0.css'
 CODA_PAY_JS = 'https://airtime.codapayments.com/airtime/js/airtime_v1.0.js'
 CODA_API_KEY_DICT = {
-    'TWD': '66180937d31a768a62bf463b3d5e5547',
-    'IDR': '3d808b4a286535ad0ad2603620232b60',
-}
+        'TWD': '66180937d31a768a62bf463b3d5e5547',
+        'IDR': '3d808b4a286535ad0ad2603620232b60',
+        }
 
 # Fortumo pay
 FORTUMO_SERVICE_ID = '8f06a4b67822839c44bef2eebb516ac8'
