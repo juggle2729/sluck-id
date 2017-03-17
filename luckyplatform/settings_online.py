@@ -48,7 +48,7 @@ APNS_ENV = 1
 #                    649, 650, 651, 659, 654, 656, 657, 658]
 SHOW_BANNED_TIDS = []
 
-MISS_RETURN_TID = 666  # pulsa 10000
+MISS_RETURN_TID = 0  # pulsa 10000
 
 # virtual goods IDs, use special strategy
 VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856, 699, 697, 698, 700, 793, 777, 665, 776, 662, 696, 663, 661, 664, 695]

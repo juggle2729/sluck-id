@@ -24,6 +24,8 @@ _LOGGER = logging.getLogger('lucky')
 
 ICON_DAILY_SIGN = 'http://p.1yuan-gou.com/icon_my_integral1%402x.png'
 ICON_DAILY_SHARE = 'http://p.1yuan-gou.com/icon_my_integral2%402x.png'
+ICON_INVITE = 'http://p.1yuan-gou.com/ic_invite_friend.png'
+ICON_POINT = 'http://p.1yuan-gou.com/ic_point.png'
 ICON_BUY = 'http://p.1yuan-gou.com/icon_my_integral3%402x.png'
 ICON_PARTNER = 'http://7xov77.com1.z0.glb.clouddn.com/ic_recruiting.png'
 ICON_FRESH = 'http://p.1yuan-gou.com/icon_my_integral5%402x.png'
@@ -87,7 +89,7 @@ def get_my_credit(request):
         'enable': 1
     })
     credit_activity.append({
-        'icon': ICON_BUY,
+        'icon': ICON_INVITE,
         'title': u"Undang Teman",
         'content': u"Dapat 10x poin dari jumlah topup teman",
         'tips': u"Ikut",
@@ -95,7 +97,7 @@ def get_my_credit(request):
         'enable': 1
     })
     credit_activity.append({
-        'icon': ICON_BUY,
+        'icon': ICON_POINT,
         'title': u"Diundang oleh Teman",
         'content': u"Masukkan kode undangan, dapat 3000 poin gratis",
         'tips': u"Ikut",
