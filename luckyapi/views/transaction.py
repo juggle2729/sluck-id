@@ -111,7 +111,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
-            pay_types[PayType.MANDIRI_ECASH.value],
+            # pay_types[PayType.MANDIRI_ECASH.value],
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
         ]
@@ -121,7 +121,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
-            pay_types[PayType.MANDIRI_ECASH.value],
+            # pay_types[PayType.MANDIRI_ECASH.value],
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
         ]
@@ -134,7 +134,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
-            pay_types[PayType.MANDIRI_ECASH.value],
+            # pay_types[PayType.MANDIRI_ECASH.value],
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
         ]
@@ -143,7 +143,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.MOGPLAY.value],
             pay_types[PayType.GAME_ON.value],
-            pay_types[PayType.MANDIRI_ECASH.value],
+            # pay_types[PayType.MANDIRI_ECASH.value],
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
         ]
@@ -160,7 +160,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
     return [
         pay_types[PayType.MOGPLAY.value],
         pay_types[PayType.GAME_ON.value],
-        pay_types[PayType.MANDIRI_ECASH.value],
+        # pay_types[PayType.MANDIRI_ECASH.value],
         pay_types[PayType.CONVENNIENCE_STORE.value],
         pay_types[PayType.ATM.value],
     ]

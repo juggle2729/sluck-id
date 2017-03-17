@@ -22,6 +22,8 @@ from luckycommon.utils.decorator import sql_wrapper
 from luckycommon.utils import exceptions as err
 from luckycommon.utils.respcode import StatusCode
 from luckycommon.utils import id_generator
+from luckycommon.db.helper import list_object
+
 
 from django.conf import settings
 
@@ -307,3 +309,8 @@ def add_account_balance(user_id, pay_id, added_balance, extend):
     else:
         _LOGGER.warn(
             'add account balance, cocurrency occured!, pay_id[%s]' % pay_id)
+
+
+@sql_wrapper
+def list_users(query_dct):
+    return list_object(query_dct, Account)
