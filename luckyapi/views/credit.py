@@ -31,7 +31,7 @@ ICON_FRESH = 'http://p.1yuan-gou.com/icon_my_integral5%402x.png'
 
 @require_GET
 @response_wrapper
-def reward_config():
+def reward_config(request):
     return {
         'register': '250',
         'show': '10x',
