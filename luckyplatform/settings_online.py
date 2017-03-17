@@ -68,10 +68,10 @@ GP_VERSION_CODE = 133
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = False  # IAP 审核开关
-IAP_VERSION_CODE = [1, 3, 7, 8, 9]
+IAP_VERSION_CODE = [1, 3, 7, 8]
 IAP_TEST_ID = []
 IOS_DEBUG_CONF = {
-    'qg_ios': 9,
+    'qg_ios': 0,
 }
 
 FRESH_RECOMMEND = [0, 0]
