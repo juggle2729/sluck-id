@@ -20,7 +20,6 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_GET, require_POST
 
-
 _LOGGER = logging.getLogger('lucky')
 
 ICON_DAILY_SIGN = 'http://p.1yuan-gou.com/icon_my_integral1%402x.png'
@@ -28,6 +27,16 @@ ICON_DAILY_SHARE = 'http://p.1yuan-gou.com/icon_my_integral2%402x.png'
 ICON_BUY = 'http://p.1yuan-gou.com/icon_my_integral3%402x.png'
 ICON_PARTNER = 'http://7xov77.com1.z0.glb.clouddn.com/ic_recruiting.png'
 ICON_FRESH = 'http://p.1yuan-gou.com/icon_my_integral5%402x.png'
+
+
+@require_GET
+@response_wrapper
+def reward_config(request):
+    return {
+        'register': '250',
+        'show': '10x',
+        'invite': '3000'
+    }
 
 
 @require_GET
@@ -116,7 +125,7 @@ def get_credit_records(request):
         raise_with_traceback(ParamError(e))
 
     r_list, count = credit_handler.get_user_credit_records(
-            request.user_id, page, size, record_type)
+        request.user_id, page, size, record_type)
     data = {
         'list': r_list,
         'total_count': count

@@ -134,11 +134,11 @@ urlpatterns = patterns(
     # zero
     url(r'^zero/fresh/?$', 'luckyapi.views.campaign.fresh_zero'),
     url(r'^zero/share/?$', 'luckyapi.views.campaign.share_zero'),
-    # url(r'^zero/push/?$', 'luckyapi.views.campaign.zero_push'),
     # sunday
     url(r'^sunday/fresh/?$', 'luckyapi.views.campaign.fresh_sunday'),
     url(r'^sunday/apply/?$', 'luckyapi.views.campaign.sunday_apply'),
     # credit
+    url(r'^credit/reward_config?$', 'luckyapi.views.credit.reward_config'),
     url(r'^my/credit/?$', 'luckyapi.views.credit.get_my_credit'),
     url(r'^credit/records/?$', 'luckyapi.views.credit.get_credit_records'),
     url(r'^credit/exchange/?$', 'luckyapi.views.credit.credit_exchange'),

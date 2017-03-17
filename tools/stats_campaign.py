@@ -31,7 +31,7 @@ mail_sender.init_conf({
     'passwd': 'madP@ssw0rd',
     'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
     'to': [
-        'zhulei@zhuohan-tech.com',
+        'zhulei@zhuohan-tech.com', 'xialu@zhuohan-tech.com',
         'mahongli@zhuohan-tech.com',
         'liuyu@zhuohan-tech.com',
         'sstong@zhuohan-tech.com',
