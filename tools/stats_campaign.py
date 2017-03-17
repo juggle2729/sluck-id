@@ -37,7 +37,8 @@ mail_sender.init_conf({
         'sstong@zhuohan-tech.com',
         'taocheng@zhuohan-tech.com',
         'chenweiran@zhuohan-tech.com',
-        'lichang@zhuohan-tech.com'
+        'lichang@zhuohan-tech.com',
+        'xialu@zhuohan-tech.com',
     ]
 })
 
