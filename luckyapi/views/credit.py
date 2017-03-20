@@ -49,14 +49,14 @@ def get_my_credit(request):
     查看我的积分
     """
     tracks = parse_p(request.GET.get('p'))
-    client_chn = tracks.get('chn', None)
+    client_chn = tracks.get('svn', '').lower()
     client_version_code = int(tracks.get('cvc', 0))
     old_version = False
-    if client_chn in settings.IOS_DEBUG_CONF:
-        if client_chn == 'ios' and client_version_code <= 14:
+    if client_chn == 'ios':
+        if client_version_code < 10:
             old_version = True
-    elif client_chn and client_version_code <= 15:
-        old_version = True
+    elif client_version_code < 133:
+            old_version = True
 
     credit = request.user.credit or 0
     data = {
@@ -77,7 +77,7 @@ def get_my_credit(request):
         'title': u"Poin Absensi",
         'content': u"Poin absensi bertambah setiap hari (max. 100)",
         'tips': u"Ikut",
-        'command': '16#' if old_version else '11#%s/user/my_daily_attendance' % settings.WEB_APP_ROOT_URL,
+        'command': '11#%s/user/my_daily_attendance' % settings.WEB_APP_ROOT_URL,
         'enable': 0 if today_sign > 0 else 1
     })
     credit_activity.append({
@@ -88,22 +88,23 @@ def get_my_credit(request):
         'command': '0#',
         'enable': 1
     })
-    credit_activity.append({
-        'icon': ICON_INVITE,
-        'title': u"Undang Teman",
-        'content': u"Dapat 10x poin dari jumlah topup teman",
-        'tips': u"Ikut",
-        'command': '334#',
-        'enable': 1
-    })
-    credit_activity.append({
-        'icon': ICON_POINT,
-        'title': u"Diundang oleh Teman",
-        'content': u"Masukkan kode undangan, dapat 3000 poin gratis",
-        'tips': u"Ikut",
-        'command': '335#',
-        'enable': 1
-    })
+    if not old_version:
+        credit_activity.append({
+            'icon': ICON_INVITE,
+            'title': u"Undang Teman",
+            'content': u"Dapat 10x poin dari jumlah topup teman",
+            'tips': u"Ikut",
+            'command': '334#',
+            'enable': 1
+        })
+        credit_activity.append({
+            'icon': ICON_POINT,
+            'title': u"Diundang oleh Teman",
+            'content': u"Masukkan kode undangan, dapat 3000 poin gratis",
+            'tips': u"Ikut",
+            'command': '335#',
+            'enable': 1
+        })
     data['category'].append({
         'title': u"Aktivitas Poin",
         'credit_activity': credit_activity
