@@ -17,10 +17,10 @@ from luckycommon.order.model.order import AwardedOrder
 from luckycommon.model.activity import Activity, ActivityWin
 
 real_user_query_result = Account.query.filter(Account.is_virtual == 0).all()
+paid_user_query_result = orm.session.query(Transaction.user_id).filter(Transaction.type == TRANSACTION_TYPE.IN).filter(
+    Transaction.status == TRANSACTION_STATUS.DONE).distinct().all()
 
-result_list = []
-
-for account in real_user_query_result:
+for result_dicts in paid_user_query_result:
     result_dict = {
         'user_id': None,
         'total_recharge_amount': 0,
@@ -32,6 +32,8 @@ for account in real_user_query_result:
         'last_recharge_at': None,
         'channel': None
     }
+    user_id = int(result_dicts[0])
+    account = Account.query.filter(Account.id == user_id).first()
     last_recharge = Transaction.query.filter(Transaction.user_id == account.id).filter(Transaction.type == TRANSACTION_TYPE.IN).filter(
         Transaction.status == TRANSACTION_STATUS.DONE).order_by(Transaction.id.desc()).first()
     total_recharge_amount = orm.session.query(func.sum(Transaction.price)).filter(Transaction.user_id == account.id).filter(
@@ -47,8 +49,8 @@ for account in real_user_query_result:
     if total_buy_amount:
         result_dict['total_buy_amount'] = float(total_buy_amount)
     result_dict['award_count'] = len(ActivityWin.query.filter(ActivityWin.winner == account.id).all())
-    for award_item in AwardedOrder.query.filter(AwardedOrder.user_id == account.id).all():
-        activity = Activity.query.filter(Activity.id == award_item.activity_id).first()
+    for award_result_dict in AwardedOrder.query.filter(AwardedOrder.user_id == account.id).all():
+        activity = Activity.query.filter(Activity.id == award_result_dict.activity_id).first()
         if activity:
             result_dict['total_award_amount'] += activity.target_amount
     result_dict['register_at'] = account.created_at.strftime('%Y-%m-%d')
@@ -58,9 +60,6 @@ for account in real_user_query_result:
         result_dict['last_recharge_at'] = account.created_at.strftime('%Y-%m-%d')
     result_dict['channel'] = json.loads(account.extend).get('chn', '')
 
-    result_list.append(result_dict)
-
-for item in result_list:
     print('%s,%s,%s,%s,%s,%s,%s,%s,%s' % (
-        item['user_id'], item['total_recharge_amount'], item['buy_count'], item['total_buy_amount'], item['award_count'], item[
-            'total_award_amount'], item['register_at'], item['last_recharge_at'], item['channel']))
+        result_dict['user_id'], result_dict['total_recharge_amount'], result_dict['buy_count'], result_dict['total_buy_amount'], result_dict['award_count'], result_dict[
+            'total_award_amount'], result_dict['register_at'], result_dict['last_recharge_at'], result_dict['channel']))
