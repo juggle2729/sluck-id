@@ -984,11 +984,13 @@ def get_gwallet_purchase_token(ptoken):
     key = prefix_key('purchasetoken:%s' % ptoken)
     return ProxyAgent().hgetall(key)
 
+
 @cache_wrapper
 def set_gwallet_refund_endtime(end_time):
     key = prefix_key('gwrefundendtime')
     value = str(end_time)
     ProxyAgent().set(key, value)
+
 
 @cache_wrapper
 def get_gwallet_refund_endtime():
