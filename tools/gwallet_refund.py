@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 
+import os
+import sys
+import time
+from datetime import datetime
+
 from httplib2 import Http
 from oauth2client.service_account import ServiceAccountCredentials
 from apiclient.discovery import build
-import time
-from datetime import datetime
-import sys
-import os
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
@@ -31,24 +32,24 @@ def _get_format_datetime(timestamp=None):
     else:
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+
 def get_start_time():
     end_time = get_gwallet_refund_endtime()
-    if end_time == None:
-        end_time = time.time() * 1000  - 3600 * 72 * 1000
+    if end_time is None:
+        end_time = time.time() * 1000 - 3600 * 72 * 1000
         end_time = int(end_time)
     return str(end_time)
 
 
 def get_next_pagetoken(result):
-    if result.has_key('tokenPagination'):
-        tokenPagination = result['tokenPagination']
-        if tokenPagination.has_key('nextPageToken'):
-            return tokenPagination['nextPageToken']
+    if 'nextPageToken' in result.get('tokenPagination', ''):
+        return result['tokenPagination']['nextPageToken']
     return None
+
 
 def get_voidedpurchases():
     credential = ServiceAccountCredentials.from_json_keyfile_name(KEY_JSON_FILE, scopes=GOOGLE_SCOPES_URL)
-    s = build('androidpublisher', 'v2', http= credential.authorize(Http()))
+    s = build('androidpublisher', 'v2', http=credential.authorize(Http()))
     purchases = s.purchases()
     voidedpurchases = purchases.voidedpurchases()
     start_time = get_start_time()
@@ -60,14 +61,12 @@ def get_voidedpurchases():
         if result.has_key('voidedPurchases'):
             for p in result['voidedPurchases']:
                 voidedpurchases_list.append(p)
-        next_pagetoken =  get_next_pagetoken(result)
-        if next_pagetoken == None:
+        next_pagetoken = get_next_pagetoken(result)
+        if next_pagetoken is None:
             break
         result = voidedpurchases.list(packageName=PACKAGE_NAME, maxResults=100,
                                       startTime=start_time, token=next_pagetoken).execute()
     return voidedpurchases_list
-
-
 
 
 def black_account_by_purchase():
@@ -95,7 +94,7 @@ def black_account_by_purchase():
             else:
                 pay = get_pay(payid)
                 pay_price = pay.price
-                pay_charge_time =  pay.updated_at
+                pay_charge_time = pay.updated_at
             black_reason = 'black account by gwallet refund, order id is {0}, ' \
                            'voided time is {1}, ' \
                            'black time is {2}'.format(

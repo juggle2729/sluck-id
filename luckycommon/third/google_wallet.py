@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-import requests
 import json
-import logging
-import hashlib
 import time
-import  base64
+import base64
+import logging
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA
-
 
 from django.conf import settings
 from luckycommon.async.async_job import track_one
@@ -48,17 +45,18 @@ CURRENCY_CODES = {
 
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
 PRODUCT_ID = {
-    '1koin' : 10*_EXCHANGE_RATIO,
-    'koin2' : 20*_EXCHANGE_RATIO,
-    'koin3' : 50*_EXCHANGE_RATIO,
-    'koin4' : 100*_EXCHANGE_RATIO,
-    'koin5' : 200*_EXCHANGE_RATIO,
+    '1koin': 10 * _EXCHANGE_RATIO,
+    'koin2': 20 * _EXCHANGE_RATIO,
+    'koin3': 50 * _EXCHANGE_RATIO,
+    'koin4': 100 * _EXCHANGE_RATIO,
+    'koin5': 200 * _EXCHANGE_RATIO,
 }
 
 pubKey = '''-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApl2HZzIJwax5ui/CXW50D2x590hikmBIiE6G7XPkzsi5mBVNQTH0lcpyAzg8DECCXznFN9duhSVdfs3kyuJdl9jYtCUb9aYNtKCAKatGQqK2dgpxdtx6QwVPApa7XXOGmeAAVq6WAgVVU7QzYuqCRMk15fDj7+J2rhdf1PGkhGJL7zd/e4sLAV1K4vaksUrBfFBEnQh2x3f0hmgJRT+IXsZl+Yul1aokdhx7oZhhOw1wTWQ12KiKgdIna2NrMzGXaERb4C+TgLpPeOkNuSKEG3tNfq+aw76FIeiBNp0H4XI3d7D7cg9juMN420sq1KHnfbjVnVX/ZjDQJM7M41wUnQIDAQAB
 -----END PUBLIC KEY-----
 '''
+
 
 def _sign(data, signature):
     key = RSA.importKey(pubKey)
@@ -68,9 +66,14 @@ def _sign(data, signature):
         return True
     return False
 
+
 def google_check_notify(request):
     p = request.POST.get('p')
-    p = json.loads(p)
+    try:
+        p = json.loads(p)
+    except (ValueError, TypeError) as e:
+        _LOGGER.error('parse request params failed, error: %s, params: %s' % (e, p))
+        raise e
     resp = []
     for info in p:
         check_sum = info['signature']
@@ -85,8 +88,8 @@ def google_check_notify(request):
         currency = 'IDR'
         check_status = _sign(check_string, check_sum)
         if not check_status:
+            _LOGGER.error('sign not pass, data: %s' % info)
             continue
-            raise ParamError('sign not pass, data: %s' % request.POST)
 
         user_id = pay.user_id
         if not pay or pay.status != PayStatus.SUBMIT.value:
@@ -112,18 +115,13 @@ def google_check_notify(request):
             res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
             if res:
                 track_one.delay('recharge', {'price': float(total_fee), 'channel': 'google_wallet'}, user_id)
-                _TRACKER.info({'user_id': user_id, 'type': 'recharge',
-                               'price': total_fee,
-                               'channel': 'coda'})
+                _TRACKER.info({'user_id': user_id, 'type': 'recharge', 'price': total_fee, 'channel': 'coda'})
                 try:
                     pay_after_recharge(pay)
                     resp.append(pay_id)
                 except Exception as e:
-                    _LOGGER.exception(
-                        'pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
+                    _LOGGER.exception('pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
         else:
             add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
             _LOGGER.error(' Google Wallet response data show transaction failed, data: %s', request.POST)
     return resp
-
-
