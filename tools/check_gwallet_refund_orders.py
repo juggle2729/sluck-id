@@ -36,7 +36,8 @@ def check_gwallet_refund_orders(orders):
                                                       datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             black_account(user_id, block_reason)
         else:
-            banned_users.append(user_id)
+            print '{0} HAS been banned!!!!'.format(user_id)
+        banned_users.append(user_id)
     # print all banned user ids
     print list(set(banned_users))
 

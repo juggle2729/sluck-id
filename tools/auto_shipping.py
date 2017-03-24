@@ -366,7 +366,7 @@ def shipping_steam(await_order, activity):
         data=_STEAM_REQ % (pay_id, product_id, comment, time_t, sign))
     resp = s.content
     print s.content
-    if 'RspCode</name>\n<value><string>00</string>' in resp and 'Success' in resp:
+    if ('RspCode</name>\n<value><string>00</string>' in resp or 'RspCode</name>\n<value><string>000</string>') in resp and 'Success' in resp:
         l = etree.fromstring(resp)
         steam_no = l.xpath('//string')[-3].text
         steam_product = 'Rp.' + product_id[9:]
