@@ -11,7 +11,7 @@ from luckycommon.db.activity import get_activity
 from luckycommon.message import handler as message_handler
 from luckycommon.message.model.message import *
 from luckycommon.model.pay import PayType, PayStatus
-from luckycommon.third import coda_pay, fortumo_pay, nganluong, paypal_pay, precard, doku
+from luckycommon.third import coda_pay, fortumo_pay, nganluong, paypal_pay, precard, doku, mimo_pay
 from luckycommon.utils.exceptions import AuthenticateError, ParamError
 from luckycommon.utils.template import generate_from_template
 from luckycommon.utils.tz import utc_to_local
@@ -136,8 +136,9 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
         if pay_type == PayType.MIMO_BCA.value:
+            charge = mimo_pay.mimo_create_charge(pay, pay_amount, 'IDR')
             _LOGGER.info('start pay by mimo bca, pay_id[%s]' % pay_id)
-            return {}
+            return {'charge': charge, 'type': 'url'}
         if pay_type == PayType.CODA_SMS.value:
             _LOGGER.info('start pay by coda sms, pay_id[%s]' % pay_id)
             return {}

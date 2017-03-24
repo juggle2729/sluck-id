@@ -154,3 +154,10 @@ FORTUMO_CLOSE_URL = 'http://121.40.29.144/api/v1/pay/close_webview/'
 # Precard
 PRECARD_GATEWAY_URL = 'http://121.40.29.144/api/v1/pay/precard/%s/'
 PAY_GATEWAY_STATUS_URL = 'http://121.40.29.144/api/v1/pay/%s/status'
+
+# mimo pay (ATM BCA)
+MIMOPAY_API_HOST = 'http://staging.mimopay.com'
+MIMOPAY_PAYMENT_METHOD = 'atm_bca_api'
+MIMOPAY_MERCHANT_CODE = "ID-0225"
+MIMOPAY_PRODUCT_NAME = "TokoSeribu"
+MIMOPAY_SECRET_KEY = '15n32j025r22jgw'

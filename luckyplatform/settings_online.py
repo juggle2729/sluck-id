@@ -153,3 +153,10 @@ FORTUMO_CLOSE_URL = 'http://id.lucky-gou.com/api/v1/pay/close_webview/'
 # Precard
 PRECARD_GATEWAY_URL = 'http://id.lucky-gou.com/api/v1/pay/precard/%s/'
 PAY_GATEWAY_STATUS_URL = 'http://id.lucky-gou.com/api/v1/pay/%s/status'
+
+# mimo pay (ATM BCA)
+MIMOPAY_API_HOST = 'https://gateway.mimopay.com'
+MIMOPAY_PAYMENT_METHOD = 'atm_bca_api'
+MIMOPAY_MERCHANT_CODE = "ID-0225"
+MIMOPAY_PRODUCT_NAME = "TokoSeribu"
+MIMOPAY_SECRET_KEY = 'l549vhh7zh2skrs'
