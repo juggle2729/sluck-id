@@ -51,7 +51,8 @@ SHOW_BANNED_TIDS = []
 MISS_RETURN_TID = 0  # pulsa 10000
 
 # virtual goods IDs, use special strategy
-VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856, 699, 697, 698, 700, 793, 777, 665, 776, 662, 696, 663, 661, 664, 695]
+VIRTUAL_GOODS_IDS = [796, 668, 667, 794, 802, 856, 699, 697, 698, 700, 793, 777, 665, 776, 662, 696, 663, 661, 664, 695, 860, 666, 793, 792,
+                     697, 694, 778]
 
 COIN_TIDS = {
     #    659: 5,
@@ -68,7 +69,7 @@ GP_VERSION_CODE = 133
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = False  # IAP 审核开关
-IAP_VERSION_CODE = [1, 3, 7, 8]
+IAP_VERSION_CODE = []
 IAP_TEST_ID = []
 IOS_DEBUG_CONF = {
     'qg_ios': 0,

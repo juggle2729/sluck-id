@@ -11,7 +11,7 @@ from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
 from luckycommon.pay.handler import pay_after_recharge
-from luckycommon.utils.exceptions import ParamError
+from luckycommon.utils.exceptions import ParamError, DataError
 
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
@@ -45,6 +45,8 @@ _EXCHANGE_RATIO = 1100
 
 
 def coda_create_charge(pay, pay_amount, currency):
+    if pay_amount <= 1:
+        raise DataError()
     price = int(pay_amount) * _EXCHANGE_RATIO
     payload = {"initRequest": {"orderId": pay.id,
                                "profile": "",
@@ -71,7 +73,7 @@ def coda_create_charge(pay, pay_amount, currency):
         return settings.CODA_PAY_GATEWAY_URL % response_dict['initResult']['txnId']
     else:
         _LOGGER.error("response data: %s" % response_dict)
-        return None
+        raise DataError()
 
 
 def _sign(origin_str):
