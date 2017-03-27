@@ -223,7 +223,7 @@ def stats_recharge(pay_id):
     if price > 0:
         partner_callback.reward_inviters(user_id, price)
         fresh_mission.check_step_d(user_id)
-        first_double.recharge_callback(user_id, price)
+        # first_double.recharge_callback(user_id, price)
 
 
 @app.task(name='partner.create_relation')
