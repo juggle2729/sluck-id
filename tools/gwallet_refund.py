@@ -54,11 +54,11 @@ def get_voidedpurchases():
     voidedpurchases = purchases.voidedpurchases()
     start_time = get_start_time()
     start_time = long(start_time)
-    print _get_format_datetime(),'Start time is: {0} ms'.format(start_time)
+    print _get_format_datetime(), 'Start time is: {0} ms'.format(start_time)
     voidedpurchases_list = []
     result = voidedpurchases.list(packageName=PACKAGE_NAME, maxResults=100, startTime=start_time).execute()
     while True:
-        if result.has_key('voidedPurchases'):
+        if 'voidedPurchases' in result:
             for p in result['voidedPurchases']:
                 voidedpurchases_list.append(p)
         next_pagetoken = get_next_pagetoken(result)
@@ -80,8 +80,8 @@ def black_account_by_purchase():
         purchase_time_millis = info.get('purchaseTimeMillis')
         voided_time_set.add(int(voided_time_millis))
         value = get_gwallet_purchase_token(purchase_token)
-        print _get_format_datetime(),"Get gwallet purchase info in redis: {0}".format(value)
-        if len(value) != 0:
+        print _get_format_datetime(), "Get gwallet purchase info in redis: {0}".format(value)
+        if value:
             userid = value['user_id']
             orderid = value['order_id']
             if exists_gp_order(orderid):
@@ -108,7 +108,7 @@ def black_account_by_purchase():
                 purchase_token, userid, orderid, payid, pay_price, pay_charge_time,
                 _get_format_datetime(purchase_time_millis), _get_format_datetime(voided_time_millis))
         else:
-            print _get_format_datetime(),"Can't find user info, purchase token info: {0}".format(purchase_token)
+            print _get_format_datetime(), "Can't find user info, purchase token info: {0}".format(purchase_token)
     if len(voided_time_set) != 0:
         next_start_time = max(voided_time_set)
         set_gwallet_refund_endtime(next_start_time)
