@@ -37,6 +37,7 @@ from luckycommon.db.strategy import (get_current_amount, add_current_amount,
 
 from luckycommon.push import PUSH_COMMANDS
 from luckycommon.push import handler as push_handler
+from luckycommon.strategy.handler import get_candidate_lucky_numbers
 from luckycommon.sunday import callback as sunday_callback
 from luckycommon.timer import TIMER_EVENT_TYPE, TimerEvent
 from luckycommon.utils.tz import now_ts
@@ -666,27 +667,12 @@ class ActivityAnnounceHandler(EventHandler):
         orders = get_last_valid_orders(last_payat)
         lottery = lottery_handler.get_latest_lottery()
         result, result_a, a_list = self.calc_result(orders, activity.target_amount, lottery.number)
-        _LOGGER.info('activity %s calc luckynumber:%s', activity_id, result)
 
-        need_adjust, need_virtual, need_loser, first_candidates, second_candidates = self.check_result(
-            activity, result)
-        adjust_success = False
-        if need_adjust:
-            _LOGGER.info('check result detail, first_candidates: %s, second_candidates: %s' % (first_candidates, second_candidates))
-            if len(first_candidates) > 0:
-                adjust_success, result, result_a, a_list = self.adjust_result(result,
-                                                                              result_a, a_list, first_candidates, orders,
-                                                                              activity.target_amount)
-                if not adjust_success and len(second_candidates) > 0:
-                    adjust_success, result, result_a, a_list = self.adjust_result(result,
-                                                                                  result_a, a_list, second_candidates, orders,
-                                                                                  activity.target_amount)
-            elif len(second_candidates) > 0:
-                adjust_success, result, result_a, a_list = self.adjust_result(result,
-                                                                              result_a, a_list, second_candidates, orders,
-                                                                              activity.target_amount)
-            else:
-                _LOGGER.info('check result detail, no candidates, skip adjust')
+        candidate_lucky_numbers = get_candidate_lucky_numbers(activity)
+        # _LOGGER.info('#strategy# befor adjust, result: %s, result_a: %s, a_list: %s, candidate_lucky_numbers: %s, orders: %s' % (result, result_a, a_list, candidate_lucky_numbers, orders))
+        adjust_success, result, result_a, a_list = self.adjust_result(result, result_a, a_list, candidate_lucky_numbers, orders,
+                                                                      activity.target_amount)
+        # _LOGGER.info('#strategy# after adjust, adjust_success %s, result: %s, result_a: %s, a_list:%s' % (adjust_success, result, result_a, a_list))
         try:
             lucky_order_id = redis_cache.get_lucky_order(activity_id, result)
             lucky_order = ActivityAnnouncer.announce(
@@ -704,13 +690,10 @@ class ActivityAnnounceHandler(EventHandler):
                 redis_cache.add_user_pending(lucky_order.buyer, 'award')
                 # 记录开奖金额
                 if not redis_cache.is_virtual_account(lucky_order.buyer):
-                    manual_intervention = True if need_loser and adjust_success else False
                     if (activity.template_id not in settings.COIN_TIDS and
                                 activity.template_id not in settings.CARD_TIDS):
                         add_current_amount(
-                            activity.target_amount, lucky_order.buyer, manual_intervention)
-                        if manual_intervention:
-                            consume_privilege(lucky_order.buyer, activity)
+                            activity.target_amount, lucky_order.buyer, False)
                 # track
                 track_info = {'user_id': lucky_order.buyer, 'type': 'win',
                               'activity_id': lucky_order.activity_id,

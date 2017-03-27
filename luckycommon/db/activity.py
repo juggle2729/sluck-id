@@ -190,8 +190,13 @@ def update_ua_status(activity_id, updated_status):
 
 
 @sql_wrapper
-def get_user_activitys(user_id, only_win=False, status=None,
-                       limit=0, offset=0):
+def get_first_user_activity(user_id):
+    return UserActivity.query.filter(UserActivity.user_id == user_id).order_by(UserActivity.updated_at.desc()).first()
+
+
+@sql_wrapper
+def get_user_activities(user_id, only_win=False, status=None,
+                        limit=0, offset=0):
     """
     目前会一次性取所有的参与记录，后面可以把user_activitys放到cache中
     并标示用户是否中奖

@@ -85,6 +85,7 @@ def unlock_numbers(activity_id, *num_list):
     key = prefix_key('numberspool:%s' % activity_id)
     return ProxyAgent().sadd(key, *num_list)
 
+
 @cache_wrapper
 def exists_15phone(phone):
     """
@@ -93,6 +94,7 @@ def exists_15phone(phone):
     key = prefix_key('phonenumber:%s' % phone)
     return ProxyAgent().exists(key)
 
+
 @cache_wrapper
 def set_15phone(phone):
     """
@@ -100,7 +102,7 @@ def set_15phone(phone):
     """
     key = prefix_key('phonenumber:%s' % phone)
     ProxyAgent().setnx(key, 'lala')
-    ProxyAgent().expire(key, 15*62)
+    ProxyAgent().expire(key, 15 * 62)
 
 
 @cache_wrapper
@@ -133,6 +135,7 @@ def set_delay_timestamp(orderid, timestamp):
     ProxyAgent().setnx(key, timestamp)
     ProxyAgent().expire(key, 3600 * 24 * 7)
 
+
 @cache_wrapper
 def get_delay_timestamp(orderid):
     '''
@@ -143,6 +146,7 @@ def get_delay_timestamp(orderid):
     key = prefix_key('phoneorder:%s' % orderid)
     return ProxyAgent().get(key)
 
+
 @cache_wrapper
 def exists_phone_limit(phone):
     """
@@ -150,6 +154,7 @@ def exists_phone_limit(phone):
     """
     key = prefix_key('phonelimit:%s' % phone)
     return ProxyAgent().exists(key)
+
 
 @cache_wrapper
 def set_phone_limit(phone, carrier):
@@ -159,9 +164,10 @@ def set_phone_limit(phone, carrier):
     key = prefix_key('phonelimit:%s' % phone)
     ProxyAgent().setnx(key, 'lala')
     if carrier in ('IR', 'TRI'):
-        ProxyAgent().expire(key, 3*61)
+        ProxyAgent().expire(key, 3 * 61)
     else:
-        ProxyAgent().expire(key, 15*61)
+        ProxyAgent().expire(key, 15 * 61)
+
 
 @cache_wrapper
 def get_left_numbers_count(activity_id):
@@ -180,17 +186,6 @@ def check_numbers_pool(activity_id):
     return True
     key = prefix_key('poolflag:%s' % activity_id)
     return ProxyAgent().get(key)
-
-
-@cache_wrapper
-def mapping_num_with_order(activity_id, num, order_id):
-    """
-    used for db
-    """
-    key = prefix_key('luckyorders:%s' % activity_id)
-    field = str(num)
-    value = str(order_id)
-    return ProxyAgent().hset(key, field, value)
 
 
 @cache_wrapper
@@ -833,6 +828,7 @@ def get_wechat_token():
     k = prefix_key('wechattoken')
     return ProxyAgent().get(k)
 
+
 _HOT_KEYS_SIZE = 10
 
 
@@ -970,7 +966,6 @@ def get_buy_records(user_id, activity_id, offset, limit):
     return None if not record_list else json.loads(record_list)
 
 
-
 @cache_wrapper
 def set_gwallet_purchase_token(ptoken, orderid, userid, payid):
     key = prefix_key('purchasetoken:%s' % ptoken)
@@ -984,11 +979,13 @@ def get_gwallet_purchase_token(ptoken):
     key = prefix_key('purchasetoken:%s' % ptoken)
     return ProxyAgent().hgetall(key)
 
+
 @cache_wrapper
 def set_gwallet_refund_endtime(end_time):
     key = prefix_key('gwrefundendtime')
     value = str(end_time)
     ProxyAgent().set(key, value)
+
 
 @cache_wrapper
 def get_gwallet_refund_endtime():
@@ -998,12 +995,6 @@ def get_gwallet_refund_endtime():
 
 @cache_wrapper
 def set_gp_delivery_timestamp(userid, timestamp):
-    '''
-    used for set gp userid flag
-    :param userid:
-    :param timestamp:
-    :return None:
-    '''
     key = prefix_key('gpuserid:%s' % userid)
     ProxyAgent().set(key, timestamp)
     ProxyAgent().expire(key, 3600 * 24 * 3)
@@ -1011,77 +1002,60 @@ def set_gp_delivery_timestamp(userid, timestamp):
 
 @cache_wrapper
 def get_gp_delivery_timestamp(userid):
-    '''
-    used for get gp userid flag
-    :param userid:
-    :return timestamp:
-    '''
     key = prefix_key('gpuserid:%s' % userid)
     return ProxyAgent().get(key)
 
 
 @cache_wrapper
 def add_borong_user(userid):
-    """
-    add userid in to borong UID set
-    :return: None
-    """
     key = prefix_key('borong:userset')
     ProxyAgent().sadd(key, userid)
 
 
 @cache_wrapper
 def del_borong_user(userid):
-    """
-    delete userid from borong UID set
-    :param userid:
-    :return:
-    """
     key = prefix_key('borong:userset')
     ProxyAgent().srem(key, userid)
 
 
 @cache_wrapper
 def ismember_borong_user(userid):
-    """
-
-    :param userid:
-    :return:
-    """
     key = prefix_key('borong:userset')
     return ProxyAgent().sismember(key, userid)
 
 
 @cache_wrapper
 def get_borong_user():
-    """
-    get all members from borong UID set
-    :return:
-    """
     key = prefix_key('borong:userset')
     return ProxyAgent().smembers(key)
 
 
 @cache_wrapper
 def set_borong_info(userid, num, amount):
-    """
-
-    :param userid:
-    :param num:
-    :param amount:
-    :return:
-    """
     key = prefix_key('borong:info:%s' % userid)
     info = {'num': num, 'amount': amount}
-    ProxyAgent().hmset(key,info)
+    ProxyAgent().hmset(key, info)
 
 
 @cache_wrapper
 def get_borong_info(userid):
-    """
-
-    :param userid:
-    :return:
-    """
     key = prefix_key('borong:info:%s' % userid)
     return ProxyAgent().hgetall(key)
+
+
+@cache_wrapper
+def increase_accumulated_privilege_count(user_id):
+    key = prefix_key('privilege_count:%s' % user_id)
+    ProxyAgent().incr(key)
+
+
+@cache_wrapper
+def get_accumulated_privilege_count(user_id):
+    key = prefix_key('privilege_count:%s' % user_id)
+    ProxyAgent().get(key)
+
+
+@cache_wrapper
+def get_accumulated_privilege_amount(user_id):
+    key = prefix_key('privilege_amount:%s' % user_id)
+    ProxyAgent().get(key)

@@ -1,21 +1,16 @@
-import json
-import sys
-import logging
 import datetime
-
+import logging
 import os
-import requests
+import sys
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
-from luckycommon.model.strategy import *
 from luckycommon.db.strategy import set_current_limit
-
+from luckycommon.model.strategy import DailyAmount, StrategyConfig
 from luckycommon.utils.tz import utc_to_local
 from luckycommon.third.sms.helper import send_sms
-
 
 _LOGGER = logging.getLogger('worker')
 
@@ -45,7 +40,7 @@ def check_current_limit():
         manual_amount_limit = item.manual_amount_limit
         manual_amount = item.manual_amount
         _LOGGER.info('current strategy amount, normal amount:%s, normal limit:%s, manual amount:%s, manual limit:%s',
-            current_amount, amount_limit, manual_amount, manual_amount_limit)
+                     current_amount, amount_limit, manual_amount, manual_amount_limit)
         left_normal_amount = amount_limit - current_amount
         left_manual_amount = manual_amount_limit - manual_amount
         if left_normal_amount < 3000 or left_manual_amount < 3000:
@@ -62,8 +57,7 @@ def add_limit():
         new_manual_limit = current_item.manual_amount_limit
         set_current_limit(new_limit, new_manual_limit)
         _LOGGER.info('add daily amount %s, current_limit:%s, current_manual_limit:%s',
-            add_amount, new_limit, new_manual_limit)
-
+                     add_amount, new_limit, new_manual_limit)
 
 
 if __name__ == '__main__':

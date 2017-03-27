@@ -378,7 +378,7 @@ def view_my_activitys(user_id, page, size, only_win, status, use_cache=False):
     if not page or page < 1:
         page = 1
     offset = 0 if not page else (page - 1) * limit
-    activitys, count = get_user_activitys(user_id)
+    activitys, count = get_user_activities(user_id)
     a_list = []
     for activity in activitys:
         if status and not (status & activity.status):
@@ -404,7 +404,7 @@ def view_my_activitys_v2(user_id, page, size, only_win, status):
     if not page or page < 1:
         page = 1
     offset = 0 if not page else (page - 1) * limit
-    activitys, count = get_user_activitys(
+    activitys, count = get_user_activities(
         user_id, only_win, status, limit, offset)
     a_list = []
     for activity in activitys:
@@ -440,7 +440,7 @@ def view_other_activitys(user_id, page, size, only_win, status):
     if not page or page < 1:
         page = 1
     offset = 0 if not page else (page - 1) * limit
-    activitys, count = get_user_activitys(user_id, only_win, status, limit, offset)
+    activitys, count = get_user_activities(user_id, only_win, status, limit, offset)
     a_list = []
     for activity in activitys:
         if only_win and activity.status < ACTIVITY_STATUS.ANNOUNCED:

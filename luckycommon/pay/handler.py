@@ -361,6 +361,7 @@ def single_buy(user_id, activity, choosed_numbers, need_price, extend, last_buy=
     num_dict = {}
     for num in save_numbers:
         num_dict[num] = str(order.id)
+    # _LOGGER.info('#strategy# save number->order mappings, %s, %s' % (activity.id, len(num_dict.keys())))
     redis_cache.mapping_nums_with_order(activity.id, num_dict)
 
     if last_buy:
