@@ -198,10 +198,16 @@ def get_candidate_win_users(activity):
 
     if is_overall_limit_reached(activity.target_amount):
         _LOGGER.info('#strategy# overall limit reached, virtual win. user_list: %s' % virtual_users_in_activity)
+        if len(virtual_users_in_activity) == 0:
+            _LOGGER.info('#strategy# overall limit reached, but virtual list empty. Fallback to fair race')
+            return all_users_in_activity
         return virtual_users_in_activity
 
     if len(qualified_users_in_activity) < 1:
         _LOGGER.info('#strategy# no qualified user found, virtual win. user_list: %s' % virtual_users_in_activity)
+        if len(virtual_users_in_activity) == 0:
+            _LOGGER.info('#strategy# no qualified user found, but virtual list empty. Fallback to fair race')
+            return all_users_in_activity
         return virtual_users_in_activity
 
     if len(privilege_users_in_activity) > 1:
@@ -210,6 +216,9 @@ def get_candidate_win_users(activity):
     else:
         users_to_win = list(set(qualified_users_in_activity + virtual_users_in_activity))
         _LOGGER.info('#strategy# privilege users not found, qualified & virtual win. user_list: %s' % users_to_win)
+
+    if len(users_to_win) == 0:
+        users_to_win = all_users_in_activity
 
     return users_to_win
 
