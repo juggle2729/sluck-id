@@ -1,7 +1,8 @@
 {
   "default": {
     "user": "xshu",
-    "mm": "ubuntu"
+    "mm": "ubuntu",
+    "wywu": "ubuntu"
   },
   "dependency": {
     "luckyservice": [

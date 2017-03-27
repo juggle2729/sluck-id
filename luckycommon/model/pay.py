@@ -43,7 +43,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'',
         'highlight': 0,
         'choice': [200, 500, 1000, 2000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_3.png',
         'tag': '',
     },
     PayType.CODA_PAY.value: {
@@ -52,7 +52,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'',
         'highlight': 0,
         'choice': [5, 10, 50, 100, 200, 500],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_5.png',
         'tag': '',
     },
     PayType.DOKU_WALLET.value: {
@@ -61,7 +61,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Doku',
         'highlight': 0,
         'choice': [10, 50, 100, 200, 500, 1000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_6.png',
         'tag': '',
     },
     PayType.DOKU_VISA.value: {
@@ -70,7 +70,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Doku Visa',
         'highlight': 0,
         'choice': [10, 50, 100, 200, 500, 1000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_22.png',
         'tag': '',
     },
     PayType.PAYSSION.value: {
@@ -79,7 +79,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'PAYSSION ',
         'highlight': 0,
         'choice': [50, 100, 200, 500, 1000, 2000, 5000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_7.png',
         'tag': '',
     },
     PayType.EWALLET.value: {
@@ -143,7 +143,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Convenience Store',
         'highlight': 0,
         'choice': [10, 20, 50, 100, 200, 500],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_12.png',
         'tag': '',
     },
     PayType.ATM.value: {
@@ -152,7 +152,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Bank Transfer',
         'highlight': 0,
         'choice': [10, 20, 50, 100, 200, 500],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_13.png',
         'tag': '',
     },
     PayType.MANDIRI_ECASH.value: {
@@ -161,7 +161,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Bank Transfer',
         'highlight': 0,
         'choice': [10, 20, 50, 100, 200, 500],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_17.png',
         'tag': '',
     },
     PayType.MOGPLAY.value: {
@@ -170,7 +170,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Mogplay',
         'highlight': 0,
         'choice': [],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_15.png',
         'tag': '',
     },
     PayType.GAME_ON.value: {
@@ -179,7 +179,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Game On',
         'highlight': 0,
         'choice': [],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_16.png',
         'tag': '',
     },
     PayType.CODA_SMS.value: {
@@ -197,7 +197,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'MIMO BCA',
         'highlight': 0,
         'choice': [50, 100, 200, 500, 1000, 2000, 5000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_18.png',
         'tag': '',
     },
     PayType.GOOGLE_BILLING.value: {
@@ -206,7 +206,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'GOOGLE BILLING',
         'highlight': 0,
         'choice': [10, 20, 50, 100, 200],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_20.png',
         'tag': '',
     },
     PayType.APPLE_IAP.value: {
@@ -215,7 +215,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Apple IAP',
         'highliht': 0,
         'choice': [50, 100, 200, 500, 1000, 2000, 5000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/ic_pay_21.png',
         'tag': '',
     },
 }
