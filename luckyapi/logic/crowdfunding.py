@@ -513,8 +513,11 @@ def create_activity_lite(activity):
         else:
             win = get_activity_win(activity.id)
             if win:
-                info = {} if not win.announce_info else json.loads(
-                    win.announce_info)
+                try:
+                    info = {} if not win.announce_info else json.loads(win.announce_info)
+                except Exception:
+                    _LOGGER.info('#bug# activity id: %s' % activity.id)
+                    info = {}
                 if info.get('winner'):
                     winner_info = info['winner']
                     number_count = winner_info.get(
