@@ -147,8 +147,7 @@ def update_award_order(user_id, order_id, receipt_info):
             receipt_info_new = {
                 'shipping_type': shipping_type,
                 'name': receipt_name,
-                'phone': receipt_item.number if receipt_item else receipt_info.get(
-                    'number'),
+                'phone': receipt_item.number if receipt_item else (receipt_info.get('number') or receipt_info.get('phone')),
                 'address': ''
             }
         else:
