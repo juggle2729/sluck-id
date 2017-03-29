@@ -117,7 +117,11 @@ def get_revealed(activity, use_cache=False):
         order_id = redis_cache.get_lucky_order(activity.id, activity.winner)
         revealed.update({'lucky_order': order_id})
     else:
-        info = {} if not win.announce_info else json.loads(win.announce_info)
+        try:
+            info = {} if not win.announce_info else json.loads(win.announce_info)
+        except Exception:
+            _LOGGER.info('#bug# activity id: %s' % activity.id)
+            info = {}
         revealed.update({'lucky_order': win.order_id})
     revealed.update({
         'calc': {
