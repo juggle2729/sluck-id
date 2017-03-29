@@ -220,8 +220,11 @@ def view_current_status(user_id, activity_id, order_id):
         order_detail.shipping_type = refer_goods.shipping_type
         if order.shipping_coin:
             order_detail.shipping_type = SHIPPING_TYPE.COIN
-    receipt_address = {} if not order.receipt_address else json.loads(
-        order.receipt_address)
+    try:
+        receipt_address = {} if not order.receipt_address else json.loads(order.receipt_address)
+    except Exception:
+        _LOGGER.info('#bug# wrong json: %s' % order.receipt_address)
+        receipt_address = {}
     if order.status in (ORDER_STATUS.WAIT_SHIP, ORDER_STATUS.WAIT_RECEIPT, ORDER_STATUS.DEAL, ORDER_STATUS.SHOW):
         shipping_type = int(receipt_address.get('shipping_type'))
         order_detail.receipt_info = {
