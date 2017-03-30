@@ -143,7 +143,6 @@ class SingleOrderView(TemplateView):
         data['term_number'] = activity.term_number
         data['source'] = goods.source if goods else 'unknown'
         data['goods_price'] = goods.price if goods else 'unknown'
-        data['receipt_address'] = ''
         return data
 
     def post(self, req, order_id):
