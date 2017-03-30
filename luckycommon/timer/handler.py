@@ -194,7 +194,7 @@ class ActivityAnnounceHandler(EventHandler):
         return result, result_a, a_list
 
     def adjust_result(self, default_num, result_a, a_list, candidates, orders, target_amount):
-        _LOGGER.info('check result detail, start adjusting')
+        _LOGGER.info('#strategy# start adjusting')
         adjust_a = result_a
         b_list = deepcopy(a_list)
         candidates.sort(reverse=True)
@@ -217,7 +217,7 @@ class ActivityAnnounceHandler(EventHandler):
         max_payat = int(b_list[0]['code'])  # 调整后的值不能超过该值
         last_order_time = redis_cache.get_last_order()
         last_order_time = 0 if not last_order_time else int(last_order_time)
-        _LOGGER.info('check result detail, adjust result, right_b:%s delta_ms:%s last_order:%s max_payat:%s' %
+        _LOGGER.info('#strategy# adjust result, right_b:%s delta_ms:%s last_order:%s max_payat:%s' %
                      (right_b, delta_ms, last_order_time, max_payat))
         max_ms_list = xrange(980, 998)
         adjust_ms_list = xrange(5, 20)
@@ -252,7 +252,7 @@ class ActivityAnnounceHandler(EventHandler):
                 b_list[i]['time'] = new_pay_at
                 Order.query.filter(Order.id == order.id).update(
                     {'pay_at': new_pay_at})
-                _LOGGER.info('check result detail, consume delta %s,adjust order to new pay at[%s]',
+                _LOGGER.info('#strategy# consume delta %s,adjust order to new pay at[%s]',
                              delta, new_pay_at)
                 if delta_ms == 0:
                     break
@@ -264,14 +264,14 @@ class ActivityAnnounceHandler(EventHandler):
             orm.session.commit()
             b_list.sort(key=lambda x: x.get('time'), reverse=True)
             _LOGGER.info(
-                'check result detail, adjust result success, adjust_a:%s, target_amount:%s',
+                '#strategy# adjust result success, adjust_a:%s, target_amount:%s',
                 adjust_a, target_amount)
             return True, right_b, adjust_a, b_list
         else:
             # fail
             orm.session.close()
             _LOGGER.info(
-                'check result detail, adjust result fail, left delta:%s, target_amount:%s',
+                '#strategy# adjust result fail, left delta:%s, target_amount:%s',
                 delta_ms, target_amount)
             return False, default_num, result_a, a_list
 
@@ -306,12 +306,12 @@ class ActivityAnnounceHandler(EventHandler):
         if rand <= rand_limit:
             need_virtual = True
             _LOGGER.info(
-                'check result detail <%s, %s>, rand: %s, rand_limit: %s' % (activity.template_id, activity.term_number, rand, rand_limit))
+                '#strategy# <%s, %s>, rand: %s, rand_limit: %s' % (activity.template_id, activity.term_number, rand, rand_limit))
 
         if activity.template_id in settings.VIRTUAL_GOODS_IDS and rand < 20:
             need_virtual = True
             _LOGGER.info(
-                'check result detail <%s, %s>, virtual goods strategy applied' % (activity.template_id, activity.term_number))
+                '#strategy# <%s, %s>, virtual goods strategy applied' % (activity.template_id, activity.term_number))
 
         return need_virtual
 
@@ -358,7 +358,7 @@ class ActivityAnnounceHandler(EventHandler):
         total_win = int(user_stats.get('total_win', 0))
         if (len(nums) < single_buy_limit or total_pay < total_buy_limit or total_recharge < total_buy_limit - 1):
             _LOGGER.info(
-                'check result detail <%s, %s, %s>, len(nums): %s, single_buy_limit: %s, total_pay: %s, total_buy_limit: %s, total_recharge: %s' % (
+                '#strategy# <%s, %s, %s>, len(nums): %s, single_buy_limit: %s, total_pay: %s, total_buy_limit: %s, total_recharge: %s' % (
                     activity.template_id, activity.term_number, user_id, len(nums), single_buy_limit, total_pay, total_buy_limit,
                     total_recharge))
             return False
@@ -366,26 +366,26 @@ class ActivityAnnounceHandler(EventHandler):
             user_net_ratio = float(total_recharge - total_win - activity.target_amount) / total_pay
             if user_net_ratio < net_ratio:
                 _LOGGER.info(
-                    'check result detail <%s, %s, %s>, len(nums): %s, single_buy_limit: %s, total_pay: %s, total_buy_limit: %s, total_recharge: %s' % (
+                    '#strategy# <%s, %s, %s>, len(nums): %s, single_buy_limit: %s, total_pay: %s, total_buy_limit: %s, total_recharge: %s' % (
                         activity.template_id, activity.term_number, user_id, len(nums), single_buy_limit, total_pay, total_buy_limit,
                         total_recharge))
                 return False
         # check illegal
         if total_recharge <= 0:
             if random.randint(1, 100) < 80:
-                _LOGGER.info('check result detail <%s, %s>,total_recharge: %s, random < 80' % (
+                _LOGGER.info('#strategy# <%s, %s>,total_recharge: %s, random < 80' % (
                     activity.template_id, activity.term_number, total_recharge))
                 return False
             elif total_win > 0:
-                _LOGGER.info('check result detail <%s, %s>,total_recharge: %s, total_win: %s' % (
+                _LOGGER.info('#strategy# <%s, %s>,total_recharge: %s, total_win: %s' % (
                     activity.template_id, activity.term_number, total_recharge, total_win))
                 return False
         if not ratio_check:
-            _LOGGER.info('check result detail <%s, %s>, ratio_check: %s' % (activity.template_id, activity.term_number, ratio_check))
+            _LOGGER.info('#strategy# detail <%s, %s>, ratio_check: %s' % (activity.template_id, activity.term_number, ratio_check))
             return True
         # check recharge amount ratio
         if activity.target_amount < 4000:
-            _LOGGER.info('check result detail <%s, %s>, activity.target_amount: %s' % (
+            _LOGGER.info('#strategy# <%s, %s>, activity.target_amount: %s' % (
                 activity.template_id, activity.term_number, activity.target_amount))
             return True
         check_ratio = True
@@ -408,8 +408,8 @@ class ActivityAnnounceHandler(EventHandler):
         elif user_net > -4000 and user_net <= -2000 and ratio <= 30:
             check_ratio = False
         if not check_ratio:
-            _LOGGER.info('check result detail <%s, %s>, ratio_check: %s' % (activity.template_id, activity.term_number, ratio_check))
-            _LOGGER.info('check result detail, standard_reached check ratio fail, uid:%s, aid:%s', user_id, activity.id)
+            _LOGGER.info('#strategy# <%s, %s>, ratio_check: %s' % (activity.template_id, activity.term_number, ratio_check))
+            _LOGGER.info('#strategy#, standard_reached check ratio fail, uid:%s, aid:%s', user_id, activity.id)
             return False
         return True
 
@@ -444,7 +444,7 @@ class ActivityAnnounceHandler(EventHandler):
         today_free = int(today_free_dict.get(str(interval_index), 0))
 
         if daily_free <= today_free:
-            _LOGGER.info('check result detail <%s, %s, %s>, daily_free: %s, total_free: %s' % (
+            _LOGGER.info('#strategy# <%s, %s, %s>, daily_free: %s, total_free: %s' % (
                 activity.template_id, activity.term_number, user_id, daily_free, today_free))
             return False
         user_stats = redis_cache.get_user_stats(user_id) or {}
@@ -452,20 +452,20 @@ class ActivityAnnounceHandler(EventHandler):
         total_win = int(user_stats.get('total_win', 0))
         user_net = total_recharge - total_win
         if user_net < free_net:
-            _LOGGER.info('check result detail <%s, %s, %s>, user_net: %s, free_net: %s' % (
+            _LOGGER.info('#strategy# <%s, %s, %s>, user_net: %s, free_net: %s' % (
                 activity.template_id, activity.term_number, user_id, user_net, free_net))
             return False
         redis_cache.incr_today_free_interval(str(interval_index))
         _LOGGER.info('strategy daily free add uid:%s,aid:%s,amount:%s',
                      user_id, activity.id, activity.target_amount)
-        _LOGGER.info('check result detail <%s, %s, %s>, user_net: %s, free_net: %s' % (
+        _LOGGER.info('#strategy# <%s, %s, %s>, user_net: %s, free_net: %s' % (
             activity.template_id, activity.term_number, user_id, user_net, free_net))
         return True
 
     def reached_limit(self, current_price):
         # check daily limit
         if self.daily_amount.current_amount + current_price > self.daily_amount.amount_limit:
-            _LOGGER.info('check result detail, reached limit %s' % self.daily_amount.amount_limit)
+            _LOGGER.info('#strategy#, reached limit %s' % self.daily_amount.amount_limit)
             return True
         return False
 
@@ -488,18 +488,18 @@ class ActivityAnnounceHandler(EventHandler):
             last_win = int(user_stats.get('last_win', 0))
             used_coupon = int(user_stats.get('used_coupon', 0))
             period = random.choice(p_conf['interval'])
-            _LOGGER.info('check result detail, total_recharge %s, total_pay: %s, total_win: %s, last_win: %s, used_coupon: %s' % (
+            _LOGGER.info('#strategy#, total_recharge %s, total_pay: %s, total_win: %s, last_win: %s, used_coupon: %s' % (
                 total_recharge, total_pay, total_win, last_win, used_coupon))
             if now_ts() - last_win < 3600 * period / 4.0:
-                _LOGGER.info('check result detail, now_ts - last_win < 3600 * period')
+                _LOGGER.info('#strategy#, now_ts - last_win < 3600 * period')
                 return False
             numerator = total_recharge if total_recharge > 0 else total_pay
             if float(total_recharge - used_coupon - total_win - target_amount) / numerator < p_conf['net']:
                 _LOGGER.info(
-                    'check result detail, float(total_recharge - used_coupon - total_win - target_amount) / numerator < p_conf["net"]')
+                    '#strategy#, float(total_recharge - used_coupon - total_win - target_amount) / numerator < p_conf["net"]')
                 return False
         except Exception as e:
-            _LOGGER.exception('check result detail, function is_loser exception, %s', e)
+            _LOGGER.exception('#strategy#, function is_loser exception, %s', e)
             return False
         return True
 
@@ -521,7 +521,7 @@ class ActivityAnnounceHandler(EventHandler):
 
         order_id = redis_cache.get_lucky_order(activity.id, lucky_number)
         order = get_order(order_id)
-        _LOGGER.info('check result detail, origin winner %s' % order.buyer)
+        _LOGGER.info('#strategy#, origin winner %s' % order.buyer)
 
         v_list = []
         loser_list = []
@@ -531,10 +531,10 @@ class ActivityAnnounceHandler(EventHandler):
             privilege_users, p_conf = get_privilege_users(
                 activity.target_amount)
         except Exception as e:
-            _LOGGER.error('check result detail, get privilege users exception, %s', e)
+            _LOGGER.error('#strategy#, get privilege users exception, %s', e)
             privilege_users = []
             p_conf = {}
-        _LOGGER.info('check result detail, found %s privilege users', len(privilege_users))
+        _LOGGER.info('#strategy#, found %s privilege users', len(privilege_users))
 
         if str(order.buyer) in self.virtual_accounts:
             virtual_win = True
@@ -549,7 +549,7 @@ class ActivityAnnounceHandler(EventHandler):
                 if winner_ratio == 1:
                     buy_all = True
                 if winner_ratio > 0.8:
-                    _LOGGER.info('check result detail, winner_ratio gt 0.8, skip adjust')
+                    _LOGGER.info('#strategy#, winner_ratio gt 0.8, skip adjust')
                     track_one.delay(collection='announce', properties={
                         'real_win': 1 if not virtual_win else 0,
                         'adjust': 0,
@@ -582,7 +582,7 @@ class ActivityAnnounceHandler(EventHandler):
             # miss it by fifty percent
             if rand <= 50:
                 loser_list = []
-                _LOGGER.info('check result detail, miss loser by ratio, %s', activity.id)
+                _LOGGER.info('#strategy#, miss loser by ratio, %s', activity.id)
         need_loser = True if len(loser_list) > 0 else False
         need_adjust = False
         adjust_reason = ''
@@ -619,12 +619,12 @@ class ActivityAnnounceHandler(EventHandler):
                             first_candidates = real_list
                             second_candidates = v_list
                             _LOGGER.info(
-                                'check result detail, standard not reached, try to send to real')
+                                '#strategy#, standard not reached, try to send to real')
                         else:
                             first_candidates = v_list
                             second_candidates = real_list
                             _LOGGER.info(
-                                'check result detail, standard not reached, try to send to virtual')
+                                '#strategy#, standard not reached, try to send to virtual')
                     else:
                         first_candidates = v_list
                         second_candidates = real_list
@@ -636,7 +636,7 @@ class ActivityAnnounceHandler(EventHandler):
                         if len(v_list) > 0:
                             first_candidates = v_list
             except Exception as e:
-                _LOGGER.error('check result detail, check standard reached exception, %s' % e)
+                _LOGGER.error('#strategy#, check standard reached exception, %s' % e)
                 need_adjust = True
                 adjust_reason = u'赢家-未知异常'
                 first_candidates = v_list
@@ -650,7 +650,7 @@ class ActivityAnnounceHandler(EventHandler):
             'announce': 1,
         })
         _LOGGER.info(
-            'check result <%s, %s>, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
+            '#strategy# <%s, %s>, winner:%s, need_virtual:%s, is_virtual:%s, need_loser:%s, is_loser:%s, need_adjust:%s, adjust_reason:%s',
             activity.template_id, activity.term_number, order.buyer, need_virtual, virtual_win, need_loser, loser_win, need_adjust,
             adjust_reason)
         return need_adjust, need_virtual, need_loser, first_candidates, second_candidates
@@ -677,7 +677,7 @@ class ActivityAnnounceHandler(EventHandler):
             lucky_order_id = redis_cache.get_lucky_order(activity_id, result)
             lucky_order = ActivityAnnouncer.announce(
                 activity, result, result_a, lottery, a_list, lucky_order_id)
-            _LOGGER.info('check result success, new winner:%s' % lucky_order.buyer)
+            _LOGGER.info('#strategy# success, new winner:%s' % lucky_order.buyer)
             # remove lucky orders cache
             redis_cache.remove_lucky_order(activity_id)
             # 记录最大的pay at

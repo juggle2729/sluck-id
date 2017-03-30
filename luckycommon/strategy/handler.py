@@ -251,7 +251,7 @@ def is_user_qualified(user_id, activity):
     result = orm.session.query(func.sum(Transaction.price)).filter(Transaction.user_id == user_id).filter(
         Transaction.type == TRANSACTION_TYPE.BALANCE_BUY).filter(Transaction.status == TRANSACTION_STATUS.DONE).first()[0]
     if result:
-        total_pay = float(result)
+        total_pay = abs(float(result))
     else:
         total_pay = 0
     target_amount = activity.target_amount
