@@ -44,7 +44,7 @@
     "luckyweb": {
       "192.168.0.191": {
         "bash": [
-          "mv assets/js/settings_us.js assets/js/env_settings.js"
+          "mv assets/js/settings_test.js assets/js/env_settings.js"
         ]
       }
     }
