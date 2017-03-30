@@ -177,9 +177,9 @@ def add_special_privilege(user_id, recharge_amount):
 
 
 def get_candidate_lucky_numbers(activity):
-    users_to_win = get_candidate_win_users(activity)
-    win_user = choose_win_user(users_to_win)
-    candidate_lucky_numbers = get_user_numbers_in_activity(win_user, activity.id)
+    candidate_win_users = get_candidate_win_users(activity)
+    candidate_win_user = choose_win_user(candidate_win_users)
+    candidate_lucky_numbers = get_user_numbers_in_activity(candidate_win_user, activity.id)
     _LOGGER.info('#strategy# candidate_lucky_numbers: %s' % candidate_lucky_numbers)
     return candidate_lucky_numbers
 
@@ -229,12 +229,12 @@ def is_virtual_user(user_id):
         return True
 
 
-def choose_win_user(users_to_win):
-    probability_list = [get_user_weight(x) for x in users_to_win]
+def choose_win_user(candidate_win_users):
+    probability_list = [get_user_weight(x) for x in candidate_win_users]
     probability_list = [float(x) / sum(probability_list) for x in probability_list]
-    win_user = numpy.random.choice(users_to_win, p=probability_list)
-    _LOGGER.info('#strategy# win_user: %s' % win_user)
-    return win_user
+    candidate_win_user = numpy.random.choice(candidate_win_users, p=probability_list)
+    _LOGGER.info('#strategy# candidate_win_user: %s' % candidate_win_user)
+    return candidate_win_user
 
 
 def get_all_users_in_activity(activity):
