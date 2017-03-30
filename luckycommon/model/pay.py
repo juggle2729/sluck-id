@@ -26,6 +26,7 @@ class PayType(CustomEnum):
     GOOGLE_BILLING = 20
     APPLE_IAP = 21
     DOKU_VISA = 22
+    MIMO_TELKOMSEL = 23
 
 
 class PayStatus(CustomEnum):
@@ -213,9 +214,18 @@ AVAILABLE_PAY_TYPES = {
         'name': u'Apple IAP',
         'pay_type': PayType.APPLE_IAP.value,
         'comment': u'Apple IAP',
-        'highliht': 0,
+        'highlight': 0,
         'choice': [50, 100, 200, 500, 1000, 2000, 5000],
         'icon': 'http://p.1yuan-gou.com/ic_pay_21.png',
+        'tag': '',
+    },
+    PayType.MIMO_TELKOMSEL.value: {
+        'name': u'MIMO TELKOMSEL',
+        'pay_type': PayType.MIMO_TELKOMSEL.value,
+        'comment': u'MIMO TELKOMSEL',
+        'highlight': 0,
+        'choice': [5, 10, 50, 100, 200, 500],
+        'icon': 'http://p.1yuan-gou.com/ic_tsel.png',
         'tag': '',
     },
 }
