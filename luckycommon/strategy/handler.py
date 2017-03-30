@@ -248,8 +248,12 @@ def get_all_users_in_activity(activity):
 def is_user_qualified(user_id, activity):
     numbers = get_user_numbers_in_activity(user_id, activity.id)
     single_buy = len(numbers)
-    user_stats = redis_cache.get_user_stats(user_id) or {}
-    total_pay = float(user_stats.get('total_pay', len(numbers)))
+    result = orm.session.query(func.sum(Transaction.price)).filter(Transaction.user_id == user_id).filter(
+        Transaction.type == TRANSACTION_TYPE.BALANCE_BUY).filter(Transaction.status == TRANSACTION_STATUS.DONE).first()[0]
+    if result:
+        total_pay = float(result)
+    else:
+        total_pay = 0
     target_amount = activity.target_amount
     qualified_item = [x for x in _QUALIFIED_RANGE if target_amount in x['range']][0]
     single_qualification = qualified_item['single']
