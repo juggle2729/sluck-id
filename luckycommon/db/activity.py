@@ -191,7 +191,7 @@ def update_ua_status(activity_id, updated_status):
 
 @sql_wrapper
 def get_first_user_activity(user_id):
-    return UserActivity.query.filter(UserActivity.user_id == user_id).order_by(UserActivity.updated_at.desc()).first()
+    return UserActivity.query.filter(UserActivity.user_id == user_id).order_by(UserActivity.updated_at).first()
 
 
 @sql_wrapper
