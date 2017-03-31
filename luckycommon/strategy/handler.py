@@ -358,7 +358,7 @@ def loss_multiplier(user_id):
         if activity:
             total_award += activity.target_amount
     if total_recharge > 0:
-        loss_rate = total_recharge - total_award / total_recharge
+        loss_rate = (total_recharge - total_award) / total_recharge
     else:
         loss_rate = 0
     loss = total_recharge - total_award
