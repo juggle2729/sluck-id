@@ -2,6 +2,7 @@
 import json
 import logging
 import datetime
+import pytz
 
 from luckycommon.model import orm
 from luckycommon.model.strategy import *
@@ -13,12 +14,10 @@ _LOGGER = logging.getLogger('lucky')
 
 
 @sql_wrapper
-def get_current_amount(daily_limit, date=None):
-    if date is None:
-        today = utc_to_local(datetime.datetime.now())
-    else:
-        today = utc_to_local(date)
+def get_current_amount(daily_limit):
+    today = utc_to_local(datetime.datetime.now(pytz.UTC))
     today_str = today.strftime('%Y-%m-%d')
+    _LOGGER.info('#strategy# today_str: %s, today: %s' % (today_str, today))
     query = DailyAmount.query.filter(DailyAmount.date == today_str)
     item = query.first()
     if not item:
