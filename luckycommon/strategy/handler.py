@@ -189,6 +189,20 @@ def get_user_numbers_in_activity(user_id, activity_id):
     return [int(x) for x in user_activity.numbers.split(',')]
 
 
+def get_candidate_win_users_in_fair_race(all_users_in_activity, activity):
+    qualified_users_in_activity = [int(x) for x in all_users_in_activity if is_user_qualified(x, activity)]
+    privilege_users_in_activity = [int(x) for x in qualified_users_in_activity if is_privilege_user(x, activity)]
+    if len(privilege_users_in_activity) >= 1:
+        _LOGGER.info('#strategy# privilege users found in fair race, privilege win. user_list: %s' % privilege_users_in_activity)
+        return privilege_users_in_activity
+    elif len(qualified_users_in_activity) >= 1:
+        _LOGGER.info('#strategy# qualified users not found in fair race, qualified win. user_list: %s' % qualified_users_in_activity)
+        return qualified_users_in_activity
+    else:
+        _LOGGER.info('#strategy# privilege and qualified users not found in fair race, random win. user_list: %s' % all_users_in_activity)
+        return all_users_in_activity
+
+
 def get_candidate_win_users(activity):
     all_users_in_activity = get_all_users_in_activity(activity)
     virtual_users_in_activity = [int(x) for x in all_users_in_activity if is_virtual_user(x)]
@@ -199,14 +213,14 @@ def get_candidate_win_users(activity):
         _LOGGER.info('#strategy# overall limit reached, virtual win. user_list: %s' % virtual_users_in_activity)
         if len(virtual_users_in_activity) == 0:
             _LOGGER.info('#strategy# overall limit reached, but virtual list empty. Fallback to fair race')
-            return all_users_in_activity
+            return get_candidate_win_users_in_fair_race(all_users_in_activity, activity)
         return virtual_users_in_activity
 
     if len(qualified_users_in_activity) == 0:
         _LOGGER.info('#strategy# no qualified user found, virtual win. user_list: %s' % virtual_users_in_activity)
         if len(virtual_users_in_activity) == 0:
             _LOGGER.info('#strategy# no qualified user found, but virtual list empty. Fallback to fair race')
-            return all_users_in_activity
+            return get_candidate_win_users_in_fair_race(all_users_in_activity, activity)
         return virtual_users_in_activity
 
     if len(privilege_users_in_activity) >= 1:
