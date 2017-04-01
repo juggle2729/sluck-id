@@ -10,7 +10,8 @@ from sqlalchemy import func
 from luckycommon.account.model.account import Account
 from luckycommon.model import orm
 from luckycommon.cache import redis_cache
-from luckycommon.cache.redis_cache import get_accumulated_privilege_count, get_accumulated_privilege_amount
+from luckycommon.cache.redis_cache import get_accumulated_privilege_count, get_accumulated_privilege_amount, \
+    increase_accumulated_privilege_count, increase_accumulated_privilege_amount
 from luckycommon.db.strategy import get_current_amount
 from luckycommon.model.activity import ACTIVITY_STATUS, Activity, UserActivity
 from luckycommon.account.db.account import get_account
@@ -275,9 +276,12 @@ def is_privilege_user(user_id, activity):
     if user_weight >= 1.2155 \
             and 100 <= target_amount <= 1000 \
             and single_buy >= target_amount * _MIN_PRIVILEGE_BUY_RATIO \
-            and accumulated_privilege_count <= _MAX_PRIVILEGE_COUNT \
-            and accumulated_privilege_amount <= _MAX_PRIVILEGE_AMOUNT:
-        _LOGGER.info('#strategy# user <%s> has privilege' % user_id)
+            and accumulated_privilege_count < _MAX_PRIVILEGE_COUNT \
+            and accumulated_privilege_amount + target_amount < _MAX_PRIVILEGE_AMOUNT:
+        _LOGGER.info('#strategy# user <%s> has privilege, target_amount: %s, single_buy: %s, privilege_count: %s, privilege_amount: %s' % (
+            user_id, target_amount, single_buy, accumulated_privilege_count, accumulated_privilege_amount))
+        increase_accumulated_privilege_count(user_id)
+        increase_accumulated_privilege_amount(user_id, target_amount)
         return True
     _LOGGER.info('#strategy# user <%s> do not has privilege' % user_id)
 
@@ -435,7 +439,7 @@ def daily_loss_multiplier(user_id):
 
 
 def first_5_buy_multiplier(user_id):
-    user_activities = get_user_activities(user_id)
+    user_activities, _ = get_user_activities(user_id)
     if len(user_activities) < 5:
         return 1.02
     return 1

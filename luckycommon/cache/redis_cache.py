@@ -1043,10 +1043,25 @@ def get_borong_info(userid):
     return ProxyAgent().hgetall(key)
 
 
+_ONE_DAY = 60 * 60 * 24
+
+
 @cache_wrapper
 def increase_accumulated_privilege_count(user_id):
     key = prefix_key('privilege_count:%s' % user_id)
-    ProxyAgent().incr(key)
+    if ProxyAgent().exists(key):
+        ProxyAgent().incr(key)
+    else:
+        ProxyAgent().setex(key, _ONE_DAY, 1)
+
+
+@cache_wrapper
+def increase_accumulated_privilege_amount(user_id, amount):
+    key = prefix_key('privilege_count:%s' % user_id)
+    if ProxyAgent().exists(key):
+        ProxyAgent().incrby(key, amount)
+    else:
+        ProxyAgent().setex(key, _ONE_DAY, amount)
 
 
 @cache_wrapper
