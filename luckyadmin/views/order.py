@@ -58,7 +58,7 @@ class OrderView(TemplateView):
                 raise NotImplementedError('not support')
 
         # normal
-        items, total_count, award_only = db.list_orders(query_dct)
+        items, total_count, award_only = db.list_orders(query_dct, True)
         for item in items:
             order, is_virtual = item
             k = order.as_dict()

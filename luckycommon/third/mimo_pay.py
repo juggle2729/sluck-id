@@ -18,14 +18,16 @@ _TRACKER = logging.getLogger('tracker')
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
 
 
-def mimo_create_charge(pay, pay_amount, currency):
+def mimo_create_charge(pay, pay_amount, currency, pay_method='atm'):
     if pay_amount <= 1:
-        raise DataError()
+        raise DataError('Pay amount must be bigger than 1')
+    if pay_method not in settings.MIMOPAY_PAYMENT_METHODS:
+        raise DataError('Invalid mimo pay method')
 
     pay_id = str(pay.id)
     request_params = {
         'host': settings.MIMOPAY_API_HOST,
-        'method': settings.MIMOPAY_PAYMENT_METHOD,
+        'method': settings.MIMOPAY_PAYMENT_METHODS['pay_method'],
         'user_id': pay.user_id,
         'product_name': settings.MIMOPAY_PRODUCT_NAME,
         'merchant_code': settings.MIMOPAY_MERCHANT_CODE,

@@ -142,6 +142,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.GAME_ON.value],
             pay_types[PayType.CONVENNIENCE_STORE.value],
             pay_types[PayType.ATM.value],
+            # pay_types[PayType.MIMO_TELKOMSEL.value],
         ]
     if platform == 'ios' and locale == 'id':
         return [
@@ -149,6 +150,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.DOKU_VISA.value],
             pay_types[PayType.DOKU_WALLET.value],
             pay_types[PayType.CODA_PAY.value],
+            # pay_types[PayType.MIMO_TELKOMSEL.value],
         ]
     if platform == 'web':
         return [

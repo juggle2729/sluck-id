@@ -139,6 +139,10 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
             charge = mimo_pay.mimo_create_charge(pay, pay_amount, 'IDR')
             _LOGGER.info('start pay by mimo bca, pay_id[%s]' % pay_id)
             return {'charge': charge, 'type': 'url'}
+        if pay_type == PayType.MIMO_TELKOMSEL.value:
+            charge = mimo_pay.mimo_create_charge(pay, pay_amount, 'IDR', pay_method='telkomsel')
+            _LOGGER.info('start pay by mimo telkomsel, pay_id[%s]' % pay_id)
+            return {'charge': charge, 'type': 'url'}
         if pay_type == PayType.CODA_SMS.value:
             _LOGGER.info('start pay by coda sms, pay_id[%s]' % pay_id)
             return {}
