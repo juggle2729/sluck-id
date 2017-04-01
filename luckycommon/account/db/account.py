@@ -27,6 +27,12 @@ def encode_password(passwd):
     return md5(passwd).hexdigest()
 
 
+def is_virtual_user(user_id):
+    account = Account.query.filter(Account.id == user_id).first()
+    if account.is_virtual:
+        return True
+
+
 @sql_wrapper
 def get_account(user_id, use_cache=False):
     if use_cache:

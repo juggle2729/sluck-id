@@ -26,7 +26,7 @@ from luckycommon.db.goods import get_goods
 from luckycommon.model.campaign import CAMPAIGN_DICT
 from luckycommon.model.activity import ACTIVITY_STATUS, TEMPLATE_STATUS
 
-from luckycommon.account.db.account import get_account
+from luckycommon.account.db.account import get_account, is_virtual_user
 from luckycommon.db.coupon import expire_coupon, award_coupon
 from luckycommon.db.activity import (get_activity, update_activity_status,
                                      get_user_activity, get_activity_users,
@@ -688,12 +688,8 @@ class ActivityAnnounceHandler(EventHandler):
                 self.spread(activity, lucky_order)
                 god_campaign.register(lucky_order.buyer, activity)
                 redis_cache.add_user_pending(lucky_order.buyer, 'award')
-                # 记录开奖金额
-                if not redis_cache.is_virtual_account(lucky_order.buyer):
-                    if (activity.template_id not in settings.COIN_TIDS and
-                                activity.template_id not in settings.CARD_TIDS):
-                        add_current_amount(
-                            activity.target_amount, lucky_order.buyer, False)
+                if not is_virtual_user(lucky_order.buyer):
+                    add_current_amount(activity.target_amount, lucky_order.buyer, False)
                 # track
                 track_info = {'user_id': lucky_order.buyer, 'type': 'win',
                               'activity_id': lucky_order.activity_id,

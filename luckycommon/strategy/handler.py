@@ -14,7 +14,7 @@ from luckycommon.cache.redis_cache import get_accumulated_privilege_count, get_a
     increase_accumulated_privilege_count, increase_accumulated_privilege_amount
 from luckycommon.db.strategy import get_current_amount
 from luckycommon.model.activity import ACTIVITY_STATUS, Activity, UserActivity
-from luckycommon.account.db.account import get_account
+from luckycommon.account.db.account import get_account, is_virtual_user
 from luckycommon.db.activity import get_activity, get_activity_users, get_user_activity, get_user_activities, get_first_user_activity
 from luckycommon.db import strategy as strategy_db
 from luckycommon.order.db.order import get_order, get_last_valid_orders, get_activity_orders
@@ -222,12 +222,6 @@ def get_candidate_win_users(activity):
         users_to_win = all_users_in_activity
 
     return users_to_win
-
-
-def is_virtual_user(user_id):
-    account = Account.query.filter(Account.id == user_id).first()
-    if account.is_virtual:
-        return True
 
 
 def choose_win_user(candidate_win_users):
