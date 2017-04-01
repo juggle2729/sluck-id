@@ -27,14 +27,14 @@ def mimo_create_charge(pay, pay_amount, currency, pay_method='atm'):
     pay_id = str(pay.id)
     request_params = {
         'host': settings.MIMOPAY_API_HOST,
-        'method': settings.MIMOPAY_PAYMENT_METHODS['pay_method'],
+        'method': settings.MIMOPAY_PAYMENT_METHODS[pay_method],
         'user_id': pay.user_id,
-        'product_name': settings.MIMOPAY_PRODUCT_NAME,
-        'merchant_code': settings.MIMOPAY_MERCHANT_CODE,
+        'product_name': settings.MIMOPAY_PRODUCT_NAMES[pay_method],
+        'merchant_code': settings.MIMOPAY_MERCHANT_CODES[pay_method],
         'tid': pay_id,
         'currency_code': currency,
         'amount': int(pay_amount) * _EXCHANGE_RATIO,
-        'key': _sign(pay_id + settings.MIMOPAY_MERCHANT_CODE + settings.MIMOPAY_SECRET_KEY),
+        'key': _sign(pay_id + settings.MIMOPAY_MERCHANT_CODES[pay_method] + settings.MIMOPAY_SECRET_KEYS[pay_method]),
     }
 
     url = '%(host)s/%(method)s/load/%(user_id)s/%(product_name)s/%(merchant_code)s/' \
@@ -56,8 +56,8 @@ def mimo_check_notify(request):
     pay = get_pay(pay_id)
     currency = 'IDR'
     calculated_sign = _sign("servicename=%stransid=%smimotransid=%sretcode=%s%s" % (
-        servicename, pay_id, trade_no, trade_status, settings.MIMOPAY_SECRET_KEY))
-    _LOGGER.info("Coda Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
+        servicename, pay_id, trade_no, trade_status, settings.MIMOPAY_SECRET_KEYS['atm']))
+    _LOGGER.info("Mimo Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
     if check_sum != calculated_sign:
         raise ParamError('sign not pass, data: %s' % request.GET)
 
@@ -89,3 +89,34 @@ def mimo_check_notify(request):
     else:
         add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
         _LOGGER.error('MIMO Pay response data show transaction failed, data: %s', request.GET)
+
+
+def bubble_mimo_check_notify(request):
+    trade_no = request.GET.get('mimotransid')
+    pay_id = request.GET.get('transid')
+    trade_status = request.GET.get('retcode')
+    price = request.GET.get('rvalue')
+    check_sum = request.GET.get('sig')
+    servicename = request.GET.get('servicename')
+    currency = 'IDR'
+    calculated_sign = _sign("servicename=%stransid=%smimotransid=%sretcode=%s%s" % (
+        servicename, pay_id, trade_no, trade_status, settings.MIMOPAY_SECRET_KEYS['telkomsel']))  # gateway secret key
+    _LOGGER.info("Bubble MIMO Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
+    if check_sum != calculated_sign:
+        raise ParamError('sign not pass, data: %s' % request.GET)
+
+    total_fee = float(price) / _EXCHANGE_RATIO
+    if int(trade_status) == 50000:
+        _LOGGER.info('MIMO Pay check order success, pay_id:%s, amount: %s, currency: %s' % (
+            pay_id, total_fee, currency))
+        _TRACKER.info({
+            'trade_status': trade_status,
+            'trade_no': trade_no,
+            'pay_id': pay_id,
+            'price': price,
+            'total_fee': total_fee,
+            'check_sum': check_sum,
+            'servicename': servicename,
+        })
+    else:
+        _LOGGER.error('Bubble MIMO Pay response data show transaction failed, data: %s', request.GET)
