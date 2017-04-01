@@ -11,7 +11,7 @@ from luckycommon.utils.exceptions import Error, PermissionError
 
 _LOGGER = logging.getLogger('lucky')
 INTERNAL_IPS = ['113.57.172.122', '120.26.57.89', '47.88.214.13',
-                '120.27.162.212', '121.41.6.238', '121.40.29.144']
+                '120.27.162.212', '121.41.6.238', '192.168.0.191']
 
 
 def frequency_limit(func):
