@@ -56,6 +56,8 @@ for ua in user_activitys:
     user_id = ua.user_id
     activity_id = ua.activity_id
     activity = Activity.query.filter(Activity.id == activity_id).first()
+    if not activity:
+        continue
     template_id = activity.template_id
     template_ids.add(template_id)
     a_dict.setdefault(template_id, {
