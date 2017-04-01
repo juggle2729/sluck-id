@@ -11,17 +11,16 @@ from django.views.decorators.http import require_POST, require_GET
 from django.views.generic import TemplateView
 
 from luckyapi.logic.account import send_auth_code
-from luckycommon.async.async_job import track_new_user, track_one
 from luckycommon.account import handler as account_handler
 from luckycommon.account import internal_handler as account_internal_handler
 from luckycommon.account.db import account as account_db
 from luckycommon.account.db.account import has_password, get_third_account_by_uid, create_third_account, get_third_account
 from luckycommon.account.handler import check_auth_code
 from luckycommon.account.model.account import ThirdAccountType
+from luckycommon.async.async_job import track_new_user, track_one
 from luckycommon.cache import account as cache
 from luckycommon.credit.db.credit import add_register_credit
 from luckycommon.partner import handler as partner_handler
-from luckycommon.push import handler as push_handler
 from luckycommon.third import facebook_login
 from luckycommon.third import google_login
 from luckycommon.utils import exceptions as err
@@ -207,6 +206,7 @@ def third_login(request):
         _TRACKER.info({"user_id": account.id, "type": "login", "logon": logon})
         return account_handler.get_user_info(account)
 
+
 @require_POST
 @response_wrapper
 @token_required
@@ -251,6 +251,7 @@ def third_bind(request):
 
         create_third_account(user_id, third_id, third_account_type)
         return {}
+
 
 @require_GET
 def create_image_code(req):
@@ -297,7 +298,7 @@ class AuthCodeView(TemplateView):
         exists = account_db.get_account_by_phone(phone)
         if query_dct['use'] == 'changepwd' and not exists:
             raise err.DataError(status=StatusCode.INVALID_USER)
-        if query_dct['use'] == 'register' and exists and has_password(phone):   # in some case, user can register and not set password
+        if query_dct['use'] == 'register' and exists and has_password(phone):  # in some case, user can register and not set password
             raise err.DataError(status=StatusCode.DUPLICATE_ACCOUNT)
         if query_dct['use'] == 'changephone' and exists:
             raise err.DataError(status=StatusCode.DUPLICATE_ACCOUNT)
