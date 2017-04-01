@@ -427,7 +427,7 @@ def mimo_notify(request):
 
 
 def bubble_mimo_notify(request):
-    """ mimopay callback api just for bubble"""
+    """ mimopay callback api for bubble and telkomsel """
     try:
         mimo_pay.bubble_mimo_check_notify(request)
         return HttpResponse('ResultCode=0', status=200)

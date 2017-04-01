@@ -6,10 +6,10 @@ from luckycommon.utils.custom_enum import CustomEnum
 class PayType(CustomEnum):
     NGANLUONG = 1
     FORTUMO_PAY = 2
-    PAYPAL_EC = 3
+    PAYPAL_EC = 3  # point
     PRE_CARD_NG = 4
     CODA_PAY = 5
-    DOKU_WALLET = 6
+    DOKU_WALLET = 6  # point
     PAYSSION = 7
     EWALLET = 8
     SMS = 9
@@ -25,8 +25,8 @@ class PayType(CustomEnum):
     CODA_SMS = 19
     GOOGLE_BILLING = 20
     APPLE_IAP = 21
-    DOKU_VISA = 22
-    MIMO_TELKOMSEL = 23
+    DOKU_VISA = 22  # point
+    MIMO_TELKOMSEL = 23  # point
 
 
 class PayStatus(CustomEnum):
@@ -45,7 +45,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [200, 500, 1000, 2000],
         'icon': 'http://p.1yuan-gou.com/ic_pay_3.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.CODA_PAY.value: {
         'name': u'Coda Pay',
@@ -63,7 +63,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [10, 50, 100, 200, 500, 1000],
         'icon': 'http://p.1yuan-gou.com/ic_pay_6.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.DOKU_VISA.value: {
         'name': u'Doku Visa',
@@ -72,7 +72,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [10, 50, 100, 200, 500, 1000],
         'icon': 'http://p.1yuan-gou.com/ic_pay_22.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.PAYSSION.value: {
         'name': u'Payssion',
@@ -226,7 +226,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [5, 10, 50, 100, 200, 500],
         'icon': 'http://p.1yuan-gou.com/ic_tsel.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
 }
 

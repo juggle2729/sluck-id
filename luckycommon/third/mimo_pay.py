@@ -7,6 +7,7 @@ import requests
 from django.conf import settings
 
 from luckycommon.async.async_job import track_one
+from luckycommon.credit.db.credit import add_special_recharge_award_credit
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -16,6 +17,7 @@ from luckycommon.utils.exceptions import ParamError, DataError
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+_AWARD_CREDIT_UNIT = 10
 
 
 def mimo_create_charge(pay, pay_amount, currency, pay_method='atm'):
@@ -57,7 +59,7 @@ def mimo_check_notify(request):
     currency = 'IDR'
     calculated_sign = _sign("servicename=%stransid=%smimotransid=%sretcode=%s%s" % (
         servicename, pay_id, trade_no, trade_status, settings.MIMOPAY_SECRET_KEYS['atm']))
-    _LOGGER.info("Mimo Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
+    _LOGGER.info("Mimo atm Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
     if check_sum != calculated_sign:
         raise ParamError('sign not pass, data: %s' % request.GET)
 
@@ -76,10 +78,11 @@ def mimo_check_notify(request):
     }
     update_pay_ext(pay_id, extend['ext'])
     if int(trade_status) == 50000:
-        _LOGGER.info('MIMO Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
+        _LOGGER.info('MIMO atm Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
             user_id, pay_id, total_fee, currency))
         track_one.delay('recharge', {'price': float(total_fee), 'channel': 'mimo'}, user_id)
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+        add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
         if res:
             _TRACKER.info({'user_id': user_id, 'type': 'recharge', 'price': total_fee, 'channel': 'mimo'})
             try:
@@ -88,10 +91,11 @@ def mimo_check_notify(request):
                 _LOGGER.exception('pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
     else:
         add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
-        _LOGGER.error('MIMO Pay response data show transaction failed, data: %s', request.GET)
+        _LOGGER.error('MIMO atm Pay response data show transaction failed, data: %s', request.GET)
 
 
 def bubble_mimo_check_notify(request):
+    """ mimopay telkomsel callback: use for bubble and lucky """
     trade_no = request.GET.get('mimotransid')
     pay_id = request.GET.get('transid')
     trade_status = request.GET.get('retcode')
@@ -100,23 +104,55 @@ def bubble_mimo_check_notify(request):
     servicename = request.GET.get('servicename')
     currency = 'IDR'
     calculated_sign = _sign("servicename=%stransid=%smimotransid=%sretcode=%s%s" % (
-        servicename, pay_id, trade_no, trade_status, settings.MIMOPAY_SECRET_KEYS['telkomsel']))  # gateway secret key
-    _LOGGER.info("Bubble MIMO Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
+        servicename, pay_id, trade_no, trade_status, settings.MIMOPAY_SECRET_KEYS['telkomsel']))
+    _LOGGER.info("MIMO telkomsel Pay sign: %s, calculated sign: %", check_sum, calculated_sign)
     if check_sum != calculated_sign:
         raise ParamError('sign not pass, data: %s' % request.GET)
 
     total_fee = float(price) / _EXCHANGE_RATIO
-    if int(trade_status) == 50000:
-        _LOGGER.info('MIMO Pay check order success, pay_id:%s, amount: %s, currency: %s' % (
-            pay_id, total_fee, currency))
-        _TRACKER.info({
-            'trade_status': trade_status,
-            'trade_no': trade_no,
-            'pay_id': pay_id,
-            'price': price,
-            'total_fee': total_fee,
-            'check_sum': check_sum,
-            'servicename': servicename,
-        })
-    else:
-        _LOGGER.error('Bubble MIMO Pay response data show transaction failed, data: %s', request.GET)
+
+    if str(pay_id).startswith('Bubble_'):  # bubble
+        if int(trade_status) == 50000:
+            _LOGGER.info('Bubble MIMO Pay check order success, pay_id:%s, amount: %s, currency: %s' % (
+                pay_id, total_fee, currency))
+            _TRACKER.info({
+                'trade_status': trade_status,
+                'trade_no': trade_no,
+                'pay_id': pay_id,
+                'price': price,
+                'total_fee': total_fee,
+                'check_sum': check_sum,
+                'servicename': servicename,
+            })
+        else:
+            _LOGGER.error('Bubble MIMO Pay response data show transaction failed, data: %s', request.GET)
+    else:  # lucky
+        pay = get_pay(pay_id)
+        user_id = pay.user_id
+        if not pay or pay.status != PayStatus.SUBMIT.value:
+            raise ParamError('pay %s has been processed' % pay_id)
+
+        extend = {
+            'title': u'deposit-MIMOPay-telkomsel',
+            'ext': {
+                'trade_status': trade_status,
+                'trade_no': trade_no,
+                'total_fee': total_fee
+            }
+        }
+        update_pay_ext(pay_id, extend['ext'])
+        if int(trade_status) == 50000:
+            _LOGGER.info('MIMO telkomsel Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
+                user_id, pay_id, total_fee, currency))
+            track_one.delay('recharge', {'price': float(total_fee), 'channel': 'mimo_telkomsel'}, user_id)
+            res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+            add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
+            if res:
+                _TRACKER.info({'user_id': user_id, 'type': 'recharge', 'price': total_fee, 'channel': 'mimo_telkomsel'})
+                try:
+                    pay_after_recharge(pay)
+                except Exception as e:
+                    _LOGGER.exception('pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
+        else:
+            add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
+            _LOGGER.error('MIMO telkomsel Pay response data show transaction failed, data: %s', request.GET)
