@@ -1057,7 +1057,7 @@ def increase_accumulated_privilege_count(user_id):
 
 @cache_wrapper
 def increase_accumulated_privilege_amount(user_id, amount):
-    key = prefix_key('privilege_count:%s' % user_id)
+    key = prefix_key('privilege_amount:%s' % user_id)
     if ProxyAgent().exists(key):
         ProxyAgent().incrby(key, amount)
     else:
