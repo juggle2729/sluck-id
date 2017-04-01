@@ -1,28 +1,26 @@
 # -*- coding: utf-8 -*-
-import re
+import datetime
 import logging
 import random
+import re
 
-import datetime
 import numpy
 from sqlalchemy import func
 
-from luckycommon.account.model.account import Account
-from luckycommon.model import orm
+from luckycommon.account.db.account import get_account, is_virtual_user
 from luckycommon.cache import redis_cache
 from luckycommon.cache.redis_cache import get_accumulated_privilege_count, get_accumulated_privilege_amount, \
     increase_accumulated_privilege_count, increase_accumulated_privilege_amount
-from luckycommon.db.strategy import get_current_amount
-from luckycommon.model.activity import ACTIVITY_STATUS, Activity, UserActivity
-from luckycommon.account.db.account import get_account, is_virtual_user
-from luckycommon.db.activity import get_activity, get_activity_users, get_user_activity, get_user_activities, get_first_user_activity
 from luckycommon.db import strategy as strategy_db
-from luckycommon.order.db.order import get_order, get_last_valid_orders, get_activity_orders
+from luckycommon.db.activity import get_activity, get_activity_users, get_user_activity, get_user_activities, get_first_user_activity
+from luckycommon.db.strategy import get_current_amount
+from luckycommon.model import orm
+from luckycommon.model.activity import ACTIVITY_STATUS, Activity, UserActivity
 from luckycommon.model.transaction import Transaction, TRANSACTION_TYPE, TRANSACTION_STATUS
+from luckycommon.order.db.order import get_order, get_last_valid_orders, get_activity_orders
 from luckycommon.order.model.order import AwardedOrder
-
+from luckycommon.utils.exceptions import ParamError
 from luckycommon.utils.tz import now_ts
-from luckycommon.utils.exceptions import ParamError, AuthenticateError
 
 _LOGGER = logging.getLogger('worker')
 _DEFAULT_DAILY_LIMIT = 50000
@@ -179,7 +177,7 @@ def add_special_privilege(user_id, recharge_amount):
 
 def get_candidate_lucky_numbers(activity):
     candidate_win_users = get_candidate_win_users(activity)
-    candidate_win_user = choose_win_user(candidate_win_users)
+    candidate_win_user = choose_win_user(candidate_win_users, activity)
     candidate_lucky_numbers = get_user_numbers_in_activity(candidate_win_user, activity.id)
     _LOGGER.info('#strategy# candidate_lucky_numbers: %s' % candidate_lucky_numbers)
     return candidate_lucky_numbers
@@ -224,8 +222,8 @@ def get_candidate_win_users(activity):
     return users_to_win
 
 
-def choose_win_user(candidate_win_users):
-    probability_list = [get_user_weight(x) for x in candidate_win_users]
+def choose_win_user(candidate_win_users, activity):
+    probability_list = [get_user_weight(x, activity) for x in candidate_win_users]
     probability_list = [float(x) / sum(probability_list) for x in probability_list]
     candidate_win_user = numpy.random.choice(candidate_win_users, p=probability_list)
     _LOGGER.info('#strategy# candidate_win_user: %s' % candidate_win_user)
@@ -262,7 +260,7 @@ def is_user_qualified(user_id, activity):
 
 
 def is_privilege_user(user_id, activity):
-    user_weight = get_user_weight(user_id)
+    user_weight = get_user_weight(user_id, activity)
     target_amount = activity.target_amount
     single_buy = len(get_user_numbers_in_activity(user_id, activity.id))
     accumulated_privilege_count = get_accumulated_privilege_count(user_id)
@@ -290,12 +288,12 @@ def is_overall_limit_reached(target_amount):
         today_amount.current_amount, today_amount.amount_limit, target_amount))
 
 
-def get_user_weight(user_id):
+def get_user_weight(user_id, activity):
     new_user = new_user_multiplier(user_id)
     first_buy_amount = first_buy_amount_multiplier(user_id)
     total_recharge = total_recharge_multiplier(user_id)
     relative_loss, absolute_loss = loss_multiplier(user_id)
-    daily_first_buy = daily_first_buy_multiplier(user_id)
+    daily_first_buy = daily_first_buy_multiplier(user_id, activity)
     daily_recharge = daily_recharge_multiplier(user_id)
     daily_loss = daily_loss_multiplier(user_id)
     first_5_buy = first_5_buy_multiplier(user_id)
@@ -377,11 +375,11 @@ def loss_multiplier(user_id):
     return relative, absolute
 
 
-def daily_first_buy_multiplier(user_id):
-    activities = UserActivity.query.filter(
+def daily_first_buy_multiplier(user_id, activity):
+    first_user_activity = UserActivity.query.filter(
         UserActivity.created_at > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).filter(
-        UserActivity.user_id == user_id).all()
-    if len(activities) == 1:
+        UserActivity.user_id == user_id).order_by(UserActivity.created_at).first()
+    if first_user_activity.activity_id == activity.id:
         return 1.02
     return 1
 
