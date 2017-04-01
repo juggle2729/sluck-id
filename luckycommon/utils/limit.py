@@ -22,7 +22,7 @@ def frequency_limit(func):
         ip = get_client_ip(req)
         if ip not in INTERNAL_IPS:
             checked = account_cache.check_ip_pay_limit(ip, req.user_id)
-            
+
             if not checked:
                 _LOGGER.error(
                     'frequency limit, ip:%s, user_id:%s', ip, req.user_id)

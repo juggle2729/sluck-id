@@ -344,22 +344,6 @@ def logout(request):
 
 @require_POST
 @response_wrapper
-def forgot_password(request):
-    """
-    忘记密码
-    """
-    query_dct = request.GET
-    check_params(query_dct, ['register_num'])
-    register_type, register_num = account_handler.check_register_num(query_dct['register_num'])
-    exist_account = account_internal_handler.exists_account(register_type, register_num)
-    if not exist_account or not exist_account.email:
-        raise err.DataError(status=StatusCode.INVALID_USER)
-    account_handler.send_resetpwd_link(exist_account.email)
-    return {}
-
-
-@require_POST
-@response_wrapper
 def reset_password(request):
     query_dct = json.loads(request.body)
     check_params(query_dct, ['phone', 'auth_code', 'password'])

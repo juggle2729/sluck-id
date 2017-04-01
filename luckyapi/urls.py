@@ -14,7 +14,6 @@ urlpatterns = patterns(
     url(r'^user/auth_code/?$', AuthCodeView.as_view()),
     url(r'^user/modify/?$', 'luckyapi.account.user.modify_user'),
     url(r'^user/public_profile/?$', 'luckyapi.account.user.get_public_profile'),
-    url(r'^forgotpwd/?$', 'luckyapi.account.auth.forgot_password'),
     url(r'^reset_password/?$', 'luckyapi.account.auth.reset_password'),
     url(r'^check_status/?$', 'luckyapi.views.activity.check_status'),
     # qr code
