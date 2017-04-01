@@ -159,5 +159,5 @@ PAY_GATEWAY_STATUS_URL = 'http://121.40.29.144/api/v1/pay/%s/status'
 MIMOPAY_API_HOST = 'http://staging.mimopay.com'
 MIMOPAY_PAYMENT_METHODS = {'atm': 'atm_bca_api', 'telkomsel': 'upoint_airtime_api'}
 MIMOPAY_MERCHANT_CODES = {'atm': "ID-0225", 'telkomsel': 'ID-0231'}
-MIMOPAY_PRODUCT_NAMES = {'atm': "TokoSeribu", 'telkomsel': 'TS_Game'}
+MIMOPAY_PRODUCT_NAMES = {'atm': "TokoSeribu", 'telkomsel': 'TokoSeribu'}
 MIMOPAY_SECRET_KEYS = {'atm': '15n32j025r22jgw', 'telkomsel': 'd4ei47hqql8z47q'}
