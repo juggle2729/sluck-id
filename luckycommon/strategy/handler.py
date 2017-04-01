@@ -202,14 +202,14 @@ def get_candidate_win_users(activity):
             return all_users_in_activity
         return virtual_users_in_activity
 
-    if len(qualified_users_in_activity) < 1:
+    if len(qualified_users_in_activity) == 0:
         _LOGGER.info('#strategy# no qualified user found, virtual win. user_list: %s' % virtual_users_in_activity)
         if len(virtual_users_in_activity) == 0:
             _LOGGER.info('#strategy# no qualified user found, but virtual list empty. Fallback to fair race')
             return all_users_in_activity
         return virtual_users_in_activity
 
-    if len(privilege_users_in_activity) > 1:
+    if len(privilege_users_in_activity) >= 1:
         users_to_win = privilege_users_in_activity
         _LOGGER.info('#strategy# privilege users found, privilege win. user_list: %s' % users_to_win)
     else:
@@ -268,8 +268,8 @@ def is_privilege_user(user_id, activity):
     if user_weight >= 1.2155 \
             and 100 <= target_amount <= 1000 \
             and single_buy >= target_amount * _MIN_PRIVILEGE_BUY_RATIO \
-            and accumulated_privilege_count < _MAX_PRIVILEGE_COUNT \
-            and accumulated_privilege_amount + target_amount < _MAX_PRIVILEGE_AMOUNT:
+            and int(accumulated_privilege_count) < _MAX_PRIVILEGE_COUNT \
+            and int(accumulated_privilege_amount) + int(target_amount) < _MAX_PRIVILEGE_AMOUNT:
         _LOGGER.info('#strategy# user <%s> has privilege, target_amount: %s, single_buy: %s, privilege_count: %s, privilege_amount: %s' % (
             user_id, target_amount, single_buy, accumulated_privilege_count, accumulated_privilege_amount))
         increase_accumulated_privilege_count(user_id)
