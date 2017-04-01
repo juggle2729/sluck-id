@@ -1067,10 +1067,10 @@ def increase_accumulated_privilege_amount(user_id, amount):
 @cache_wrapper
 def get_accumulated_privilege_count(user_id):
     key = prefix_key('privilege_count:%s' % user_id)
-    ProxyAgent().get(key)
+    return ProxyAgent().get(key)
 
 
 @cache_wrapper
 def get_accumulated_privilege_amount(user_id):
     key = prefix_key('privilege_amount:%s' % user_id)
-    ProxyAgent().get(key)
+    return ProxyAgent().get(key)
