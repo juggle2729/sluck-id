@@ -426,6 +426,16 @@ def mimo_notify(request):
         return HttpResponse('N', status=400)
 
 
+def bubble_mimo_notify(request):
+    """ mimopay callback api just for bubble"""
+    try:
+        mimo_pay.bubble_mimo_check_notify(request)
+        return HttpResponse('ResultCode=0', status=200)
+    except Exception as e:
+        _LOGGER.exception('Bubble MIMO Pay notify exception.(%s)' % e)
+        return HttpResponse('N', status=400)
+
+
 def doku_notify(request):
     try:
         doku_check_notify(request)
