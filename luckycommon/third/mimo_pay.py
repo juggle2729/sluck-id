@@ -7,6 +7,7 @@ import requests
 from django.conf import settings
 
 from luckycommon.async.async_job import track_one
+from luckycommon.credit.db.credit import add_special_recharge_award_credit
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -16,6 +17,7 @@ from luckycommon.utils.exceptions import ParamError, DataError
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+_AWARD_CREDIT_UNIT = 10
 
 
 def mimo_create_charge(pay, pay_amount, currency, pay_method='atm'):
@@ -80,6 +82,7 @@ def mimo_check_notify(request):
             user_id, pay_id, total_fee, currency))
         track_one.delay('recharge', {'price': float(total_fee), 'channel': 'mimo'}, user_id)
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+        add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
         if res:
             _TRACKER.info({'user_id': user_id, 'type': 'recharge', 'price': total_fee, 'channel': 'mimo'})
             try:
@@ -143,6 +146,7 @@ def bubble_mimo_check_notify(request):
                 user_id, pay_id, total_fee, currency))
             track_one.delay('recharge', {'price': float(total_fee), 'channel': 'mimo_telkomsel'}, user_id)
             res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+            add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
             if res:
                 _TRACKER.info({'user_id': user_id, 'type': 'recharge', 'price': total_fee, 'channel': 'mimo_telkomsel'})
                 try:
