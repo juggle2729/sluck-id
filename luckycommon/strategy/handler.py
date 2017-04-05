@@ -303,6 +303,8 @@ def is_overall_limit_reached(target_amount):
 
 
 def get_user_weight(user_id, activity):
+    if is_virtual_user(user_id):
+        return 1.5
     new_user = new_user_multiplier(user_id)
     first_buy_amount = first_buy_amount_multiplier(user_id)
     total_recharge = total_recharge_multiplier(user_id)
@@ -434,7 +436,7 @@ def daily_loss_multiplier(user_id):
         if activity:
             daily_award += activity.target_amount
 
-    loss = daily_award - daily_recharge
+    loss = daily_recharge - daily_award
     if loss >= 5000:
         return 1.05
     if loss >= 2000:
