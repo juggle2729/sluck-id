@@ -204,8 +204,12 @@ def get_user_activities(user_id, only_win=False, status=None,
     id_list = []
     if only_win:
         winned_activitys = redis_cache.get_winn_list(user_id)
-        count = len(winned_activitys)
-        id_list.extend(winned_activitys)
+        if winned_activitys:
+            id_list.extend(winned_activitys)
+        else:
+            for win_activity in ActivityWin.query.filter(ActivityWin.winner == int(user_id)).all():
+                id_list.append(win_activity.activity_id)
+        count = len(id_list)
         activitys = get_activitys_by_ids(id_list, status, limit, offset)
     else:
         query = orm.session.query(UserActivity.activity_id).filter(
