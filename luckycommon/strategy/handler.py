@@ -274,6 +274,8 @@ def is_user_qualified(user_id, activity):
 
 
 def is_privilege_user(user_id, activity):
+    if is_virtual_user(user_id):
+        return False
     user_weight = get_user_weight(user_id, activity)
     target_amount = activity.target_amount
     single_buy = len(get_user_numbers_in_activity(user_id, activity.id))

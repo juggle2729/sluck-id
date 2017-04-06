@@ -85,9 +85,3 @@ def call_announce_activity(activity_id, last_payat):
     call_announce_notify(activity_id, notify_ts)
     # 塞到cache队列中，用于加快开奖查询
     redis_cache.add_to_announce(activity_id)
-
-
-if __name__ == "__main__":
-    activity_id = sys.argv[1]
-    last_payat = sys.argv[2]
-    call_announce_activity(activity_id, last_payat)
