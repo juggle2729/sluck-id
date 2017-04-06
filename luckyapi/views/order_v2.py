@@ -4,6 +4,7 @@ import logging
 
 from django.views.decorators.http import require_POST
 
+from luckycommon.account.db.account import is_virtual_user
 from luckycommon.async.async_job import track_one
 from luckycommon.credit.model.credit import AWARD_CREDIT_UNIT
 from luckycommon.pay import handler as pay_handler
@@ -44,7 +45,8 @@ def pay(request, activity_id):
     if pk_size is not None:
         order_context.update({'pk_size': pk_size})
 
-    order, coupon = pay_handler.create_and_pay_order(request.user_id, activity_id, quantity, order_context)
+    user_id = request.user_id
+    order, coupon = pay_handler.create_and_pay_order(user_id, activity_id, quantity, order_context)
     order_numbers = [] if not order.lucky_numbers else order.lucky_numbers.split(',')
     data = {
         'order_id': order.id,
@@ -62,7 +64,9 @@ def pay(request, activity_id):
                    'activity_id': order.activity_id,
                    'price': order.total_price,
                    'from': 'api'})
-    track_one.delay('buy', {'activity_id': order.activity_id, 'price': float(order.total_price)}, order.buyer)
+    track_one.delay('buy',
+                    {'activity_id': order.activity_id, 'price': float(order.total_price), 'is_virtual': is_virtual_user(user_id)},
+                    order.buyer)
 
     return data
 
