@@ -145,7 +145,7 @@ def filter_apples(request, item_list):
     debug_conf = settings.IOS_DEBUG_CONF
     if chn in debug_conf:
         debug_cvc = debug_conf.get(chn)
-        if cvc == debug_cvc:
+        if int(cvc) == int(debug_cvc):
             # filter apple goods
             filter_list = []
             for item in item_list:
