@@ -63,11 +63,7 @@ def modify_hot_activity(activity_id):
     _LOGGER.info('modify_hot_activity:%s' % activity_id)
     try:
         activity = Activity.query.filter(Activity.id == activity_id).one()
-        pool_flag = redis_cache.check_numbers_pool(activity_id)
-        if pool_flag:
-            activity.current_amount = activity.target_amount - redis_cache.get_left_numbers_count(activity.id)
-        else:
-            activity.current_amount = redis_cache.get_lucky_numbers_count(activity.id)
+        activity.current_amount = activity.target_amount - redis_cache.get_left_numbers_count(activity.id)
 
         query = HotActivity.query
         query = query.filter(HotActivity.template_id == activity.template_id)

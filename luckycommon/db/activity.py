@@ -31,13 +31,8 @@ _LOGGER = logging.getLogger('lucky')
 @sql_wrapper
 def _fill_order(activity):
     try:
-        pool_flag = redis_cache.check_numbers_pool(activity.id)
-        if pool_flag:
-            activity.current_amount = activity.target_amount - \
-                redis_cache.get_left_numbers_count(activity.id)
-        else:
-            activity.current_amount = redis_cache.get_lucky_numbers_count(
-                activity.id)
+        activity.current_amount = activity.target_amount - \
+            redis_cache.get_left_numbers_count(activity.id)
     except Exception:
         payed_orders = Order.query.filter(Order.activity_id == activity.id)\
                                   .filter(Order.status >= ORDER_STATUS.PAYED)\

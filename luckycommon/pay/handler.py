@@ -64,11 +64,7 @@ def revert_lucky_numbers(activity_id, revert_numbers):
     _LOGGER.info('revert lucky numbers %s for %s' %
                  (revert_numbers, activity_id))
     if len(revert_numbers) > 0:
-        pool_flag = redis_cache.check_numbers_pool(activity_id)
-        if pool_flag:
-            redis_cache.unlock_numbers(activity_id, *revert_numbers)
-        else:
-            redis_cache.revert_lucky_numbers(activity_id, *revert_numbers)
+        redis_cache.unlock_numbers(activity_id, *revert_numbers)
 
 
 def check_complete(activity):

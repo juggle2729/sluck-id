@@ -179,16 +179,6 @@ def get_left_numbers_count(activity_id):
 
 
 @cache_wrapper
-def check_numbers_pool(activity_id):
-    """
-    used for cache flag
-    """
-    return True
-    key = prefix_key('poolflag:%s' % activity_id)
-    return ProxyAgent().get(key)
-
-
-@cache_wrapper
 def mapping_nums_with_order(activity_id, mapping_dict):
     """
     used for db
