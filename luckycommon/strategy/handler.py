@@ -398,7 +398,7 @@ def daily_first_buy_multiplier(user_id, activity):
         UserActivity.created_at > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)).filter(
         UserActivity.user_id == user_id).order_by(UserActivity.created_at).first()
 
-    if not first_user_activity and first_user_activity.activity_id == activity.id:
+    if first_user_activity and first_user_activity.activity_id == activity.id:
         return 1.02
     return 1
 

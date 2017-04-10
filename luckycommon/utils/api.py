@@ -160,7 +160,6 @@ def filter_gp(request, item_list):
     if p.get('market') == 'gp' and str(p.get('cvc')) == str(settings.GP_VERSION_CODE) and settings.GP_FLAG:
         filter_list = []
         for item in item_list:
-            _LOGGER.error('SEEEEEEEEEEEEEEEEEEEEE item is %s,   %s', item['gid'], settings.GP_ALLOWED_TIDS)
             if int(item.get('gid')) in settings.GP_ALLOWED_TIDS:
                 filter_list.append(item)
         return filter_list
