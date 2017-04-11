@@ -93,8 +93,7 @@ def coda_check_notify(request):
     currency = 'IDR'
     calculated_sign = _sign("%s%s%s%s" % (
         trade_no, API_KEY_DICT[currency], pay_id, trade_status))
-    _LOGGER.info("Coda Pay sign: %s, calculated sign: %",
-                 check_sum, calculated_sign)
+    _LOGGER.info("Coda Pay sign: %s, calculated sign: %s" % (check_sum, calculated_sign))
     if check_sum != calculated_sign:
         raise ParamError('sign not pass, data: %s' % request.GET)
 
