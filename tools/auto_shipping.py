@@ -350,7 +350,7 @@ def shipping_steam(await_order, activity):
         print 'ship steam order done, order_id: %s, user_id: %s, steam_code: %s' % (await_order.order_id, charge_account, steam_code)
         order_db.update_order_info(
             await_order.order_id,
-            {'status': ORDER_STATUS.DEAL, 'code': steam_code}, )
+            {'status': ORDER_STATUS.DEAL, 'remark': steam_code}, )
         show_order(await_order)
     else:
         print 'steam response invalid. order_id: %s, resp: %s' % (await_order.order_id, resp)
