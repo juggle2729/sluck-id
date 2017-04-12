@@ -520,7 +520,6 @@ def start():
 
 def start_steam():
     await_orders = get_await_list()
-    print 'steam'
     for await_order in await_orders:
         activity_id = await_order.activity_id
         activity = get_activity(activity_id)
