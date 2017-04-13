@@ -11,7 +11,7 @@ from luckycommon.db.activity import get_activity
 from luckycommon.message import handler as message_handler
 from luckycommon.message.model.message import *
 from luckycommon.model.pay import PayType, PayStatus
-from luckycommon.third import coda_pay, fortumo_pay, nganluong, paypal_pay, precard, doku, mimo_pay
+from luckycommon.third import coda_pay, fortumo_pay, nganluong, paypal_pay, precard, doku, mimo_pay, bluepay
 from luckycommon.utils.exceptions import AuthenticateError, ParamError
 from luckycommon.utils.template import generate_from_template
 from luckycommon.utils.tz import utc_to_local
@@ -163,6 +163,10 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
             charge = doku.doku_create_charge(pay, pay_amount, 'visa')
             _LOGGER.info('start pay by doku, pay_id[%s]' % pay_id)
             return {'charge': charge, 'type': 'html_text'}
+        if pay_type == PayType.BLUEPAY_SMS.value:
+            charge = bluepay.bluepay_create_charge(pay, pay_amount, 'sms')
+            _LOGGER.info('start pay by bluepay, pay_id[%s]' % pay_id)
+            return {'charge': charge, 'type': 'url'}
         raise ParamError('pay type not support!')
     except Exception as e:
         pay_db.submit_pay_revert(pay_id)

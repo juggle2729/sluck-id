@@ -27,6 +27,7 @@ class PayType(CustomEnum):
     APPLE_IAP = 21
     DOKU_VISA = 22  # point
     MIMO_TELKOMSEL = 23  # point
+    BLUEPAY_SMS = 24
 
 
 class PayStatus(CustomEnum):
@@ -53,7 +54,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'',
         'highlight': 0,
         'choice': [5, 10, 50, 100, 200, 500],
-        'icon': 'http://p.1yuan-gou.com/ic_pay_5.png',
+        'icon': 'http://p.1yuan-gou.com/codapay_sms.png',
         'tag': '',
     },
     PayType.DOKU_WALLET.value: {
@@ -189,7 +190,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'coda sms',
         'highlight': 0,
         'choice': [50, 100, 200, 500, 1000, 2000, 5000],
-        'icon': '',
+        'icon': 'http://p.1yuan-gou.com/codapay_sms.png',
         'tag': '',
     },
     PayType.MIMO_BCA.value: {
@@ -227,6 +228,15 @@ AVAILABLE_PAY_TYPES = {
         'choice': [5, 10, 50, 100, 200, 500],
         'icon': 'http://p.1yuan-gou.com/ic_tsel.png',
         'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
+    },
+    PayType.BLUEPAY_SMS.value: {
+        'name': u'Bluepay sms',
+        'pay_type': PayType.BLUEPAY_SMS.value,
+        'comment': u'Bluepay',
+        'highlight': 0,
+        'choice': [5, 10, 50, 100, 200, 500],
+        'icon': 'http://p.1yuan-gou.com/bluepay_sms.png',
+        'tag': '',
     },
 }
 

@@ -9,41 +9,29 @@ from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
 from luckycommon.pay.handler import pay_after_recharge
-from luckycommon.utils.exceptions import ParamError
+from luckycommon.utils.exceptions import ParamError, DataError
 
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
 
 _BLUEPAY_KEY = 'VMM91GP7Aq8EAD22'
+_BLUEPAY_PRODUCT_ID = 716
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
-
-COUNTRY_CODES = {
-    'SGD': '702',
-    'IDR': '360',
-    'MYR': '458',
-    'THB': '764',
-    'PHP': '608',
-    'VND': '704',
-    'TWD': '158',
-    'LKR': '144',
-}
-
-CURRENCY_CODES = {
-    'SGD': '702',
-    'IDR': '360',
-    'MYR': '458',
-    'THB': '764',
-    'PHP': '608',
-    'VND': '704',
-    'TWD': '901',
-    'LKR': '144',
-}
 
 
 def _sign(origin_str):
     m = hashlib.md5(origin_str + _BLUEPAY_KEY)
     sign = m.hexdigest().lower()
     return sign
+
+
+def bluepay_create_charge(pay, pay_amount, channel=None):
+    if pay_amount <= 1:
+        raise DataError()
+    gate_way = 'http://in.webpay.bluepay.tech/bluepay/sms.php'
+    price = int(pay_amount) * _EXCHANGE_RATIO
+    url = '%s?pricelist=%s&productId=%s&transactionId=%s&operatorlist=%s' % (gate_way, price, _BLUEPAY_PRODUCT_ID, pay.id, 'Indosat')
+    return url
 
 
 def bluepay_check_notify(request):
