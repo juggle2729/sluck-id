@@ -114,13 +114,13 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
         if pay_type == PayType.EWALLET.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
-        if pay_type == PayType.SMS.value:
+        if pay_type == PayType.BLUEPAY_SDK_SMS.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
-        if pay_type == PayType.MOGPLAY.value:
+        if pay_type == PayType.BLUEPAY_SDK_MOGPLAY.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
-        if pay_type == PayType.GAME_ON.value:
+        if pay_type == PayType.BLUEPAY_SDK_GAME_ON.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
         if pay_type == PayType.ONLINE_BANK.value:
@@ -146,10 +146,10 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
         if pay_type == PayType.CODA_SMS.value:
             _LOGGER.info('start pay by coda sms, pay_id[%s]' % pay_id)
             return {}
-        if pay_type == PayType.CONVENNIENCE_STORE.value:
+        if pay_type == PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
-        if pay_type == PayType.ATM.value:
+        if pay_type == PayType.BLUEPAY_SDK_ATM.value:
             _LOGGER.info('start pay by payssion, pay_id[%s]' % pay_id)
             return {}
         if pay_type == PayType.GOOGLE_BILLING.value:

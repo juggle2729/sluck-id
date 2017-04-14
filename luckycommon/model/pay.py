@@ -12,14 +12,14 @@ class PayType(CustomEnum):
     DOKU_WALLET = 6  # point
     PAYSSION = 7
     EWALLET = 8
-    SMS = 9
+    BLUEPAY_SDK_SMS = 9
     CARRIER_BILLING = 10
     TELCO_VOUCHER = 11
-    CONVENNIENCE_STORE = 12
-    ATM = 13
+    BLUEPAY_SDK_CONVENNIENCE_STORE = 12
+    BLUEPAY_SDK_ATM = 13
     ONLINE_BANK = 14
-    MOGPLAY = 15
-    GAME_ON = 16
+    BLUEPAY_SDK_MOGPLAY = 15
+    BLUEPAY_SDK_GAME_ON = 16
     MANDIRI_ECASH = 17
     MIMO_BCA = 18
     CODA_SMS = 19
@@ -98,9 +98,9 @@ AVAILABLE_PAY_TYPES = {
         'icon': '',
         'tag': '',
     },
-    PayType.SMS.value: {
+    PayType.BLUEPAY_SDK_SMS.value: {
         'name': u'sms',
-        'pay_type': PayType.SMS.value,
+        'pay_type': PayType.BLUEPAY_SDK_SMS.value,
         'comment': u'sms test',
         'highlight': 0,
         'choice': [5, 10, 20, 25, 50, 100, 200],
@@ -139,18 +139,18 @@ AVAILABLE_PAY_TYPES = {
         'icon': '',
         'tag': '',
     },
-    PayType.CONVENNIENCE_STORE.value: {
+    PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value: {
         'name': u'Convenience Store',
-        'pay_type': PayType.CONVENNIENCE_STORE.value,
+        'pay_type': PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value,
         'comment': u'Convenience Store',
         'highlight': 0,
         'choice': [10, 20, 50, 100, 200, 500],
         'icon': 'http://p.1yuan-gou.com/ic_pay_12.png',
         'tag': '',
     },
-    PayType.ATM.value: {
+    PayType.BLUEPAY_SDK_ATM.value: {
         'name': u'Bank Transfer',
-        'pay_type': PayType.ATM.value,
+        'pay_type': PayType.BLUEPAY_SDK_ATM.value,
         'comment': u'Bank Transfer',
         'highlight': 0,
         'choice': [10, 20, 50, 100, 200, 500],
@@ -166,18 +166,18 @@ AVAILABLE_PAY_TYPES = {
         'icon': 'http://p.1yuan-gou.com/ic_pay_17.png',
         'tag': '',
     },
-    PayType.MOGPLAY.value: {
+    PayType.BLUEPAY_SDK_MOGPLAY.value: {
         'name': u'mogplay',
-        'pay_type': PayType.MOGPLAY.value,
+        'pay_type': PayType.BLUEPAY_SDK_MOGPLAY.value,
         'comment': u'Mogplay',
         'highlight': 0,
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_pay_15.png',
         'tag': '',
     },
-    PayType.GAME_ON.value: {
+    PayType.BLUEPAY_SDK_GAME_ON.value: {
         'name': u'game on',
-        'pay_type': PayType.GAME_ON.value,
+        'pay_type': PayType.BLUEPAY_SDK_GAME_ON.value,
         'comment': u'Game On',
         'highlight': 0,
         'choice': [],
