@@ -13,6 +13,7 @@ from luckycommon.model.transaction import Transaction, TRANSACTION_STATUS, TRANS
 from luckycommon.utils.decorator import sql_wrapper
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import id_generator
+from luckycommon.helper import paginate
 
 _LOGGER = logging.getLogger('lucky')
 
@@ -196,6 +197,22 @@ def get_award(user_id):
         filter(Transaction.status == TRANSACTION_STATUS.DONE). \
         filter(Transaction.type == TRANSACTION_TYPE.AWARD).first()[0]
     return amount
+
+
+@sql_wrapper
+def get_transaction_info(user_id):
+    query = orm.session.query(Transaction.type, Transaction.status, Transaction.extend)
+    pay_id_list = get_pay_id_list(user_id, PayStatus.DONE)
+    query_info = paginate(query).filter(Transaction.pay_id.in_(pay_id_list), \
+                                Transaction.user_id=user_id).all()
+    query_info = map(lambda x: dict(zip(("transaction_type", "transaction_status", \
+                                         "transaction_ex_info", ""), x), 
+                     query_info))
+    def _translate_info(key, dict_info):
+        dict_info[key] = json.dumps(dict_info[key])
+        return dict_info
+    result_info_info = map(lambda x: _translate_info("transaction_ex_info", x), query_info)
+    return (result_info_info)
 
 
 @sql_wrapper
