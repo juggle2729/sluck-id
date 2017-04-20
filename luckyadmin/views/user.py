@@ -14,8 +14,9 @@ from luckycommon.utils import exceptions as err
 from luckycommon.utils.respcode import StatusCode
 from luckycommon.utils.api import check_params, token_required
 from luckycommon.utils.tz import utc_to_local_str
-from luckycommon.order.db.order import get_awarder_info
+from luckycommon.order.db.order import get_awardorder_info 
 from luckycommon.db.transaction import get_transaction_info
+from luckycommon.account.db.account import get_account_status
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -178,24 +179,25 @@ class SinglePermissionView(TemplateView):
 
 class WinnerUserView(TemplateView):
 
-    __allow_admin_list=[0, 0, 0, 0]
+    _allow_admin_list=[17, 0, 0, 0]
 
-    @method_decorator(token_required)
+    #@method_decorator(token_required)
     def get(self, req, user_id):
         user_id = long(user_id)
-
-        info = db.get_user(user_id).as_dict()
-        if req.user.id != user_id and req.user.role < info['role']:
-            raise err.PermissionError()
-        if req.user.id not in __allow_admin_list:
+	info = db.get_user(user_id)
+        if req.user.id not in self._allow_admin_list:
             return {"result_info": "not allow access!"}
-        db.account_info = {"bannd": True} if get_account_status(user_id) else {"bannd": False}
+        account_info = True if get_account_status(user_id) else False
         transaction_info = get_transaction_info(user_id)
-        wining_info = get_wining_info(user_id)
-        return reduce(lambda x, y: x.update(y), [account_info, transaction_info_info, wining_info])
+        wining_info = get_transaction_info(user_id)
+        result = {"user_id": user_id, \
+		  "account_info": account_info, \
+		  "transaction_info": transaction_info, \
+		  "wining_info": wining_info}
+	return result
 
     @method_decorator(response_wrapper)
-    @method_decorator(token_required)
+    #@method_decorator(token_required)
     def dispatch(self, *args, **kwargs):
-        return super(SingleUserView, self).dispatch(*args, **kwargs)
+        return super(WinnerUserView, self).dispatch(*args, **kwargs)
 

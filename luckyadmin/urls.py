@@ -37,7 +37,7 @@ urlpatterns = patterns(
     url(r'^activity/?$', ActivityListView.as_view()),
     url(r'^activity/template/(?P<template_id>\d+)/?$',
         SingleActivityTemplateView.as_view()),
-    url(r'winingsinfo/(?P<user_id>\d+)/?$', WinnerUserView.as_view())
+    url(r'user/info/winingsinfo/(?P<user_id>\d+)/?$', WinnerUserView.as_view()),
     # order
     url(r'^order/?$', OrderView.as_view()),
     url(r'^order/(?P<order_id>\d+)/?$', SingleOrderView.as_view()),
