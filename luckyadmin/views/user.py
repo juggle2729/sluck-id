@@ -181,7 +181,7 @@ class WinnerUserView(TemplateView):
 
     _allow_admin_list=[17, 0, 0, 0]
 
-    #@method_decorator(token_required)
+    @method_decorator(token_required)
     def get(self, req, user_id):
         user_id = long(user_id)
 	info = db.get_user(user_id)
@@ -189,7 +189,7 @@ class WinnerUserView(TemplateView):
             return {"result_info": "not allow access!"}
         account_info = True if get_account_status(user_id) else False
         transaction_info = get_transaction_info(user_id)
-        wining_info = get_transaction_info(user_id)
+        wining_info = get_awardorder_info(user_id)
         result = {"user_id": user_id, \
 		  "account_info": account_info, \
 		  "transaction_info": transaction_info, \
@@ -197,7 +197,7 @@ class WinnerUserView(TemplateView):
 	return result
 
     @method_decorator(response_wrapper)
-    #@method_decorator(token_required)
+    @method_decorator(token_required)
     def dispatch(self, *args, **kwargs):
         return super(WinnerUserView, self).dispatch(*args, **kwargs)
 

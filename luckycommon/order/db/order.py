@@ -581,33 +581,27 @@ def add_order_route(order_id, status, operator=None, content=None):
 
 @sql_wrapper
 def get_awardorder_info(user_id):
-    query = orm.session.query(AwardedOrder.activity_id, AwardedOrder.order_id, \
-                              AwardedOrder.activity_name, AwardedOrder.status, \
-                              AwardedOrder.created_at)
+    query = orm.session.query(ActivityWin.activity_id, ActivityWin.order_id, \
+                              ActivityWin.created_at)
+    query_info = query.filter(ActivityWin.winner == user_id).all()
+  
+    result_info = map(lambda x: dict(zip(("activity_id", "order_id", 
+                                          "created_at", \
+                                         ), x)), query_info)
     
-    
-    query_info = query.filter(AwardedOrder.user_id == user_id).all()
-    #result_info = reduce(lambda x, y: x.update(y), \
-    result_info = map(lambda x: dict(zip(("activity_id", "order_id", \
-                                          "ivity_name", "status", \
-                                          "created_at"), x)), query_info)
-
-    activity_id_list = map(lambda x: x[0], query_info)
-    _add_query = orm.session.query(Activity.term_number)
+    activity_id_list = map(lambda x: x[0], query_info) #_get_head(x), query_info)
+    _add_query = orm.session.query(Activity.term_number, Activity.name, Activity.status)
     _add_content = _add_query.filter(Activity.id.in_(activity_id_list)).all()
-    #_add_info_1 = reduce(lambda x, y: x.update(y), \
-    _add_info_1 = map(lambda x: dict(zip(("activity_term_number",), x)), query_info)
+    _add_info_1 = map(lambda x: dict(zip(("activity_term_number", \
+                                          "activity_name", "status", \
+                                          ), x)), query_info)
 
-    order_id_list = map(lambda x: x[1], query_info)
+    order_id_list = map(lambda x: x[1], query_info) # _get_neck(x), query_info)
     _add_query = orm.session.query(Order.status, Order.receipt_address)
     _add_content = _add_query.filter(Order.id.in_(order_id_list)).all()
-    #_add_info_2 = reduce(lambda x, y: x.update(y), \
     _add_info_2 = map(lambda x: dict(zip(("order_status", "receipt_address",), x)), query_info)
-    
-    #result_info_dict = reduce(lambda x, y: x.update(y), [result_info, _add_info_1, _add_info_2])
-    
-    return result_info + _add_info_1 + _add_info_2 
 
+    return ({"activity_info":_add_info_1, "order_info": _add_info_2})
 
 
 class OrderPayer:
