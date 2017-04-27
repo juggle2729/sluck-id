@@ -1,6 +1,8 @@
 {
   "default": {
     "mm": "ubuntu",
+    "user": "ubuntu",
+    "host":"127.0.0.1",
     "need_confirm": false
   },
   "dependency": {

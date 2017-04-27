@@ -579,6 +579,31 @@ def add_order_route(order_id, status, operator=None, content=None):
     order_route.save()
 
 
+@sql_wrapper
+def get_awardorder_info(user_id):
+    query = orm.session.query(ActivityWin.activity_id, ActivityWin.order_id, \
+                              ActivityWin.created_at)
+    query_info = query.filter(ActivityWin.winner == user_id).all()
+  
+    result_info = map(lambda x: dict(zip(("activity_id", "order_id", 
+                                          "created_at", \
+                                         ), x)), query_info)
+    
+    activity_id_list = map(lambda x: x[0], query_info) #_get_head(x), query_info)
+    _add_query = orm.session.query(Activity.term_number, Activity.name, Activity.status)
+    _add_content = _add_query.filter(Activity.id.in_(activity_id_list)).all()
+    _add_info_1 = map(lambda x: dict(zip(("activity_term_number", \
+                                          "activity_name", "status", \
+                                          ), x)), query_info)
+
+    order_id_list = map(lambda x: x[1], query_info) # _get_neck(x), query_info)
+    _add_query = orm.session.query(Order.status, Order.receipt_address)
+    _add_content = _add_query.filter(Order.id.in_(order_id_list)).all()
+    _add_info_2 = map(lambda x: dict(zip(("order_status", "receipt_address",), x)), query_info)
+
+    return ({"activity_info":_add_info_1, "order_info": _add_info_2})
+
+
 class OrderPayer:
 
     """
