@@ -183,8 +183,10 @@ class WinnerUserView(TemplateView):
 
     @method_decorator(token_required)
     def get(self, req, user_id):
+        query_dct = req.GET.dict()
+        _LOGGER.info('query_dct : %s' % query_dct)
         user_id = long(user_id)
-	info = db.get_user(user_id)
+        info = db.get_user(user_id)
         if req.user.id not in self._allow_admin_list:
             return {"result_info": "not allow access!"}
         account_info = True if get_account_status(user_id) else False
@@ -194,7 +196,7 @@ class WinnerUserView(TemplateView):
 		  "account_info": account_info, \
 		  "transaction_info": transaction_info, \
 		  "wining_info": wining_info}
-	return result
+        return result
 
     @method_decorator(response_wrapper)
     @method_decorator(token_required)
