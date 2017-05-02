@@ -13,6 +13,7 @@ from luckycommon.model.transaction import Transaction, TRANSACTION_STATUS, TRANS
 from luckycommon.utils.decorator import sql_wrapper
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import id_generator
+from luckycommon.db.helper import paginate
 
 _LOGGER = logging.getLogger('lucky')
 
@@ -196,6 +197,27 @@ def get_award(user_id):
         filter(Transaction.status == TRANSACTION_STATUS.DONE). \
         filter(Transaction.type == TRANSACTION_TYPE.AWARD).first()[0]
     return amount
+
+
+@sql_wrapper
+def get_pay_id_list(user_id, status=1):
+    query = orm.session.query(Pay.id).filter(Pay.user_id==user_id, Pay.status==status).all()
+    return map(lambda x: x[0], query)
+
+
+@sql_wrapper
+def get_transaction_info(user_id):
+    from sqlalchemy import desc
+    query = orm.session.query(Transaction.id, Transaction.pay_id, Transaction.status, Transaction.extend, \
+                            Transaction.title, Transaction.price, Transaction.created_at)
+    query = query.filter(Transaction.user_id==user_id, Transaction.type==1).order_by(desc(Transaction.created_at))
+    query_info = paginate(query, {"$size": 1000}).all()
+    query_info = map(lambda x: dict(zip(("id", "pay_id", "transaction_status", "transaction_ex_info", "title", "price", "created_time"), x)), \
+			query_info)
+    # def _translate_info(key, dict_info):
+        # dict_info["trade_no"] = json.dumps(dict_info[key]).get("trade_no", "")
+    # map(lambda x: _translate_info("transaction_ex_info", x), query_info)
+    return query_info
 
 
 @sql_wrapper
