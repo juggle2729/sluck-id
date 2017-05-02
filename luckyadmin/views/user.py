@@ -16,6 +16,8 @@ from luckycommon.utils.api import check_params, token_required
 from luckycommon.utils.tz import utc_to_local_str
 from luckycommon.order.db.order import get_awardorder_info 
 from luckycommon.db.transaction import get_transaction_info
+from luckycommon.db.transaction import get_all_recharge_price
+from luckycommon.account.db.account import get_user_by_uid
 from luckycommon.account.db.account import get_account_status
 
 _LOGGER = logging.getLogger(__name__)
@@ -179,7 +181,7 @@ class SinglePermissionView(TemplateView):
 
 class WinnerUserView(TemplateView):
 
-    _allow_admin_list=[17, 0, 0, 0]
+    _allow_admin_list=[17,]
 
     @method_decorator(token_required)
     def get(self, req, user_id):
@@ -190,10 +192,16 @@ class WinnerUserView(TemplateView):
         if req.user.id not in self._allow_admin_list:
             return {"result_info": "not allow access!"}
         account_info = True if get_account_status(user_id) else False
+        phone = get_user_by_uid(user_id).phone
         transaction_info = get_transaction_info(user_id)
         wining_info = get_awardorder_info(user_id)
+        all_recharge_account = get_all_recharge_price(user_id)
+        all_wining_account = wining_info.pop(0)
         result = {"user_id": user_id, \
 		  "account_info": account_info, \
+          "phone": phone, \
+          "all_recharge": all_recharge_account, \
+          "all_wining": all_wining_account, \
 		  "transaction_info": transaction_info, \
 		  "wining_info": wining_info}
         return result

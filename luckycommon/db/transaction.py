@@ -221,6 +221,16 @@ def get_transaction_info(user_id):
 
 
 @sql_wrapper
+def get_all_recharge_price(user_id):
+    query = orm.session.query(Transaction.price,)
+    query_info = query.filter(Transaction.user_id==user_id, Transaction.type==1).all()
+    if len(query_info) > 0:
+        return reduce(lambda x, y: x+y, map(lambda x: float(x[0]), query_info))
+    else: 
+        return 0.0
+
+
+@sql_wrapper
 def transfer_coin(out_uid, in_uid, amount):
     """
     转账夺宝币
