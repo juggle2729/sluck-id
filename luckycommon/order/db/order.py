@@ -588,7 +588,7 @@ def get_awardorder_info(user_id):
     result_info = map(lambda x: dict(zip(("activity_id", "order_id", 
                                           "created_at", \
                                          ), x)), query_info)
-    
+
     activity_id_list = map(lambda x: x["activity_id"], result_info)
     # _LOGGER.info('activity_id_list : %s' % activity_id_list)
     _add_query = orm.session.query(Activity.term_number, Activity.name,)
@@ -598,14 +598,18 @@ def get_awardorder_info(user_id):
                                           ), x)), _add_content)
 
     order_id_list = map(lambda x: x[1], query_info)
-    # _add_query = orm.session.query(Order.goods_quantity,)
-    # _add_content = _add_query.filter(Order.id.in_(order_id_list)).all()
-    # _add_info_2 = map(lambda x: dict(zip(("order_goods_quantity",), x)), _add_content)
+    _add_query = orm.session.query(Order.total_price,)
+    _add_content = _add_query.filter(Order.id.in_(order_id_list)).all()
+    # _add_info_2 = map(lambda x: dict(zip(("order_price",), x)), _add_content)
+    if len(_add_content) > 0:
+        _total_order_price = reduce(lambda x, y: x+y, map(lambda x: float(x[0]), _add_content))
+    else:
+        _total_order_price = 0.0
 
     _add_query = orm.session.query(AwardedOrder.receipt_address, AwardedOrder.status, \
                                     AwardedOrder.remark, AwardedOrder.updated_at, AwardedOrder.created_at)
     _add_content = _add_query.filter(AwardedOrder.order_id.in_(order_id_list)).all()
-    _LOGGER.info('order_receipt_address : %s' % _add_content)
+    # _LOGGER.info('order_receipt_address : %s' % _add_content)
     _add_info_3 = map(lambda x: dict(zip(("order_receipt_address", "order_status", \
                                     "order_remark", "order_update_time", "order_created_time"), x)), _add_content)
     
@@ -613,6 +617,7 @@ def get_awardorder_info(user_id):
     _info_no_use = map(lambda x: x[0].update(x[-1]), zip(_add_info_1,  _add_info_3))
 
     result_info = sorted(_add_info_1, key=lambda x: x["order_created_time"])
+    result_info.append(_total_order_price)
 
     return result_info[::-1]
 
