@@ -179,7 +179,7 @@ class SinglePermissionView(TemplateView):
 
 class WinnerUserView(TemplateView):
 
-    _allow_admin_list=[17, 0, 0, 0]
+    _allow_admin_list=[17,]
 
     @method_decorator(token_required)
     def get(self, req, user_id):
