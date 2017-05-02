@@ -37,7 +37,7 @@ from luckycommon.db.strategy import (get_current_amount, add_current_amount,
 
 from luckycommon.push import PUSH_COMMANDS
 from luckycommon.push import handler as push_handler
-from luckycommon.strategy.handler import get_candidate_lucky_numbers
+from luckycommon.strategy.handler import get_candidate_lucky_numbers, get_qualified_lucy_numbers
 from luckycommon.sunday import callback as sunday_callback
 from luckycommon.timer import TIMER_EVENT_TYPE, TimerEvent
 from luckycommon.utils.tz import now_ts
@@ -669,10 +669,13 @@ class ActivityAnnounceHandler(EventHandler):
         result, result_a, a_list = self.calc_result(orders, activity.target_amount, lottery.number)
 
         candidate_lucky_numbers = get_candidate_lucky_numbers(activity)
-        # _LOGGER.info('#strategy# befor adjust, result: %s, result_a: %s, a_list: %s, candidate_lucky_numbers: %s, orders: %s' % (result, result_a, a_list, candidate_lucky_numbers, orders))
         adjust_success, result, result_a, a_list = self.adjust_result(result, result_a, a_list, candidate_lucky_numbers, orders,
                                                                       activity.target_amount)
-        # _LOGGER.info('#strategy# after adjust, adjust_success %s, result: %s, result_a: %s, a_list:%s' % (adjust_success, result, result_a, a_list))
+        if not adjust_success:
+            _LOGGER.info('#strategy# adjust failed, try use all qualified numbers')
+            qualified_lucky_numbers = get_qualified_lucy_numbers(activity)
+            adjust_success, result, result_a, a_list = self.adjust_result(result, result_a, a_list, qualified_lucky_numbers, orders,
+                                                                          activity.target_amount)
         try:
             lucky_order_id = redis_cache.get_lucky_order(activity_id, result)
             lucky_order = ActivityAnnouncer.announce(

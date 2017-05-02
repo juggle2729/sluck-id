@@ -183,6 +183,16 @@ def get_candidate_lucky_numbers(activity):
     return candidate_lucky_numbers
 
 
+def get_qualified_lucy_numbers(activity):
+    all_users_in_activity = get_all_users_in_activity(activity)
+    qualified_users_in_activity = [int(x) for x in all_users_in_activity if is_user_qualified(x, activity)]
+    candidate_lucky_numbers = []
+    for user in qualified_users_in_activity:
+        candidate_lucky_numbers += get_user_numbers_in_activity(user, activity.id)
+    _LOGGER.info('#strategy# qualified_lucky_numbers: %s' % candidate_lucky_numbers)
+    return candidate_lucky_numbers
+
+
 def get_user_numbers_in_activity(user_id, activity_id):
     _LOGGER.info('#strategy# user_id: %s, activity_id: %s' % (user_id, activity_id))
     user_activity = get_user_activity(user_id, activity_id)
@@ -227,7 +237,7 @@ def get_candidate_win_users(activity):
         users_to_win = privilege_users_in_activity
         _LOGGER.info('#strategy# privilege users found, privilege win. user_list: %s' % users_to_win)
     else:
-        users_to_win = list(set(qualified_users_in_activity + virtual_users_in_activity))
+        users_to_win = qualified_users_in_activity
         _LOGGER.info('#strategy# privilege users not found, qualified & virtual win. user_list: %s' % users_to_win)
 
     if len(users_to_win) == 0:
@@ -253,6 +263,8 @@ def get_all_users_in_activity(activity):
 
 
 def is_user_qualified(user_id, activity):
+    if is_virtual_user(user_id):
+        return True
     numbers = get_user_numbers_in_activity(user_id, activity.id)
     single_buy = len(numbers)
     result = orm.session.query(func.sum(Transaction.price)).filter(Transaction.user_id == user_id).filter(
