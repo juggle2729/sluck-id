@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+from time import sleep
 
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
@@ -27,7 +28,10 @@ def put_numbers_back(activity_id):
     print len(raw_numbers), len(uniques)
 
 
-# put_back('8157db8d-0473-35f9-8275-1ba0bce8e990')
+for activity in Activity.query.filter(Activity.status == 1):
+    put_numbers_back(activity.id)
+    print 'put numbers back. activity_id: <%s>, name: %s' % (activity.id, activity.name)
+    sleep(1)
 
 
 def put_orders_back(activity_id):

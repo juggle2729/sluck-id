@@ -14,7 +14,7 @@ from luckycommon.utils import exceptions as err
 from luckycommon.utils.respcode import StatusCode
 from luckycommon.utils.api import check_params, token_required
 from luckycommon.utils.tz import utc_to_local_str
-from luckycommon.order.db.order import get_awardorder_info 
+from luckycommon.order.db.order import get_awardorder_info
 from luckycommon.db.transaction import get_transaction_info
 from luckycommon.db.transaction import get_all_recharge_price
 from luckycommon.account.db.account import get_user_by_uid
@@ -44,7 +44,6 @@ def logout(req):
 
 
 class UserView(TemplateView):
-
     @method_decorator(token_required)
     def get(self, req, *args, **kwargs):
         query_dct = req.GET.dict()
@@ -80,7 +79,6 @@ class UserView(TemplateView):
 
 
 class SingleUserView(TemplateView):
-
     def get(self, req, user_id):
         user_id = long(user_id)
 
@@ -135,7 +133,6 @@ class SingleUserView(TemplateView):
 
 
 class PermissionView(TemplateView):
-
     def get(self, req):
         query_dct = req.GET.dict()
         items, total_count = db.list_perm(query_dct)
@@ -156,7 +153,6 @@ class PermissionView(TemplateView):
 
 
 class SinglePermissionView(TemplateView):
-
     def get(self, req, perm_id):
         perm_id = int(perm_id)
         return db.get_perm(id=perm_id).as_dict()
@@ -181,33 +177,28 @@ class SinglePermissionView(TemplateView):
 
 class WinnerUserView(TemplateView):
 
-    _allow_admin_list=[17,]
-
     @method_decorator(token_required)
     def get(self, req, user_id):
         query_dct = req.GET.dict()
         _LOGGER.info('query_dct : %s' % query_dct)
         user_id = long(user_id)
         info = db.get_user(user_id)
-        if req.user.id not in self._allow_admin_list:
-            return {"result_info": "not allow access!"}
         account_info = True if get_account_status(user_id) else False
         phone = get_user_by_uid(user_id).phone
         transaction_info = get_transaction_info(user_id)
         wining_info = get_awardorder_info(user_id)
         all_recharge_account = get_all_recharge_price(user_id)
         all_wining_account = wining_info.pop(0)
-        result = {"user_id": user_id, \
-		  "account_info": account_info, \
-          "phone": phone, \
-          "all_recharge": all_recharge_account, \
-          "all_wining": all_wining_account, \
-		  "transaction_info": transaction_info, \
-		  "wining_info": wining_info}
+        result = {"user_id": user_id,
+                  "account_info": account_info,
+                  "phone": phone,
+                  "all_recharge": all_recharge_account,
+                  "all_wining": all_wining_account,
+                  "transaction_info": transaction_info,
+                  "wining_info": wining_info}
         return result
 
     @method_decorator(response_wrapper)
     @method_decorator(token_required)
     def dispatch(self, *args, **kwargs):
         return super(WinnerUserView, self).dispatch(*args, **kwargs)
-

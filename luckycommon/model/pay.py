@@ -227,7 +227,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [5, 10, 50, 100, 200, 500],
         'icon': 'http://p.1yuan-gou.com/ic_tsel.png',
-        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
+        'tag': '',
     },
     PayType.BLUEPAY_SMS.value: {
         'name': u'Bluepay sms',
