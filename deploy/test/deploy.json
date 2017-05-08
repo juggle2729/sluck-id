@@ -38,14 +38,14 @@
   },
   "env": {
     "luckyservice-id": {
-      "121.40.29.144": {
+      "54.169.136.207": {
         "bash": [
           "rm -rf luckyweb"
         ]
       }
     },
     "luckyweb": {
-      "121.40.29.144": {
+      "54.169.136.207": {
         "bash": [
           "mv assets/js/settings_test.js assets/js/env_settings.js"
         ]
