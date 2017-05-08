@@ -224,6 +224,8 @@ class ActivityAnnounceHandler(EventHandler):
             if i == 0:
                 continue
             pay_at_code = int(b_list[i]['code'])
+            _LOGGER.info('#strategy# get last order: %s, announce activity: %s, pay_at_code: %s' % (
+                last_order_time, order.activity_id, pay_at_code))
             pay_at_ms = pay_at_code % 1000  # 取毫秒部分
             if pay_at_code > last_order_time:
                 if pay_at_ms + delta_ms >= 1000:  # 不能溢出
