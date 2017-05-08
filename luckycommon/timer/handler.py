@@ -673,11 +673,13 @@ class ActivityAnnounceHandler(EventHandler):
         if lucky_number not in candidate_lucky_numbers:
             adjust_success, lucky_number, result_a, a_list = self.adjust_result(lucky_number, result_a, a_list, candidate_lucky_numbers,
                                                                                 orders, activity.target_amount)
-            if not adjust_success:
+            qualified_lucky_numbers = get_qualified_lucy_numbers(activity)
+            if not adjust_success and lucky_number not in qualified_lucky_numbers:
                 _LOGGER.info('#strategy# adjust failed, try use all qualified numbers')
-                qualified_lucky_numbers = get_qualified_lucy_numbers(activity)
                 adjust_success, lucky_number, result_a, a_list = self.adjust_result(lucky_number, result_a, a_list, qualified_lucky_numbers,
                                                                                     orders, activity.target_amount)
+            else:
+                _LOGGER.info('#strategy# lucky number is fine, no need to second adjust.')
         else:
             _LOGGER.info('#strategy# lucky number is fine, no need to adjust.')
         try:
