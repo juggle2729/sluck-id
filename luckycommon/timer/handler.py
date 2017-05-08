@@ -189,9 +189,8 @@ class ActivityAnnounceHandler(EventHandler):
             except Exception as e:
                 _LOGGER.error('announce_activity split error %s' % e)
 
-        result = (result_a + result_b) % target_amount + \
-                 ActivityAnnounceHandler._BASE_NUM
-        return result, result_a, a_list
+        lucky_number = (result_a + result_b) % target_amount + ActivityAnnounceHandler._BASE_NUM
+        return lucky_number, result_a, a_list
 
     def adjust_result(self, default_num, result_a, a_list, candidates, orders, target_amount):
         _LOGGER.info('#strategy# start adjusting')
@@ -666,21 +665,23 @@ class ActivityAnnounceHandler(EventHandler):
 
         orders = get_last_valid_orders(last_payat)
         lottery = lottery_handler.get_latest_lottery()
-        result, result_a, a_list = self.calc_result(orders, activity.target_amount, lottery.number)
+        lucky_number, result_a, a_list = self.calc_result(orders, activity.target_amount, lottery.number)
 
         candidate_lucky_numbers = get_candidate_lucky_numbers(activity)
-        adjust_success, result, result_a, a_list = self.adjust_result(result, result_a, a_list, candidate_lucky_numbers, orders,
-                                                                      activity.target_amount)
-        if not adjust_success:
-            _LOGGER.info('#strategy# adjust failed, try use all qualified numbers')
-            qualified_lucky_numbers = get_qualified_lucy_numbers(activity)
-            adjust_success, result, result_a, a_list = self.adjust_result(result, result_a, a_list, qualified_lucky_numbers, orders,
-                                                                          activity.target_amount)
+        if lucky_number not in candidate_lucky_numbers:
+            adjust_success, lucky_number, result_a, a_list = self.adjust_result(lucky_number, result_a, a_list, candidate_lucky_numbers,
+                                                                                orders, activity.target_amount)
+            if not adjust_success:
+                _LOGGER.info('#strategy# adjust failed, try use all qualified numbers')
+                qualified_lucky_numbers = get_qualified_lucy_numbers(activity)
+                adjust_success, lucky_number, result_a, a_list = self.adjust_result(lucky_number, result_a, a_list, qualified_lucky_numbers,
+                                                                                    orders, activity.target_amount)
+        else:
+            _LOGGER.info('#strategy# lucky number is fine, no need to adjust.')
         try:
-            lucky_order_id = redis_cache.get_lucky_order(activity_id, result)
-            lucky_order = ActivityAnnouncer.announce(
-                activity, result, result_a, lottery, a_list, lucky_order_id)
-            _LOGGER.info('#strategy# success, new winner:%s' % lucky_order.buyer)
+            lucky_order_id = redis_cache.get_lucky_order(activity_id, lucky_number)
+            lucky_order = ActivityAnnouncer.announce(activity, lucky_number, result_a, lottery, a_list, lucky_order_id)
+            _LOGGER.info('#strategy# announce finished, winner:%s, lucky number: %s' % (lucky_order.buyer, lucky_number))
             # remove lucky orders cache
             redis_cache.remove_lucky_order(activity_id)
             # 记录最大的pay at
