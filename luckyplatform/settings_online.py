@@ -158,5 +158,5 @@ PAY_GATEWAY_STATUS_URL = 'http://id.lucky-gou.com/api/v1/pay/%s/status'
 MIMOPAY_API_HOST = 'https://gateway.mimopay.com'
 MIMOPAY_PAYMENT_METHODS = {'atm': 'atm_bca_api', 'telkomsel': 'upoint_airtime_api'}
 MIMOPAY_MERCHANT_CODES = {'atm': "ID-0225", 'telkomsel': 'ID-0231'}
-MIMOPAY_PRODUCT_NAMES = {'atm': "TokoSeribu", 'telkomsel': 'TokoSeribu'}
+MIMOPAY_PRODUCT_NAMES = {'atm': "TS", 'telkomsel': 'TS'}
 MIMOPAY_SECRET_KEYS = {'atm': 'l549vhh7zh2skrs', 'telkomsel': '6z1ynean07ycuv7'}
