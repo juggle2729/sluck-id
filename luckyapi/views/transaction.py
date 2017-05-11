@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
+from datetime import datetime
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -12,6 +13,7 @@ from future.utils import raise_with_traceback
 from luckyapi.logic.transaction import (
     get_user_transactions, create_pay_id, submit_pay, view_pay_status,
     transfer_to_other, get_transfer_records)
+from luckycommon.account.db.account import get_user_by_uid
 from luckycommon.cache import redis_cache
 from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
@@ -85,6 +87,7 @@ def transfer_coin(request):
 @token_required
 def get_pay_types(request):
     try:
+        user_id = request.user_id
         platform = request.GET.get('platform')
         version_code = request.GET.get('version_code', 1)
         locale = request.GET.get('locale')
@@ -98,6 +101,13 @@ def get_pay_types(request):
         version_code,
         locale,
         chn)
+
+    # temp strategy remove MIMO_TELKOMSEL for new registered user
+    user = get_user_by_uid(user_id)
+    if user.created_at > datetime(2017, 5, 9):
+        filtered_available_pay_types.remove(AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value])
+    # end temp strategy
+
     data = {
         'list': filtered_available_pay_types,
         'count': len(filtered_available_pay_types)
