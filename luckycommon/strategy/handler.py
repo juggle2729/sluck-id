@@ -264,9 +264,11 @@ def list_multiple(list1, list2):
 
 def choose_win_user(candidate_win_users, activity):
     probability_list = [get_user_weight(x, activity) for x in candidate_win_users]
+    _LOGGER.info('#strategy# probability_list: %s' % probability_list)
     user_activity_amount_weight_list = [get_user_activity_weight(x, activity) for x in candidate_win_users]
     probability_list = list_multiple(user_activity_amount_weight_list, probability_list)
     probability_list = [float(x) / sum(probability_list) for x in probability_list]
+    _LOGGER.info('#strategy# probability_list: %s' % probability_list)
     candidate_win_user = numpy.random.choice(candidate_win_users, p=probability_list)
     _LOGGER.info('#strategy# candidate_win_user: %s' % candidate_win_user)
     return candidate_win_user
