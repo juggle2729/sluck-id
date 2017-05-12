@@ -251,7 +251,7 @@ def get_user_activity_weight(user_id, activity):
         UserActivity.activity_id == activity.id, user_id ==user_id)
     nunber_len = numbers_chars.count(",")+1
     total_amount = activity.target_amount
-    return numbers_len/total_amount
+    return float(number_len)/float(total_amount)
 
 def list_multiple(list1, list2):
     # to multiple two list member
