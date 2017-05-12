@@ -226,7 +226,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'MIMO TELKOMSEL',
         'highlight': 0,
         'choice': [10, 50],
-        'icon': 'http://p.1yuan-gou.com/ic_tsel.png',
+        'icon': 'http://p.1yuan-gou.com/ic_tsel_new.png',
         'tag': '',
     },
     PayType.BLUEPAY_SMS.value: {
