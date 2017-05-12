@@ -249,7 +249,7 @@ def get_candidate_win_users(activity):
 def get_user_activity_weight(user_id, activity):
     numbers_chars = orm.session.query(UserActivity.numbers).filter(
         UserActivity.activity_id == activity.id, UserActivity.user_id ==user_id).first()
-    number_len = str(numbers_chars).count(",")+1
+    number_len = str(numbers_chars).count(",")
     total_amount = activity.target_amount
     return float(number_len)
 
