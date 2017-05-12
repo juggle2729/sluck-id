@@ -225,7 +225,7 @@ AVAILABLE_PAY_TYPES = {
         'pay_type': PayType.MIMO_TELKOMSEL.value,
         'comment': u'MIMO TELKOMSEL',
         'highlight': 0,
-        'choice': [5, 10, 50, 100, 200, 500],
+        'choice': [10, 50],
         'icon': 'http://p.1yuan-gou.com/ic_tsel.png',
         'tag': '',
     },
