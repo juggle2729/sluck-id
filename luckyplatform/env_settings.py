@@ -25,7 +25,7 @@ LANGUAGE_CODE = 'en-us'
 
 CITY_LAN = 'id'
 
-ROOT_URL = 'http://192.168.0.191/'
+ROOT_URL = 'http://54.169.136.207/'
 
 CELERY_BROKER = 'redis://127.0.0.1:6379//'
 
@@ -33,11 +33,11 @@ GEOLITE_CITY_DB = '/home/ubuntu/af-env/data/GeoLite2-City.mmdb'
 
 LIST_UPDATE = '/home/ubuntu/af-env/luckyservice/luckycommon/virtual/list_update'
 
-WEB_APP_ROOT_URL = 'http://192.168.0.191:9898'
+WEB_APP_ROOT_URL = 'http://54.169.136.207:9898'
 
-ADMIN_ROOT_URL = 'http://192.168.0.191/'
+ADMIN_ROOT_URL = 'http://54.169.136.207/'
 
-INVITER_SHARE_LINK = 'http://192.168.0.191/share_app2/'
+INVITER_SHARE_LINK = 'http://54.169.136.207/share_app2/'
 
 XINGE_ACCESS_ID = '2200194027'
 XINGE_SECRET = 'a24df2ea34f4ef67021a22a1ba41a032'
@@ -123,20 +123,20 @@ PAYPAL_API_PASSWORD = "NM9R6AYQ67B4LV84"
 PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31AHfwRGYJfzLcwi-.BLrQMUf3ZxLi"
 PAYPAL_API_ENVIRONMENT = 'PRODUCTION'
 
-PAYPAL_NOTIFY_URL = 'http://192.168.0.191/api/v1/pay/paypal/notify'
-PAYPAL_SUCCESS_URL = 'http://192.168.0.191/api/v1/pay/paypal/success'
-PAYPAL_FAILED_URL = 'http://192.168.0.191/api/v1/pay/paypal/failed'
-PAYPAL_RETURN_URL = 'http://192.168.0.191/api/v1/pay/close_webview'
-PAYPAL_CANCEL_URL = 'http://192.168.0.191/api/v1/pay/close_webview'
+PAYPAL_NOTIFY_URL = 'http://54.169.136.207/api/v1/pay/paypal/notify'
+PAYPAL_SUCCESS_URL = 'http://54.169.136.207/api/v1/pay/paypal/success'
+PAYPAL_FAILED_URL = 'http://54.169.136.207/api/v1/pay/paypal/failed'
+PAYPAL_RETURN_URL = 'http://54.169.136.207/api/v1/pay/close_webview'
+PAYPAL_CANCEL_URL = 'http://54.169.136.207/api/v1/pay/close_webview'
 
 # NganLuong pay
-NGANLUONG_CHECK_ORDER_URL = 'http://192.168.0.191/api/v1/pay/nganluong/check_order'
-NGANLUONG_RETURN_URL = 'http://192.168.0.191/api/v1/pay/nganluong/return'
-NGANLUONG_NOTIFY_URL = 'http://192.168.0.191/api/v1/pay/nganluong/notify'
-NGANLUONG_CLOSE_URL = 'http://192.168.0.191/api/v1/pay/close_webview'
+NGANLUONG_CHECK_ORDER_URL = 'http://54.169.136.207/api/v1/pay/nganluong/check_order'
+NGANLUONG_RETURN_URL = 'http://54.169.136.207/api/v1/pay/nganluong/return'
+NGANLUONG_NOTIFY_URL = 'http://54.169.136.207/api/v1/pay/nganluong/notify'
+NGANLUONG_CLOSE_URL = 'http://54.169.136.207/api/v1/pay/close_webview'
 
 # Coda pay
-CODA_PAY_GATEWAY_URL = 'http://192.168.0.191/api/v1/pay/coda_pay/gateway/%s/'
+CODA_PAY_GATEWAY_URL = 'http://54.169.136.207/api/v1/pay/coda_pay/gateway/%s/'
 CODA_PAY_ORDER_URL = 'https://sandbox.codapayments.com/airtime/api/restful/v1.0/Payment/init/'
 CODA_PAY_CSS = 'https://sandbox.codapayments.com/airtime/css/airtime_v1.0.css'
 CODA_PAY_JS = '	https://sandbox.codapayments.com/airtime/js/airtime_v1.0.js'
@@ -148,12 +148,12 @@ CODA_API_KEY_DICT = {
 # Fortumo pay
 FORTUMO_SERVICE_ID = '8f06a4b67822839c44bef2eebb516ac8'
 FORTUMO_SECRET = 'ab19ee77832943b1631dd00331533a4b'
-FORTUMO_NOTIFY_URL = 'http://192.168.0.191/api/v1/pay/fortumo/notify/'
-FORTUMO_CLOSE_URL = 'http://192.168.0.191/api/v1/pay/close_webview/'
+FORTUMO_NOTIFY_URL = 'http://54.169.136.207/api/v1/pay/fortumo/notify/'
+FORTUMO_CLOSE_URL = 'http://54.169.136.207/api/v1/pay/close_webview/'
 
 # Precard
-PRECARD_GATEWAY_URL = 'http://192.168.0.191/api/v1/pay/precard/%s/'
-PAY_GATEWAY_STATUS_URL = 'http://192.168.0.191/api/v1/pay/%s/status'
+PRECARD_GATEWAY_URL = 'http://54.169.136.207/api/v1/pay/precard/%s/'
+PAY_GATEWAY_STATUS_URL = 'http://54.169.136.207/api/v1/pay/%s/status'
 
 # mimo pay (ATM BCA)
 MIMOPAY_API_HOST = 'http://staging.mimopay.com'
