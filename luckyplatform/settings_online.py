@@ -68,11 +68,10 @@ GP_FLAG = False  # GP switch, True is on sensor
 GP_VERSION_CODE = 133
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
-IAP_FLAG = True  # IAP 审核开关
-IAP_VERSION_CODE = [12]
+IAP_FLAG = False  # IAP 审核开关
+IAP_VERSION_CODE = []
 IAP_TEST_ID = []
 IOS_DEBUG_CONF = {
-    'qg_ios': 12,
 }
 
 FRESH_RECOMMEND = [0, 0]
