@@ -338,7 +338,7 @@ def is_overall_limit_reached(target_amount):
 
 def get_user_weight(user_id, activity):
     if is_virtual_user(user_id):
-        return 1.5
+        return 3.0
     new_user = new_user_multiplier(user_id)
     first_buy_amount = first_buy_amount_multiplier(user_id)
     total_recharge = total_recharge_multiplier(user_id)
