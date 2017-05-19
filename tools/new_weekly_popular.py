@@ -29,13 +29,14 @@ mail_sender.init_conf({
     'to': [
         'zhulei@zhuohan-tech.com',
         'mahongli@zhuohan-tech.com',
-        'liuyu@zhuohan-tech.com',
+        # 'liuyu@zhuohan-tech.com',
         'sstong@zhuohan-tech.com',
         'taocheng@zhuohan-tech.com',
-        'chenweiran@zhuohan-tech.com',
+        # 'chenweiran@zhuohan-tech.com',
         'lichang@zhuohan-tech.com',
         'xialu@zhuohan-tech.com',
-        'wywu@zhuohan-tech.com',
+        'caonianci@zhuohan-tech.com',
+        # 'wywu@zhuohan-tech.com',
     ]
 })
 
