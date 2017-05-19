@@ -104,7 +104,7 @@ def get_pay_types(request):
 
     # temp strategy remove MIMO_TELKOMSEL for new registered user
     user = get_user_by_uid(user_id)
-    if user.created_at > datetime(2017, 5, 9):
+    if user.created_at > datetime(2017, 5, 9) and AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value] in filtered_available_pay_types:
         filtered_available_pay_types.remove(AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value])
     # end temp strategy
 
