@@ -169,7 +169,7 @@ def choose_activity(activitys):
 def monitor_activity(diaosi=False):
     while True:
         now = local_now()
-        time.sleep(21)
+        time.sleep(11)
         activitys = get_available_activitys(diaosi)
         if not activitys:
             continue
