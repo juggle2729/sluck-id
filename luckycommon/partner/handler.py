@@ -94,7 +94,7 @@ def bind_inviter(user_id, inviter_id):
             raise ParamError('circular invitation')
     async_job.create_partner_relation.delay(user_id, invite_list)
     # award
-    add_invitation_credit(user_id)
+    # add_invitation_credit(user_id)
 
 
 def bind_inviter_by_track(user_id, track_key):
