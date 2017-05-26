@@ -179,14 +179,14 @@ APPEND_SLASH = True
 STATIC_URL = '/static/'
 
 MYSQL_CONF = {
-    'db': 'mysql://root:123456@127.0.0.1:3306/lucky?charset=utf8',
+    'db': 'mysql://lucky:123456@127.0.0.1:3306/lucky?charset=utf8',
     'DEBUG': False
 }
 
 SLAVE_CONF = MYSQL_CONF
 
 ADMIN_CONF = {
-    'db': 'mysql://root:123456@127.0.0.1:3306/admin?charset=utf8',
+    'db': 'mysql://lucky:123456@127.0.0.1:3306/admin?charset=utf8',
     'DEBUG': False
 }
 
