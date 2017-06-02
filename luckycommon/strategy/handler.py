@@ -248,19 +248,21 @@ def get_candidate_win_users(activity):
 
 def get_user_activity_weight(user_id, activity):
     numbers_chars = orm.session.query(UserActivity.numbers).filter(
-        UserActivity.activity_id == activity.id, UserActivity.user_id ==user_id).first()
+        UserActivity.activity_id == activity.id, UserActivity.user_id == user_id).first()
     number_len = str(numbers_chars).count(",")
     total_amount = activity.target_amount
     return float(number_len)
+
 
 def list_multiple(list1, list2):
     # to multiple two list member
     # eg:  [a*x, b*y, c*z] = list_multiple([a, b, c], [x, y, z])
     if len(list1) == len(list2):
-        result_list = map(lambda x: x[0]*x[1], zip(list1, list2))
+        result_list = map(lambda x: x[0] * x[1], zip(list1, list2))
         return result_list
     else:
         return None
+
 
 def choose_win_user(candidate_win_users, activity):
     probability_list = [get_user_weight(x, activity) for x in candidate_win_users]
