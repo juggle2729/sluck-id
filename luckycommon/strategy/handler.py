@@ -312,7 +312,11 @@ def is_privilege_user(user_id, activity):
     target_amount = activity.target_amount
     single_buy = len(get_user_numbers_in_activity(user_id, activity.id))
     accumulated_privilege_count = get_accumulated_privilege_count(user_id)
+    if not accumulated_privilege_count:
+        accumulated_privilege_count = 0
     accumulated_privilege_amount = get_accumulated_privilege_amount(user_id)
+    if not accumulated_privilege_amount:
+        accumulated_privilege_amount = 0
     if user_weight >= 1.2155 \
             and 100 <= target_amount <= 1000 \
             and single_buy >= target_amount * _MIN_PRIVILEGE_BUY_RATIO \
