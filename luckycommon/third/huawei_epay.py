@@ -21,6 +21,14 @@ _HUAWEIEPAY_KEY = '115cffec94ca4d4299b21310b7950535'
 _HUAWEIEPAY_SECRET = "0b3e29ef7d47cb9c"
 _HUAWEIEPAY_NOTIFIY_URL = "http://54.169.136.207/api/v1/pay/huawei_epay/notify/"
 
+_HUAWEI_API_HOST = "api-sp.digitalincloud.com"
+_HUAWEI_PATH = {
+    "query_channel": "/payment/queryChannel/v1",
+    "creat_payment": "/payment/create/v1",
+    "gen_auth_code": "/payment/generatePaymentAuthenticode/v1",
+    "do_payment": "/payment/doPayment/v1"
+}
+
 
 def _sign():
     nonce_str = "".join(random.sample(string.ascii_letters + string.digits, 32)).lower()
