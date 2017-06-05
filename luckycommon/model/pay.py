@@ -28,6 +28,7 @@ class PayType(CustomEnum):
     DOKU_VISA = 22  # point
     MIMO_TELKOMSEL = 23  # point
     BLUEPAY_SMS = 24
+    SELF_RECHARGE_CARD = 26
 
 
 class PayStatus(CustomEnum):
@@ -235,6 +236,15 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Bluepay',
         'highlight': 0,
         'choice': [5, 10, 50, 100, 200, 500],
+        'icon': 'http://p.1yuan-gou.com/bluepay_sms.png',
+        'tag': '',
+    },
+    PayType.SELF_RECHARGE_CARD.value: {
+        'name': u'Recharge Card',
+        'pay_type': PayType.SELF_RECHARGE_CARD.value,
+        'comment': u'recharge card',
+        'highlight': 0,
+        'choice': [],
         'icon': 'http://p.1yuan-gou.com/bluepay_sms.png',
         'tag': '',
     },

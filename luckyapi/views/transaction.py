@@ -21,6 +21,7 @@ from luckycommon.order.db.order import get_order, get_order_numbers
 from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, doku, payssion, bluepay, mimo_pay, \
     google_wallet, iap
 from luckycommon.third.doku import doku_check_notify
+from luckycommon.third.self_recharge_card import pay_via_self_recharge_card
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
@@ -145,6 +146,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and 134 <= int(version_code) and locale == 'id':
         return [
+            pay_types[PayType.SELF_RECHARGE_CARD.value],
             pay_types[PayType.MIMO_TELKOMSEL.value],
             pay_types[PayType.CODA_PAY.value],
             # pay_types[PayType.BLUEPAY_SMS.value],
@@ -166,6 +168,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'ios' and locale == 'id':
         return [
+            pay_types[PayType.SELF_RECHARGE_CARD.value],
             pay_types[PayType.MIMO_TELKOMSEL.value],
             pay_types[PayType.CODA_PAY.value],
             # pay_types[PayType.BLUEPAY_SMS.value],
@@ -501,3 +504,15 @@ def precard_gateway(request, pay_id):
             return TemplateResponse(request, 'pay_status.html', {'pay_status_url': pay_status_url})
         else:
             return HttpResponse(u'Thanh toán thất bại', status=200)
+
+
+@require_POST
+@response_wrapper
+def consume_self_recharge_card(request, pay_id):
+    pay = get_pay(pay_id)
+    card_id = int(request.POST.get('card_id'))
+    card_secret = request.POST.get('card_secret')
+    success = pay_via_self_recharge_card(pay, card_id, card_secret)
+    return {
+        'success': success,
+    }

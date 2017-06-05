@@ -167,6 +167,9 @@ def submit_pay(user_id, pay_id, pay_amount, pay_context, return_url):
             charge = bluepay.bluepay_create_charge(pay, pay_amount, 'sms')
             _LOGGER.info('start pay by bluepay, pay_id[%s]' % pay_id)
             return {'charge': charge, 'type': 'url'}
+        if pay_type == PayType.SELF_RECHARGE_CARD.value:
+            _LOGGER.info('start pay by self recharge card, pay_id[%s]' % pay_id)
+            return {'charge': '', 'type': 'native'}
         raise ParamError('pay type not support!')
     except Exception as e:
         pay_db.submit_pay_revert(pay_id)

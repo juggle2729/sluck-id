@@ -60,6 +60,7 @@ urlpatterns = patterns(
     url(r'^pay/fortumo/notify/?$', 'luckyapi.views.transaction.fortumo_notify'),
     url(r'^pay/payssion/notify/?$', 'luckyapi.views.transaction.payssion_notify'),
     url(r'^pay/precard/(?P<pay_id>[^/]+)/?$', 'luckyapi.views.transaction.precard_gateway'),
+    url(r'^pay/self_recharge_card/(?P<pay_id>[^/]+)/?$', 'luckyapi.views.transaction.consume_self_recharge_card'),
     url(r'^pay/indomog/notify/?$', 'luckyapi.views.transaction.indomog_notify'),
     url(r'^pay/notify/indomog/?$', 'luckyapi.views.transaction.indomog_notify'),
     url(r'^pay/notify/doku/?$', 'luckyapi.views.transaction.doku_notify'),
