@@ -2,6 +2,7 @@
 import json
 import logging
 from datetime import datetime
+import requests
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -19,7 +20,7 @@ from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
 from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, doku, payssion, bluepay, mimo_pay, \
-    google_wallet, iap
+    google_wallet, iap, huawei_epay
 from luckycommon.third.doku import doku_check_notify
 from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
@@ -27,6 +28,8 @@ from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.exceptions import AuthenticateError
 from luckycommon.utils.respcode import StatusCode
+from luckycommon.third.huawei_epay import get_response_, get_carrier_from_phone, set_payment_data, \
+    pre_process_indonesia_phone, callback_success_header, callback_failure_header
 
 _LOGGER = logging.getLogger('pay')
 
@@ -118,70 +121,78 @@ def get_pay_types(request):
 def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
     if platform == 'android' and 122 <= int(version_code) < 126 and locale == 'id':
         return [
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+            pay_types[PayType.HUAWEI_EPAY.value],
+            # pay_types[PayType.MIMO_BCA.value],
+            # pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            # pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            # pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            # pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
     if platform == 'android' and 126 <= int(version_code) < 131 and locale == 'id':
         return [
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+            pay_types[PayType.HUAWEI_EPAY.value],
+            # pay_types[PayType.MIMO_BCA.value],
+            # pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            # pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            # pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            # pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
     if platform == 'android' and 131 <= int(version_code) <= 133 and locale == 'id':
         return [
-            pay_types[PayType.CODA_PAY.value],
-            pay_types[PayType.DOKU_VISA.value],
-            pay_types[PayType.DOKU_WALLET.value],
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+            pay_types[PayType.HUAWEI_EPAY.value],
+            # pay_types[PayType.CODA_PAY.value],
+            # pay_types[PayType.DOKU_VISA.value],
+            # pay_types[PayType.DOKU_WALLET.value],
+            # pay_types[PayType.MIMO_BCA.value],
+            # pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            # pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            # pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            # pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
     if platform == 'android' and 134 <= int(version_code) and locale == 'id':
         return [
-            pay_types[PayType.MIMO_TELKOMSEL.value],
-            pay_types[PayType.CODA_PAY.value],
+            pay_types[PayType.HUAWEI_EPAY.value],
+            # pay_types[PayType.MIMO_TELKOMSEL.value],
+            # pay_types[PayType.CODA_PAY.value],
             # pay_types[PayType.BLUEPAY_SMS.value],
-            pay_types[PayType.DOKU_VISA.value],
-            pay_types[PayType.DOKU_WALLET.value],
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+            # pay_types[PayType.DOKU_VISA.value],
+            # pay_types[PayType.DOKU_WALLET.value],
+            # pay_types[PayType.MIMO_BCA.value],
+            # pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            # pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            # pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            # pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
     if platform == 'android' and locale == 'id':
         return [
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+            pay_types[PayType.HUAWEI_EPAY.value],
+            # pay_types[PayType.MIMO_BCA.value],
+            # pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            # pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            # pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            # pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
     if platform == 'ios' and locale == 'id':
         return [
-            pay_types[PayType.MIMO_TELKOMSEL.value],
-            pay_types[PayType.CODA_PAY.value],
+            pay_types[PayType.HUAWEI_EPAY.value],
+            # pay_types[PayType.BLUEPAY_SDK_ATM.value],
+            # pay_types[PayType.MIMO_TELKOMSEL.value],
+            # pay_types[PayType.CODA_PAY.value],
             # pay_types[PayType.BLUEPAY_SMS.value],
-            pay_types[PayType.DOKU_VISA.value],
-            pay_types[PayType.DOKU_WALLET.value],
-            pay_types[PayType.MIMO_BCA.value],
+            # pay_types[PayType.DOKU_VISA.value],
+            # pay_types[PayType.DOKU_WALLET.value],
+            # pay_types[PayType.MIMO_BCA.value],
         ]
     if platform == 'web':
         return [
             pay_types[PayType.CODA_PAY.value],
         ]
     return [
-        pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-        pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-        pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-        pay_types[PayType.BLUEPAY_SDK_ATM.value],
+        pay_types[PayType.HUAWEI_EPAY.value],
+        # pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+        # pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+        # pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+        # pay_types[PayType.BLUEPAY_SDK_ATM.value],
     ]
 
 
@@ -199,6 +210,42 @@ def create_pay(request):
 
 
 DAILY_RECHARGE_LIMIT = 100000
+
+
+_HUAWEI_API_HOST = "api-sp.digitalincloud.com"
+_HUAWEI_PATH = {
+    "query_channel": "/payment/queryChannel/v1",
+    "creat_payment": "/payment/create/v1",
+    "gen_auth_code": "/payment/generatePaymentAuthenticode/v1",
+    "do_payment": "/payment/doPayment/v1"
+}
+
+@require_POST
+@response_wrapper
+@token_required
+def do_payment(request):
+    payment_id = requests.POST.get("payment_id", "")
+    valid_code = requests.POST.get("valid_code", "")
+    data = {
+        "payment_id": payment_id ,
+        "valid_code": {"code": valid_code},
+    }
+    url = "http://".join(_HUAWEI_API_HOST+_HUAWEI_PATH["do_payment"])
+    response = get_response_(data, url).text
+    return json.loads(response)
+
+
+@require_POST
+@response_wrapper
+@token_required
+def get_payment_authcode(request):
+    payment_id = requests.POST.get("payment_id", "")
+    data = {
+        "payment_id": payment_id ,
+    }
+    url = "http://".join(_HUAWEI_API_HOST+_HUAWEI_PATH["gen_auth_code"])
+    response = get_response_(data, url).text
+    return json.loads(response)
 
 
 @require_POST
@@ -242,7 +289,23 @@ def pay_submit(request, pay_id):
         'pk_size': pk_size,
     })
     pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url)
-    return pay_data
+    # huawei epay logic
+    pay = get_pay(pay_id)
+    _LOGGER.error("pay type info id %s, type %s " %(pay.id, pay.pay_type))
+    if pay.pay_type != PayType.HUAWEI_EPAY:
+        _LOGGER.error("this is not huawei pay")
+        return pay_data
+    pay_amount = pay_amount*(1100.00)
+    phone = request.POST.get("phone", "")
+    phone = pre_process_indonesia_phone(phone)
+    carrier = get_carrier_from_phone(phone)
+    if not carrier:
+        raise err.ParamError('not support thit carrier yet')
+    data = set_payment_data(carrier_id=carrier, phone="+62"+phone, price=pay_amount, payid=pay_id)
+    url = "http://"+(_HUAWEI_API_HOST + _HUAWEI_PATH["creat_payment"])
+    response = get_response_(data, url).text
+    auth_method_info = json.loads(response).get("auth_method", {})
+    return auth_method_info
 
 
 @require_GET
@@ -501,3 +564,20 @@ def precard_gateway(request, pay_id):
             return TemplateResponse(request, 'pay_status.html', {'pay_status_url': pay_status_url})
         else:
             return HttpResponse(u'Thanh toán thất bại', status=200)
+
+
+@require_POST
+def huawei_epay_notify(request):
+    try:
+        resp = huawei_epay.huaweipay_check_notify(request)
+        resp = HttpResponse(json.dumps({"result":{"code":"000000","message":"Success"}}))
+        for tip in callback_success_header:
+            resp[tip] = callback_success_header[tip]
+        return resp
+    except Exception as e:
+        resp = HttpResponse(json.dumps({"result":{"code":"E000000","message":"System error."}}))
+        for tip in callback_failure_header:
+            resp[tip] = callback_failure_header[tip]
+        return resp
+
+
