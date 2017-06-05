@@ -68,6 +68,7 @@ urlpatterns = patterns(
     url(r'^pay/bluepay/notify/?$', 'luckyapi.views.transaction.bluepay_notify'),
     url(r'^pay/iap/notify/?$', 'luckyapi.views.transaction.iap_notify'),
     url(r'^pay/bubble_mimo/notify/?$', 'luckyapi.views.transaction.bubble_mimo_notify'),
+    url(r'^pay/huawei_epay/notify/?$', 'luckyapi.views.transaction.huawei_epay_notify'),
     # notification
     url(r'^notifications/?$', 'luckyapi.views.notification.get_notifications'),
     url(r'^sysannounce/?$', 'luckyapi.views.notification.get_sys_notifications'),
@@ -91,6 +92,7 @@ urlpatterns = patterns(
     url(r'^third/datacell/fail/?$', 'luckyapi.views.third.datacell_f'),
     url(r'^third/datacell/success/?$', 'luckyapi.views.third.datacell_s'),
     url(r'^third/pulsa/?$', 'luckyapi.views.third.mobilepulsa'),
+    url(r'^third/huawei_info/?$', 'luckyapi.views.third.huawei_epay_info'),
     # show
     url(r'^my/shows/?$', 'luckyapi.views.show.get_my_shows'),
     url(r'^my/shows/detail/?$', 'luckyapi.views.show.get_my_show_detail'),
