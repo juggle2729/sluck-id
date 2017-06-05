@@ -50,6 +50,8 @@ StatusCode = Enum({
     "USED_CARD": (402, u"card already used"),
     "INVALID_CARD": (402, u"card invalid"),
     "SERVER_ERROR": (403, u"server error, card not recharged"),
+    "PAY_ID_NOT_FOUND": (404, u"pay_id not found"),
+    "PAY_STATUS_INVALID": (405, u"pay_status invalid"),
 })
 
 StatusCodeDict = StatusCode.to_dict()

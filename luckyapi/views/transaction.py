@@ -26,7 +26,7 @@ from luckycommon.utils import exceptions as err
 from luckycommon.utils import tz
 from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
-from luckycommon.utils.exceptions import AuthenticateError
+from luckycommon.utils.exceptions import AuthenticateError, RechargeCardError
 from luckycommon.utils.respcode import StatusCode
 
 _LOGGER = logging.getLogger('pay')
@@ -510,6 +510,10 @@ def precard_gateway(request, pay_id):
 @response_wrapper
 def consume_self_recharge_card(request, pay_id):
     pay = get_pay(pay_id)
+    if not pay:
+        raise RechargeCardError(status=StatusCode.PAY_ID_NOT_FOUND)
+    if pay.status != PayStatus.SUBMIT.value:
+        raise RechargeCardError(status=StatusCode.PAY_STATUS_INVALID)
     card_id = int(request.POST.get('card_id'))
     card_secret = request.POST.get('card_secret')
     success = pay_via_self_recharge_card(pay, card_id, card_secret)
