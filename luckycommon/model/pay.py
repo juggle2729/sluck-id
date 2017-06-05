@@ -245,7 +245,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Huaweiepay',
         'highlight': 0,
         'choice': [1, 5, 10, 50, 100, 200, 500],
-        'icon': 'http://p.1yuan-gou.com/bluepay_sms.png',
+        'icon': 'http://p.1yuan-gou.com/huawei_pay.png',
         'tag': '',
     },
 }
