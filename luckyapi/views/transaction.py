@@ -292,8 +292,7 @@ def pay_submit(request, pay_id):
     # huawei epay logic
     pay = get_pay(pay_id)
     _LOGGER.error("pay type info id %s, type %s " %(pay.id, pay.pay_type))
-    if pay.pay_type != PayType.HUAWEI_EPAY:
-        _LOGGER.error("this is not huawei pay")
+    if pay.pay_type != PayType.HUAWEI_EPAY.value:
         return pay_data
     pay_amount = pay_amount*(1100.00)
     phone = request.POST.get("phone", "")
