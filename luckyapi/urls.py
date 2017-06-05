@@ -150,9 +150,9 @@ urlpatterns = patterns(
     # social
     url(r'^social/share/?$', 'luckyapi.views.check.submit_share'),
     # partner
-    url(r'^inviter/track/?$', 'luckyapi.views.partner.track_inviter'),
-    url(r'^inviter/add/?$', 'luckyapi.views.partner.add_inviter'),
-    url(r'^inviter/entry/?$', 'luckyapi.views.partner.get_entry'),
+    # url(r'^inviter/track/?$', 'luckyapi.views.partner.track_inviter'),
+    # url(r'^inviter/add/?$', 'luckyapi.views.partner.add_inviter'),
+    # url(r'^inviter/entry/?$', 'luckyapi.views.partner.get_entry'),
     url(r'^partner/reward/records/?$', 'luckyapi.views.partner.reward_record'),
     url(r'^partner/reward/?$', 'luckyapi.views.partner.reward_status'),
     url(r'^partner/accu/?$', 'luckyapi.views.partner.current_accumulation'),
