@@ -74,22 +74,22 @@ def get_my_credit(request):
         'command': '0#',
         'enable': 1
     })
-    credit_activity.append({
-        'icon': ICON_INVITE,
-        'title': u"Undang Teman",
-        'content': u"Dapat 10x poin dari jumlah topup teman",
-        'tips': u"Ikut",
-        'command': '334#',
-        'enable': 1
-    })
-    credit_activity.append({
-        'icon': ICON_POINT,
-        'title': u"Diundang oleh Teman",
-        'content': u"Masukkan kode undangan",
-        'tips': u"Ikut",
-        'command': '335#',
-        'enable': 1
-    })
+    # credit_activity.append({
+    #     'icon': ICON_INVITE,
+    #     'title': u"Undang Teman",
+    #     'content': u"Dapat 10x poin dari jumlah topup teman",
+    #     'tips': u"Ikut",
+    #     'command': '334#',
+    #     'enable': 1
+    # })
+    # credit_activity.append({
+    #     'icon': ICON_POINT,
+    #     'title': u"Diundang oleh Teman",
+    #     'content': u"Masukkan kode undangan",
+    #     'tips': u"Ikut",
+    #     'command': '335#',
+    #     'enable': 1
+    # })
     data['category'].append({
         'title': u"Aktivitas Poin",
         'credit_activity': credit_activity
