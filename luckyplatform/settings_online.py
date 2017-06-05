@@ -113,7 +113,7 @@ BAN_VIRTUAL_LOGIN = False
 
 SERVICE_ID = 1
 
-ANNOUNCE_DELAY = 300
+ANNOUNCE_DELAY = 60
 
 # paypal settings
 PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"
