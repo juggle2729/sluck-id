@@ -87,17 +87,17 @@ JPUSH_ENV = 'prod'
 MONGO_ADDR = "mongodb://127.0.0.1/"
 
 MYSQL_CONF = {
-    'db': 'mysql://root:123456@127.0.0.1:3306/lucky?charset=utf8',
+    'db': 'mysql://lucky:123456@127.0.0.1:3306/lucky?charset=utf8',
     'DEBUG': False
 }
 
 SLAVE_CONF = {
-    'db': 'mysql://root:123456@127.0.0.1:3306/lucky?charset=utf8',
+    'db': 'mysql://lucky:123456@127.0.0.1:3306/lucky?charset=utf8',
     'DEBUG': False
 }
 
 ADMIN_CONF = {
-    'db': 'mysql://root:123456@127.0.0.1:3306/admin?charset=utf8',
+    'db': 'mysql://lucky:123456@127.0.0.1:3306/admin?charset=utf8',
     'DEBUG': False
 }
 

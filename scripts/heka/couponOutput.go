@@ -46,7 +46,7 @@ func (o *CouponOutput) ConfigStruct() interface{} {
 	return &CouponOutputConfig{
 		MongoAddr:      []string{"localhost:27017"},
 		RedisAddr:      "127.0.0.1:6379",
-		MySQLAddr:      "root:123456@tcp(127.0.0.1:3306)/lucky",
+		MySQLAddr:      "lucky:123456@tcp(127.0.0.1:3306)/lucky",
 		ConnectTimeout: 3,
 		Procs:          2,
 		DbName:         "lucky",

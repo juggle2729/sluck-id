@@ -416,7 +416,7 @@ example
 '''
 if __name__ == '__main__':
     conf = {
-        "db": "mysql://root:123456@127.0.0.1:3306/lucky?charset=utf8", 'DEBUG': False}
+        "db": "mysql://lucky:123456@127.0.0.1:3306/lucky?charset=utf8", 'DEBUG': False}
     orm = ArmoryOrm()
     orm.init_conf(conf)
 
