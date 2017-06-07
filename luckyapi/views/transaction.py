@@ -10,6 +10,7 @@ from django.template.response import TemplateResponse
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from future.utils import raise_with_traceback
 
+from luckyapi.logic.recharge_card import get_self_recharge_card_status
 from luckyapi.logic.transaction import (
     get_user_transactions, create_pay_id, submit_pay, view_pay_status,
     transfer_to_other, get_transfer_records)
@@ -507,6 +508,7 @@ def precard_gateway(request, pay_id):
 
 
 @require_POST
+@token_required
 @response_wrapper
 def consume_self_recharge_card(request, pay_id):
     pay = get_pay(pay_id)
@@ -519,4 +521,15 @@ def consume_self_recharge_card(request, pay_id):
     success = pay_via_self_recharge_card(pay, card_id, card_secret)
     return {
         'success': success,
+    }
+
+
+@require_GET
+@token_required
+@response_wrapper
+def check_self_recharge_card(request):
+    card_id = request.GET.get('card_id')
+    status = get_self_recharge_card_status(card_id)
+    return {
+        'card_status': status,
     }

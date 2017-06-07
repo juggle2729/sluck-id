@@ -27,6 +27,13 @@ def create_recharge_card(amount, agent=None):
     return card.id, raw_secret
 
 
+def get_self_recharge_card_status(card_id):
+    card = RechargeCard.query.filter(RechargeCard.id == card_id).first()
+    if not card:
+        return 'not_found'
+    return card.status
+
+
 def consume_recharge_card(user_id, pay_id, card_id, card_secret):
     card = RechargeCard.query.filter(RechargeCard.id == card_id).first()
     if not card:
