@@ -245,7 +245,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'recharge card',
         'highlight': 0,
         'choice': [],
-        'icon': 'http://p.1yuan-gou.com/bluepay_sms.png',
+        'icon': 'http://p.1yuan-gou.com/ic_tokopay.png',
         'tag': '',
     },
 }
