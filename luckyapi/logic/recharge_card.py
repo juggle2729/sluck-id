@@ -27,6 +27,11 @@ def create_recharge_card(amount, agent=None):
     return card.id, raw_secret
 
 
+def get_card_by_id(card_id):
+    card = RechargeCard.query.filter(RechargeCard.id == card_id).first()
+    return card
+
+
 def get_self_recharge_card_status(card_id):
     card = RechargeCard.query.filter(RechargeCard.id == card_id).first()
     if not card:
@@ -38,13 +43,17 @@ def consume_recharge_card(user_id, pay_id, card_id, card_secret):
     card = RechargeCard.query.filter(RechargeCard.id == card_id).first()
     if not card:
         raise RechargeCardError(status=StatusCode.CARD_NOT_FOUND)
+
     if card.status == RechargeCardStatus.USED.value:
         raise RechargeCardError(status=StatusCode.USED_CARD)
+
     if card.status == RechargeCardStatus.INVALID.value:
         raise RechargeCardError(status=StatusCode.INVALID_CARD)
+
     encoded_secret = card.secret
     if not check_password(card_secret, encoded_secret):
         raise RechargeCardError(status=StatusCode.WRONG_SECRET)
+
     session = orm.session
     try:
         result = RechargeCard.query.filter(RechargeCard.id == card_id).filter(RechargeCard.status == RechargeCardStatus.VALID.value).update(
