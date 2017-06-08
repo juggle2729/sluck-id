@@ -62,7 +62,8 @@ def view_scrolling():
         cmd = scrolling_value.get('cmd')
         scrolling_list.append({
             'text': text,
-            'cmd': '11#%s/discovery/lucky_wall' % settings.WEB_APP_ROOT_URL,
+            'cmd': cmd,
+            'params': params
         })
         count += 1
 
