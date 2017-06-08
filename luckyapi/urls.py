@@ -38,6 +38,7 @@ urlpatterns = patterns(
     url(r'^activitys/(?P<activity_id>[^/]+)/records/?$', 'luckyapi.views.activity.get_buy_records'),
     url(r'^activitys/(?P<activity_id>[^/]+)/calclist/?$', 'luckyapi.views.activity.get_calc_record'),
     url(r'^activitys/(?P<activity_id>[^/]+)/billboard/?$', 'luckyapi.views.activity.get_billboard'),
+    url(r'^activitys/(?P<activity_id>[^/]+)/users/?$', 'luckyapi.views.activity.get_users_in_activity'),
     url(r'^pk/?$', 'luckyapi.views.pk.get_pk_activitys'),
     # transaction
     url(r'^transactions/?$', 'luckyapi.views.transaction.get_transactions'),
