@@ -517,7 +517,7 @@ def consume_self_recharge_card(request, pay_id):
     if pay.status != PayStatus.SUBMIT.value:
         raise RechargeCardError(status=StatusCode.PAY_STATUS_INVALID)
     card_id = int(request.POST.get('card_id'))
-    card_secret = request.POST.get('card_secret')
+    card_secret = request.POST.get('card_secret').upper()
     success = pay_via_self_recharge_card(pay, card_id, card_secret)
     return {
         'success': success,
