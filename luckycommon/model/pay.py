@@ -247,6 +247,14 @@ AVAILABLE_PAY_TYPES = {
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_tokopay.png',
         'tag': '',
+        'agents': [{
+            'name': 'JD',
+            'phone': '0723236523',
+        }, {
+            'name': 'Coda',
+            'phone': '06-7342332232339899899'
+        },
+        ],
     },
 }
 
