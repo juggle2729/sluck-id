@@ -508,8 +508,8 @@ def precard_gateway(request, pay_id):
 
 
 @require_POST
-@token_required
 @response_wrapper
+@token_required
 def consume_self_recharge_card(request, pay_id):
     pay = get_pay(pay_id)
     if not pay:
@@ -525,8 +525,8 @@ def consume_self_recharge_card(request, pay_id):
 
 
 @require_GET
-@token_required
 @response_wrapper
+@token_required
 def check_self_recharge_card(request):
     card_id = request.GET.get('card_id')
     status = get_self_recharge_card_status(card_id)
