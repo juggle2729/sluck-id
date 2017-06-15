@@ -174,7 +174,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_pay_15.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.BLUEPAY_SDK_GAME_ON.value: {
         'name': u'game on',
@@ -183,7 +183,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_pay_16.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.CODA_SMS.value: {
         'name': u'coda sms',

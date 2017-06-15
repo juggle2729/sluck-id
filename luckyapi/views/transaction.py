@@ -118,22 +118,6 @@ def get_pay_types(request):
 
 
 def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
-    if platform == 'android' and 122 <= int(version_code) < 126 and locale == 'id':
-        return [
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
-        ]
-    if platform == 'android' and 126 <= int(version_code) < 131 and locale == 'id':
-        return [
-            pay_types[PayType.MIMO_BCA.value],
-            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
-            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
-            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
-            pay_types[PayType.BLUEPAY_SDK_ATM.value],
-        ]
     if platform == 'android' and 131 <= int(version_code) <= 133 and locale == 'id':
         return [
             pay_types[PayType.CODA_PAY.value],
@@ -145,12 +129,23 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
             pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
-    if platform == 'android' and 134 <= int(version_code) and locale == 'id':
+    if platform == 'android' and 134 <= int(version_code) <= 135 and locale == 'id':
         return [
-            pay_types[PayType.SELF_RECHARGE_CARD.value],
             pay_types[PayType.MIMO_TELKOMSEL.value],
             pay_types[PayType.CODA_PAY.value],
-            # pay_types[PayType.BLUEPAY_SMS.value],
+            pay_types[PayType.DOKU_VISA.value],
+            pay_types[PayType.DOKU_WALLET.value],
+            pay_types[PayType.MIMO_BCA.value],
+            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+        ]
+    if platform == 'android' and 136 <= int(version_code) and locale == 'id':
+        return [
+            # pay_types[PayType.SELF_RECHARGE_CARD.value],
+            pay_types[PayType.MIMO_TELKOMSEL.value],
+            pay_types[PayType.CODA_PAY.value],
             pay_types[PayType.DOKU_VISA.value],
             pay_types[PayType.DOKU_WALLET.value],
             pay_types[PayType.MIMO_BCA.value],

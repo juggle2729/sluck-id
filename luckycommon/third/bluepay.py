@@ -5,6 +5,7 @@ import logging
 from django.conf import settings
 
 from luckycommon.async.async_job import track_one
+from luckycommon.credit.db.credit import add_special_recharge_award_credit
 from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
@@ -17,6 +18,7 @@ _TRACKER = logging.getLogger('tracker')
 _BLUEPAY_KEY = 'VMM91GP7Aq8EAD22'
 _BLUEPAY_PRODUCT_ID = 716
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+_AWARD_CREDIT_UNIT = 10
 
 
 def _sign(origin_str):
@@ -72,6 +74,7 @@ def bluepay_check_notify(request):
         _LOGGER.info('Blue Pay check order success, user_id:%s pay_id:%s, amount: %s, currency: %s' % (
             user_id, pay_id, total_fee, currency))
         res = add_pay_success_transaction(user_id, pay_id, total_fee, extend)
+        add_special_recharge_award_credit(user_id, total_fee * _AWARD_CREDIT_UNIT)
         if res:
             track_one.delay('recharge', {'price': float(total_fee), 'channel': 'bluepay'}, user_id)
             _TRACKER.info({'user_id': user_id, 'type': 'recharge',
