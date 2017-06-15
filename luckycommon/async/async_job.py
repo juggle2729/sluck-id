@@ -7,6 +7,7 @@ import random
 import logging
 import requests
 
+from luckycommon.account.db.account import is_virtual_user
 from luckycommon.level.handler import add_exp
 from luckycommon.model import orm
 from luckycommon.model.virtual import VirtualPool
@@ -200,7 +201,7 @@ def stats_consume(user_id, total_amount, coupon_amount=0):
     _LOGGER.info('stats consume %s:%s,%s', user_id,
                  total_amount, coupon_amount)
     consume_amount = total_amount - coupon_amount
-    if not redis_cache.is_virtual_account(user_id):
+    if not is_virtual_user(user_id):
         if consume_amount > 0:
             try:
                 add_consume_credit(user_id, consume_amount)
