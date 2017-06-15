@@ -64,7 +64,7 @@ COIN_TIDS = {
     #    646: 1000,
 }
 
-GP_FLAG = True  # GP switch, True is on sensor
+GP_FLAG = False  # GP switch, True is on sensor
 GP_VERSION_CODE = 136
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 

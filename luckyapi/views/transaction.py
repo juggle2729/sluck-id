@@ -164,7 +164,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'ios' and locale == 'id':
         return [
-            pay_types[PayType.SELF_RECHARGE_CARD.value],
+            # pay_types[PayType.SELF_RECHARGE_CARD.value],
             pay_types[PayType.MIMO_TELKOMSEL.value],
             pay_types[PayType.CODA_PAY.value],
             # pay_types[PayType.BLUEPAY_SMS.value],
