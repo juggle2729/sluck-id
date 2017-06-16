@@ -29,7 +29,8 @@ from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.exceptions import AuthenticateError
 from luckycommon.utils.respcode import StatusCode
 from luckycommon.third.huawei_epay import get_response_, get_carrier_from_phone, set_payment_data, \
-    pre_process_indonesia_phone, callback_success_header, callback_failure_header, _HUAWEI_API_HOST, _HUAWEI_PATH
+    pre_process_indonesia_phone, callback_success_header, callback_failure_header, _HUAWEI_API_HOST, _HUAWEI_PATH, \
+    _HUAWEI_EPAY_ADD_TAX_TOTAL
 
 _LOGGER = logging.getLogger('pay')
 
@@ -107,7 +108,8 @@ def get_pay_types(request):
 
     # temp strategy remove MIMO_TELKOMSEL for new registered user
     user = get_user_by_uid(user_id)
-    if user.created_at > datetime(2017, 5, 9) and AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value] in filtered_available_pay_types:
+    if user.created_at > datetime(2017, 5, 9) and AVAILABLE_PAY_TYPES[
+        PayType.MIMO_TELKOMSEL.value] in filtered_available_pay_types:
         filtered_available_pay_types.remove(AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value])
     # end temp strategy
 
@@ -254,17 +256,17 @@ def pay_submit(request, pay_id):
     pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url)
     # huawei epay logic
     pay = get_pay(pay_id)
-    _LOGGER.error("pay type info id %s, type %s " %(pay.id, pay.pay_type))
+    _LOGGER.error("pay type info id %s, type %s " % (pay.id, pay.pay_type))
     if pay.pay_type != PayType.HUAWEI_EPAY.value:
         return pay_data
-    pay_amount = pay_amount*(1100.00)
+    pay_amount = pay_amount * _HUAWEI_EPAY_ADD_TAX_TOTAL
     phone = request.POST.get("phone", "")
     phone = pre_process_indonesia_phone(phone)
     carrier = get_carrier_from_phone(phone)
     if not carrier:
         raise err.ParamError('not support thit carrier yet')
-    data = set_payment_data(carrier_id=carrier, phone="+62"+phone, price=pay_amount, payid=pay_id)
-    url = "http://"+(_HUAWEI_API_HOST + _HUAWEI_PATH["creat_payment"])
+    data = set_payment_data(carrier_id=carrier, phone="+62" + phone, price=pay_amount, payid=pay_id)
+    url = "http://" + (_HUAWEI_API_HOST + _HUAWEI_PATH["creat_payment"])
     response = get_response_(data, url).text
     auth_method_info = json.loads(response).get("auth_method", {})
     return auth_method_info
@@ -532,14 +534,12 @@ def precard_gateway(request, pay_id):
 def huawei_epay_notify(request):
     try:
         resp = huawei_epay.huaweipay_check_notify(request)
-        resp = HttpResponse(json.dumps({"result":{"code":"000000","message":"Success"}}))
+        resp = HttpResponse(json.dumps({"result": {"code": "000000", "message": "Success"}}))
         for tip in callback_success_header:
             resp[tip] = callback_success_header[tip]
         return resp
     except Exception as e:
-        resp = HttpResponse(json.dumps({"result":{"code":"E000000","message":"System error."}}))
+        resp = HttpResponse(json.dumps({"result": {"code": "E000000", "message": "System error."}}))
         for tip in callback_failure_header:
             resp[tip] = callback_failure_header[tip]
         return resp
-
-
