@@ -29,6 +29,9 @@ class PayType(CustomEnum):
     MIMO_TELKOMSEL = 23  # point
     BLUEPAY_SMS = 24
     SELF_RECHARGE_CARD = 26
+    MIMO_INDOSAT = 27
+    MIMO_THREE = 28
+    MIMO_XL = 29
 
 
 class PayStatus(CustomEnum):
@@ -228,6 +231,33 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [10, 50],
         'icon': 'http://p.1yuan-gou.com/ic_tsel_new.png',
+        'tag': '',
+    },
+    PayType.MIMO_INDOSAT.value: {
+        'name': u'MIMO INDOSAT',
+        'pay_type': PayType.MIMO_INDOSAT.value,
+        'comment': u'MIMO INDOSAT',
+        'highlight': 0,
+        'choice': [10, 20,50, 100],
+        'icon': 'http://p.1yuan-gou.com/indosat.png',
+        'tag': '',
+    },
+    PayType.MIMO_THREE.value: {
+        'name': u'MIMO THREE',
+        'pay_type': PayType.MIMO_THREE.value,
+        'comment': u'MIMO THREE',
+        'highlight': 0,
+        'choice': [10, 20,50, 100],
+        'icon': 'http://p.1yuan-gou.com/three.png',
+        'tag': '',
+    },
+    PayType.MIMO_XL.value: {
+        'name': u'MIMO XL',
+        'pay_type': PayType.MIMO_XL.value,
+        'comment': u'MIMO XL',
+        'highlight': 0,
+        'choice': [10, 20,50, 100],
+        'icon': 'http://p.1yuan-gou.com/xl.png',
         'tag': '',
     },
     PayType.BLUEPAY_SMS.value: {

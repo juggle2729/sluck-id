@@ -16,7 +16,7 @@ from luckycommon.utils.exceptions import ParamError, DataError
 
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
-_EXCHANGE_RATIO = settings.EXCHANGE_RATIO
+_EXCHANGE_RATIO = 1000
 
 
 def mimo_create_charge(pay, pay_amount, currency, pay_method='atm'):

@@ -102,14 +102,9 @@ SESSION_COOKIE_AGE = 20 * 60
 INSTALLED_APPS = (
     'luckyapi',
     'luckyadmin',
-    'raven.contrib.django.raven_compat',
     # 'corsheaders',
     # 'luckytest'
 )
-
-RAVEN_CONFIG = {
-    'dsn': 'http://3b974441d614479f88f0318a428d3f3c:8e3052d2eaea4b88b5a8e1a4a78f54ce@114.55.27.19:9000/2',
-}
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
