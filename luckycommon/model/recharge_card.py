@@ -2,7 +2,7 @@
 from luckycommon.model import orm
 from luckycommon.utils.custom_enum import CustomEnum
 
-ALLOWED_RECHARGE_CARD_AMOUNT = (50, 100, 250)
+ALLOWED_RECHARGE_CARD_AMOUNT = (50, 100, 250, 500)
 RECHARGE_CARD_ID_LENGTH = 8
 RECHARGE_CARD_SECRET_LENGTH = 8
 
