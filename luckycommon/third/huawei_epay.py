@@ -11,6 +11,7 @@ from luckycommon.db.pay import get_pay, update_pay_ext
 from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail_transaction
 from luckycommon.model.pay import PayStatus
 from luckycommon.pay.handler import pay_after_recharge
+from luckycommon.utils import exceptions as err
 from luckycommon.utils.exceptions import ParamError, DataError
 
 _EXCHANGE_RATIO = settings.EXCHANGE_RATIO
@@ -53,7 +54,7 @@ def _sign_request_body(body_info, req_id):
     if isinstance(body_info, str):
         message = body_info
     code = hmac.new(key_info, message, digestmod=hashlib.sha256).digest()
-    _LOGGER.error("body_sign body %s, req_id %s, sign %s" % (message, req_id, base64.b64encode(code)))
+    _LOGGER.debug("body_sign body %s, req_id %s, sign %s" % (message, req_id, base64.b64encode(code)))
     return base64.b64encode(code)
 
 
@@ -127,11 +128,11 @@ def get_response_(body_data, url, method="POST"):
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'X-WSSE': 'UsernameToken Username="%s", PasswordDigest="%s", Nonce="%s", Created="%s"' % (
-        username, passworddigiest, nonce, created),
+            username, passworddigiest, nonce, created),
         'Request-Id': request_id,
         'Body-Sign': 'sign_type="HMAC-SHA256", signature="%s"' % body_sign
     }
-    _LOGGER.error("huwei_request_head %s" % headers)
+    _LOGGER.debug("request_huawei header %s, body %s" % (headers, body_data))
     if method == "GET":
         headers.pop("Body-Sign")
         headers.pop("Request-Id")
@@ -140,9 +141,9 @@ def get_response_(body_data, url, method="POST"):
     try:
         return requests.post(url, data=json.dumps(body_data), headers=headers, allow_redirects=False, timeout=5.0)
     except requests.exceptions.Timeout:
-        _LOGGER.info("#HUAWEI PAY# requset %s connect time out, body %s" % (url, body_data))
+        _LOGGER.error("#HUAWEI PAY# requset %s connect time out, body %s" % (url, body_data))
     except Exception, e:
-        _LOGGER.info(
+        _LOGGER.error(
             "#HUAWEI PAY# requset %s , %s in %s request with body %s" % (e.__class__.__name__, e, url, body_data))
     return None
 
@@ -237,20 +238,17 @@ def huaweipay_check_notify(request):
     body_dict = json.loads(request.body)
     sign_info = request.META.get('HTTP_BODY_SIGN')
     sign = sign_info.split(", ")[-1].split("signature=")[-1][1:-1]
-    _LOGGER.error('##* Huawei pay *## callback req_sign info %s' % sign_info)
-    _LOGGER.error('##* Huawei pay *## callback req_sign type %s, info %s' % (type(sign), sign))
     req_id = request.META.get('HTTP_REQUEST_ID')
-    _LOGGER.error('##* Huawei pay *## callback req_id info %s' % req_id)
     if not _check_sign(body_info=request.body, req_id=req_id, str_info=sign):
         return HttpResponse(status=500)
     payment = body_dict["payment"]
-    _LOGGER.error('##* Huawei pay *## payment info %s' % payment)
     transaction = payment["transactions"][0]
     pay_id = transaction.get("outTradeNo", 0)
     price = transaction["amount"]["total"]
-    _LOGGER.error('##* Huawei pay *## callbck value pay_id %s, pay price %s' % (pay_id, price))
     currency = transaction["amount"]['currency']
     callback_status = payment.get('state')
+    _LOGGER.warning(
+        '##* Huawei pay *## callback value pay_id %s, pay price %s, status %s' % (pay_id, price, callback_status))
     status = {"created": 0, "pending": 1, "completed": 2, "failed": 4, "canceled": 8}.get(callback_status, 1)
     trade_no = payment.get("id")
     pay_id = int(pay_id)
@@ -285,6 +283,19 @@ def huaweipay_check_notify(request):
                     'pay_after_recharge of pay[%s] exception.(%s)', pay.id, e)
     else:
         add_pay_fail_transaction(user_id, pay_id, total_fee, extend)
+
+
+def huawei_create_charge(pay_id, pay_amount, phone):
+    pay_amount = pay_amount * _HUAWEI_EPAY_ADD_TAX_TOTAL
+    phone = pre_process_indonesia_phone(phone)
+    carrier = get_carrier_from_phone(phone)
+    if not carrier:
+        raise err.ParamError('not support thit carrier yet')
+    data = set_payment_data(carrier_id=carrier, phone="+62" + phone, price=pay_amount, payid=pay_id)
+    url = "http://" + (_HUAWEI_API_HOST + _HUAWEI_PATH["creat_payment"])
+    response = get_response_(data, url).text
+    auth_method_info = json.loads(response).get("auth_method", {})
+    return auth_method_info
 
 
 def huawei_check_payment():

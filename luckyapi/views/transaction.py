@@ -125,7 +125,6 @@ def get_pay_types(request):
 def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
     if platform == 'android' and 131 <= int(version_code) <= 133 and locale == 'id':
         return [
-            pay_types[PayType.HUAWEI_EPAY.value],
             pay_types[PayType.CODA_PAY.value],
             pay_types[PayType.DOKU_VISA.value],
             pay_types[PayType.DOKU_WALLET.value],
@@ -135,7 +134,19 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
             pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
-    if platform == 'android' and 134 <= int(version_code) <= 135 and locale == 'id':
+    if platform == 'android' and 134 <= int(version_code) < 135 and locale == 'id':
+        return [
+            pay_types[PayType.MIMO_TELKOMSEL.value],
+            pay_types[PayType.CODA_PAY.value],
+            pay_types[PayType.DOKU_VISA.value],
+            pay_types[PayType.DOKU_WALLET.value],
+            pay_types[PayType.MIMO_BCA.value],
+            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+        ]
+    if platform == 'android' and 135 <= int(version_code) < 136 and locale == 'id':
         return [
             pay_types[PayType.HUAWEI_EPAY.value],
             pay_types[PayType.MIMO_TELKOMSEL.value],
@@ -167,7 +178,6 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and locale == 'id':
         return [
-            pay_types[PayType.HUAWEI_EPAY.value],
             pay_types[PayType.MIMO_BCA.value],
             pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
             pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
@@ -193,7 +203,6 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.CODA_PAY.value],
         ]
     return [
-        pay_types[PayType.HUAWEI_EPAY.value],
         pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
         pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
         pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
@@ -231,6 +240,7 @@ def pay_submit(request, pay_id):
             buy_list = json.loads(buy_list)
         coupon = request.POST.get('coupon')
         pk_size = request.POST.get('pk_size')
+        phone = request.POST.get("phone", "")
     except:
         raise err.ParamError('pay type wrong')
 
@@ -257,22 +267,8 @@ def pay_submit(request, pay_id):
         'coupon': coupon,
         'pk_size': pk_size,
     })
-    pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url)
-    # huawei epay logic
-    pay = get_pay(pay_id)
-    if pay.pay_type != PayType.HUAWEI_EPAY.value:
-        return pay_data
-    pay_amount = pay_amount * _HUAWEI_EPAY_ADD_TAX_TOTAL
-    phone = request.POST.get("phone", "")
-    phone = pre_process_indonesia_phone(phone)
-    carrier = get_carrier_from_phone(phone)
-    if not carrier:
-        raise err.ParamError('not support thit carrier yet')
-    data = set_payment_data(carrier_id=carrier, phone="+62" + phone, price=pay_amount, payid=pay_id)
-    url = "http://" + (_HUAWEI_API_HOST + _HUAWEI_PATH["creat_payment"])
-    response = get_response_(data, url).text
-    auth_method_info = json.loads(response).get("auth_method", {})
-    return auth_method_info
+    pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url, phone)
+    return pay_data
 
 
 @require_GET
