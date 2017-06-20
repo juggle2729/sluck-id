@@ -256,7 +256,6 @@ def pay_submit(request, pay_id):
     pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url)
     # huawei epay logic
     pay = get_pay(pay_id)
-    _LOGGER.error("pay type info id %s, type %s " % (pay.id, pay.pay_type))
     if pay.pay_type != PayType.HUAWEI_EPAY.value:
         return pay_data
     pay_amount = pay_amount * _HUAWEI_EPAY_ADD_TAX_TOTAL
