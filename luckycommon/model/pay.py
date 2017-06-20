@@ -276,8 +276,9 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'Huaweiepay',
         'highlight': 0,
         'choice': [1, 5, 10, 50, 100, 200, 500],
-        'icon': 'http://p.1yuan-gou.com/huawei_pay.png',
+        'icon': 'http://p.1yuan-gou.com/huaweipay.png',
         'tag': '',
+    },
     PayType.SELF_RECHARGE_CARD.value: {
         'name': u'Recharge Card',
         'pay_type': PayType.SELF_RECHARGE_CARD.value,
@@ -295,7 +296,6 @@ AVAILABLE_PAY_TYPES = {
         },
         ],
     },
-},
 }
 
 
