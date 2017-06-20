@@ -29,6 +29,10 @@ class PayType(CustomEnum):
     MIMO_TELKOMSEL = 23  # point
     BLUEPAY_SMS = 24
     HUAWEI_EPAY = 25
+    SELF_RECHARGE_CARD = 26
+    MIMO_INDOSAT = 27
+    MIMO_THREE = 28
+    MIMO_XL = 29
 
 
 class PayStatus(CustomEnum):
@@ -174,7 +178,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_pay_15.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.BLUEPAY_SDK_GAME_ON.value: {
         'name': u'game on',
@@ -183,7 +187,7 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_pay_16.png',
-        'tag': '',
+        'tag': 'http://p.1yuan-gou.com/ic_pay_10x.png',
     },
     PayType.CODA_SMS.value: {
         'name': u'coda sms',
@@ -230,6 +234,33 @@ AVAILABLE_PAY_TYPES = {
         'icon': 'http://p.1yuan-gou.com/ic_tsel_new.png',
         'tag': '',
     },
+    PayType.MIMO_INDOSAT.value: {
+        'name': u'MIMO INDOSAT',
+        'pay_type': PayType.MIMO_INDOSAT.value,
+        'comment': u'MIMO INDOSAT',
+        'highlight': 0,
+        'choice': [10, 20,50, 100],
+        'icon': 'http://p.1yuan-gou.com/indosat.png',
+        'tag': '',
+    },
+    PayType.MIMO_THREE.value: {
+        'name': u'MIMO THREE',
+        'pay_type': PayType.MIMO_THREE.value,
+        'comment': u'MIMO THREE',
+        'highlight': 0,
+        'choice': [10, 20,50, 100],
+        'icon': 'http://p.1yuan-gou.com/three.png',
+        'tag': '',
+    },
+    PayType.MIMO_XL.value: {
+        'name': u'MIMO XL',
+        'pay_type': PayType.MIMO_XL.value,
+        'comment': u'MIMO XL',
+        'highlight': 0,
+        'choice': [10, 20,50, 100],
+        'icon': 'http://p.1yuan-gou.com/xl.png',
+        'tag': '',
+    },
     PayType.BLUEPAY_SMS.value: {
         'name': u'Bluepay sms',
         'pay_type': PayType.BLUEPAY_SMS.value,
@@ -247,6 +278,22 @@ AVAILABLE_PAY_TYPES = {
         'choice': [1, 5, 10, 50, 100, 200, 500],
         'icon': 'http://p.1yuan-gou.com/huawei_pay.png',
         'tag': '',
+    PayType.SELF_RECHARGE_CARD.value: {
+        'name': u'Recharge Card',
+        'pay_type': PayType.SELF_RECHARGE_CARD.value,
+        'comment': u'recharge card',
+        'highlight': 0,
+        'choice': [],
+        'icon': 'http://p.1yuan-gou.com/ic_tokopay.png',
+        'tag': '',
+        'agents': [{
+            'name': 'JD',
+            'phone': '0723236523',
+        }, {
+            'name': 'Coda',
+            'phone': '06-7342332232339899899'
+        },
+        ],
     },
 }
 

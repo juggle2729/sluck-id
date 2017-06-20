@@ -16,6 +16,7 @@ class HttpCode(object):
     NOT_FOUND = 404
     METHOD_NOT_ALLOWED = 405
     EXPECTATION_FAILED = 417
+    RECHARGED_CARD_ERROR = 418
     SERVER_ERROR = 500
     NOT_IMPLEMENTED = 501
 
@@ -43,7 +44,14 @@ StatusCode = Enum({
     "PINGXX_PLATFORM_ERROR": (130, u"ping++ 平台错误"),
 
     "RESOURCE_INSUFFICIENT": (201, u"资源不足"),
-    "REACH_LIMIT": (301, u"达到限制")
+    "REACH_LIMIT": (301, u"达到限制"),
+    "CARD_NOT_FOUND": (400, u"card not found"),
+    "WRONG_SECRET": (401, u"wrong secret"),
+    "USED_CARD": (402, u"card already used"),
+    "INVALID_CARD": (403, u"card invalid"),
+    "SERVER_ERROR": (404, u"server error, card not recharged"),
+    "PAY_ID_NOT_FOUND": (405, u"pay_id not found"),
+    "PAY_STATUS_INVALID": (406, u"pay_status invalid"),
 })
 
 StatusCodeDict = StatusCode.to_dict()

@@ -691,6 +691,23 @@ def view_calc_record(activity_id):
     return calc_record
 
 
+def view_users_in_activity(activity_id):
+    user_list = []
+    user_activities = get_activity_users(activity_id)
+    for user_activity in user_activities:
+        user_id = user_activity.user_id
+        account = get_account(user_id)
+        if not account:
+            continue
+        user_list.append({
+            'user_id': user_id,
+            'nickname': account.nick_name,
+            'avatar': account.avatar_id,
+            'numbers': user_activity.numbers.split(','),
+        })
+    return user_list
+
+
 def start_next_activity(user_id, template_id):
     # check status
     activity_template = get_template(template_id)

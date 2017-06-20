@@ -65,14 +65,14 @@ COIN_TIDS = {
 }
 
 GP_FLAG = False  # GP switch, True is on sensor
-GP_VERSION_CODE = 135
+GP_VERSION_CODE = 136
 GP_ALLOWED_TIDS = [752, 753, 754, 755, 750, 751, 665]
 
 IAP_FLAG = True  # IAP 审核开关
 IAP_VERSION_CODE = [13]
 IAP_TEST_ID = []
 IOS_DEBUG_CONF = {
-    'qg_ios': 13,
+    'qg_ios': 13
 }
 
 FRESH_RECOMMEND = [0, 0]
@@ -113,7 +113,7 @@ BAN_VIRTUAL_LOGIN = False
 
 SERVICE_ID = 1
 
-ANNOUNCE_DELAY = 300
+ANNOUNCE_DELAY = 60
 
 # paypal settings
 PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"

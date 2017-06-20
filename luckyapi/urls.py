@@ -38,6 +38,7 @@ urlpatterns = patterns(
     url(r'^activitys/(?P<activity_id>[^/]+)/records/?$', 'luckyapi.views.activity.get_buy_records'),
     url(r'^activitys/(?P<activity_id>[^/]+)/calclist/?$', 'luckyapi.views.activity.get_calc_record'),
     url(r'^activitys/(?P<activity_id>[^/]+)/billboard/?$', 'luckyapi.views.activity.get_billboard'),
+    url(r'^activitys/(?P<activity_id>[^/]+)/users/?$', 'luckyapi.views.activity.get_users_in_activity'),
     url(r'^pk/?$', 'luckyapi.views.pk.get_pk_activitys'),
     # transaction
     url(r'^transactions/?$', 'luckyapi.views.transaction.get_transactions'),
@@ -60,6 +61,8 @@ urlpatterns = patterns(
     url(r'^pay/fortumo/notify/?$', 'luckyapi.views.transaction.fortumo_notify'),
     url(r'^pay/payssion/notify/?$', 'luckyapi.views.transaction.payssion_notify'),
     url(r'^pay/precard/(?P<pay_id>[^/]+)/?$', 'luckyapi.views.transaction.precard_gateway'),
+    url(r'^pay/self_recharge_card/(?P<pay_id>[^/]+)/?$', 'luckyapi.views.transaction.consume_self_recharge_card'),
+    url(r'^pay/check_self_recharge_card/?$', 'luckyapi.views.transaction.check_self_recharge_card'),
     url(r'^pay/indomog/notify/?$', 'luckyapi.views.transaction.indomog_notify'),
     url(r'^pay/notify/indomog/?$', 'luckyapi.views.transaction.indomog_notify'),
     url(r'^pay/notify/doku/?$', 'luckyapi.views.transaction.doku_notify'),
@@ -152,9 +155,9 @@ urlpatterns = patterns(
     # social
     url(r'^social/share/?$', 'luckyapi.views.check.submit_share'),
     # partner
-    url(r'^inviter/track/?$', 'luckyapi.views.partner.track_inviter'),
+    # url(r'^inviter/track/?$', 'luckyapi.views.partner.track_inviter'),
     # url(r'^inviter/add/?$', 'luckyapi.views.partner.add_inviter'),
-    url(r'^inviter/entry/?$', 'luckyapi.views.partner.get_entry'),
+    # url(r'^inviter/entry/?$', 'luckyapi.views.partner.get_entry'),
     url(r'^partner/reward/records/?$', 'luckyapi.views.partner.reward_record'),
     url(r'^partner/reward/?$', 'luckyapi.views.partner.reward_status'),
     url(r'^partner/accu/?$', 'luckyapi.views.partner.current_accumulation'),

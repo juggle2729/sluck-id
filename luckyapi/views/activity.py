@@ -10,7 +10,7 @@ from luckyapi.logic.crowdfunding import (create_activity_template,
                                          view_activity_detail,
                                          view_revealed_list,
                                          view_calc_record,
-                                         view_activitys_by_tids)
+                                         view_activitys_by_tids, view_users_in_activity)
 from luckycommon.order.handler import (
     view_buy_record_list,
     view_buy_record_list_timeline, view_detail_numbers)
@@ -49,7 +49,7 @@ def _filter_star(request, item_list):
     else:
         filter_list = []
         for item in item_list:
-            if int(item.get('gid')) in (774,775,780,781 ):
+            if int(item.get('gid')) in (774, 775, 780, 781):
                 item['is_star'] = 1
             filter_list.append(item)
         return filter_list
@@ -97,10 +97,12 @@ def start_template(request, template_id):
     }
     return data
 
+
 @require_GET
 @response_wrapper
 def check_status(request):
     return {'status': settings.GP_FLAG}
+
 
 @require_GET
 @response_wrapper
@@ -309,6 +311,12 @@ def get_billboard(request, activity_id):
 
 @require_GET
 @response_wrapper
+def get_users_in_activity(request, activity_id):
+    return view_users_in_activity(activity_id)
+
+
+@require_GET
+@response_wrapper
 @token_required
 def get_my_activitys(request):
     """
@@ -443,6 +451,7 @@ def get_search_activitys(request):
         'size': len(activitys),
     }
     return data
+
 
 @require_GET
 @response_wrapper

@@ -1067,3 +1067,14 @@ CREATE TABLE `message` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`))ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `recharge_card` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `secret` varchar(128) NOT NULL,
+  `amount` bigint(20) DEFAULT NULL,
+  `status` varchar(16) NOT NULL,
+  `agent` varchar(16) NOT NULL DEFAULT 'official',
+  `user_id` bigint(20) DEFAULT NULL,
+  `pay_id` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`))ENGINE=InnoDB CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

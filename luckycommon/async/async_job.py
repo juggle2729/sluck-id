@@ -7,6 +7,7 @@ import random
 import logging
 import requests
 
+from luckycommon.account.db.account import is_virtual_user
 from luckycommon.level.handler import add_exp
 from luckycommon.model import orm
 from luckycommon.model.virtual import VirtualPool
@@ -200,7 +201,7 @@ def stats_consume(user_id, total_amount, coupon_amount=0):
     _LOGGER.info('stats consume %s:%s,%s', user_id,
                  total_amount, coupon_amount)
     consume_amount = total_amount - coupon_amount
-    if not redis_cache.is_virtual_account(user_id):
+    if not is_virtual_user(user_id):
         if consume_amount > 0:
             try:
                 add_consume_credit(user_id, consume_amount)
@@ -253,6 +254,7 @@ def stats_announce(activity_id, winner):
 
 @app.task(name='utils.track_one')
 def track_one(collection, properties, user_id=None):
+    return
     _LOGGER.info('track one event into collection: %s' % collection)
     status, error_message = collect_event(collection, properties, user_id)
     if not status:
@@ -261,6 +263,7 @@ def track_one(collection, properties, user_id=None):
 
 @app.task(name='utils.track_new_user')
 def track_new_user(user_id, properties):
+    return
     _LOGGER.info('track one new user %s' % user_id)
     status, error_message = create_user(user_id, properties)
     if not status:
@@ -269,6 +272,7 @@ def track_new_user(user_id, properties):
 
 @app.task(name='utils.set_user_properties')
 def set_user(user_id, properties):
+    return
     _LOGGER.info('set user properties %s, %s' % (user_id, properties))
     status, error_message = set_user_properties(user_id, properties)
     if not status:
@@ -277,6 +281,7 @@ def set_user(user_id, properties):
 
 @app.task(name='utils.increment_user_property')
 def increment_user(user_id, property, value):
+    return
     _LOGGER.info('increment user property %s, %s, %s' % (user_id, property, value))
     status, error_message = increment_user_property(user_id, property, value)
     if not status:

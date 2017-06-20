@@ -114,7 +114,7 @@ BAN_VIRTUAL_LOGIN = False
 
 SERVICE_ID = 1
 
-ANNOUNCE_DELAY = 30
+ANNOUNCE_DELAY = 60
 
 # paypal settings
 PAYPAL_REDIRECT_URL = "https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=%s"
@@ -157,7 +157,23 @@ PAY_GATEWAY_STATUS_URL = 'http://54.169.136.207/api/v1/pay/%s/status'
 
 # mimo pay (ATM BCA)
 MIMOPAY_API_HOST = 'http://staging.mimopay.com'
-MIMOPAY_PAYMENT_METHODS = {'atm': 'atm_bca_api', 'telkomsel': 'upoint_airtime_api'}
-MIMOPAY_MERCHANT_CODES = {'atm': "ID-0225", 'telkomsel': 'ID-0231'}
-MIMOPAY_PRODUCT_NAMES = {'atm': "TS", 'telkomsel': 'TS'}
-MIMOPAY_SECRET_KEYS = {'atm': '15n32j025r22jgw', 'telkomsel': 'd4ei47hqql8z47q'}
+MIMOPAY_PAYMENT_METHODS = {'atm': 'atm_bca_api',
+                           'indosat': 'indosat_airtime_api',
+                           'three': 'three_airtime_api',
+                           'xl': 'xl_airtime_api',
+                           'telkomsel': 'upoint_airtime_api'}
+MIMOPAY_MERCHANT_CODES = {'atm': "ID-0225",
+                          'indosat': 'ID-0225',
+                          'three': 'ID-0225',
+                          'xl': 'ID-0225',
+                          'telkomsel': 'ID-0231'}
+MIMOPAY_PRODUCT_NAMES = {'atm': "TS",
+                         'indosat': 'TS',
+                         'three': 'TS',
+                         'xl': 'TS',
+                         'telkomsel': 'TS'}
+MIMOPAY_SECRET_KEYS = {'atm': '15n32j025r22jgw',
+                       'indosat': '15n32j025r22jgw',
+                       'three': '15n32j025r22jgw',
+                       'xl': '15n32j025r22jgw',
+                       'telkomsel': 'd4ei47hqql8z47q'}

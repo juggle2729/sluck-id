@@ -92,3 +92,7 @@ class ResourceNotModified(ClientError):
 
 class BalanceInsufficient(ClientError):
     pass
+
+
+class RechargeCardError(Error):
+    HTTPCODE = HttpCode.RECHARGED_CARD_ERROR
