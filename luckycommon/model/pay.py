@@ -295,6 +295,7 @@ AVAILABLE_PAY_TYPES = {
         },
         ],
     },
+},
 }
 
 
