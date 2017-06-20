@@ -2,6 +2,7 @@
 import json
 import logging
 from datetime import datetime
+import requests
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -20,7 +21,7 @@ from luckycommon.db.pay import get_pay
 from luckycommon.model.pay import PayType, PayStatus, AVAILABLE_PAY_TYPES
 from luckycommon.order.db.order import get_order, get_order_numbers
 from luckycommon.third import coda_pay, fortumo_pay, nganluong, precard, paypal_pay, doku, payssion, bluepay, mimo_pay, \
-    google_wallet, iap
+    google_wallet, iap, huawei_epay
 from luckycommon.third.doku import doku_check_notify
 from luckycommon.third.self_recharge_card import pay_via_self_recharge_card
 from luckycommon.utils import exceptions as err
@@ -29,6 +30,9 @@ from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.exceptions import AuthenticateError, RechargeCardError
 from luckycommon.utils.respcode import StatusCode
+from luckycommon.third.huawei_epay import get_response_, get_carrier_from_phone, set_payment_data, \
+    pre_process_indonesia_phone, callback_success_header, callback_failure_header, _HUAWEI_API_HOST, _HUAWEI_PATH, \
+    _HUAWEI_EPAY_ADD_TAX_TOTAL
 
 _LOGGER = logging.getLogger('pay')
 
@@ -106,7 +110,8 @@ def get_pay_types(request):
 
     # temp strategy remove MIMO_TELKOMSEL for new registered user
     user = get_user_by_uid(user_id)
-    if user.created_at > datetime(2017, 5, 9) and AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value] in filtered_available_pay_types:
+    if user.created_at > datetime(2017, 5, 9) and AVAILABLE_PAY_TYPES[
+        PayType.MIMO_TELKOMSEL.value] in filtered_available_pay_types:
         filtered_available_pay_types.remove(AVAILABLE_PAY_TYPES[PayType.MIMO_TELKOMSEL.value])
     # end temp strategy
 
@@ -129,8 +134,21 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
             pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
             pay_types[PayType.BLUEPAY_SDK_ATM.value],
         ]
-    if platform == 'android' and 134 <= int(version_code) <= 135 and locale == 'id':
+    if platform == 'android' and 134 <= int(version_code) < 135 and locale == 'id':
         return [
+            pay_types[PayType.MIMO_TELKOMSEL.value],
+            pay_types[PayType.CODA_PAY.value],
+            pay_types[PayType.DOKU_VISA.value],
+            pay_types[PayType.DOKU_WALLET.value],
+            pay_types[PayType.MIMO_BCA.value],
+            pay_types[PayType.BLUEPAY_SDK_MOGPLAY.value],
+            pay_types[PayType.BLUEPAY_SDK_GAME_ON.value],
+            pay_types[PayType.BLUEPAY_SDK_CONVENNIENCE_STORE.value],
+            pay_types[PayType.BLUEPAY_SDK_ATM.value],
+        ]
+    if platform == 'android' and 135 <= int(version_code) < 136 and locale == 'id':
+        return [
+            pay_types[PayType.HUAWEI_EPAY.value],
             pay_types[PayType.MIMO_TELKOMSEL.value],
             pay_types[PayType.CODA_PAY.value],
             pay_types[PayType.DOKU_VISA.value],
@@ -143,6 +161,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'android' and 136 <= int(version_code) and locale == 'id':
         return [
+            pay_types[PayType.HUAWEI_EPAY.value],
             pay_types[PayType.SELF_RECHARGE_CARD.value],
             pay_types[PayType.MIMO_INDOSAT.value],
             pay_types[PayType.MIMO_THREE.value],
@@ -167,6 +186,7 @@ def filter_available_pay_types(pay_types, platform, version_code, locale, chn):
         ]
     if platform == 'ios' and locale == 'id':
         return [
+            pay_types[PayType.HUAWEI_EPAY.value],
             pay_types[PayType.SELF_RECHARGE_CARD.value],
             pay_types[PayType.MIMO_INDOSAT.value],
             pay_types[PayType.MIMO_THREE.value],
@@ -220,6 +240,7 @@ def pay_submit(request, pay_id):
             buy_list = json.loads(buy_list)
         coupon = request.POST.get('coupon')
         pk_size = request.POST.get('pk_size')
+        phone = request.POST.get("phone", "")
     except:
         raise err.ParamError('pay type wrong')
 
@@ -246,7 +267,7 @@ def pay_submit(request, pay_id):
         'coupon': coupon,
         'pk_size': pk_size,
     })
-    pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url)
+    pay_data = submit_pay(user_id, pay_id, pay_amount, pay_context, return_url, phone)
     return pay_data
 
 
@@ -509,6 +530,20 @@ def precard_gateway(request, pay_id):
 
 
 @require_POST
+def huawei_epay_notify(request):
+    try:
+        resp = huawei_epay.huaweipay_check_notify(request)
+        resp = HttpResponse(json.dumps({"result": {"code": "000000", "message": "Success"}}))
+        for tip in callback_success_header:
+            resp[tip] = callback_success_header[tip]
+        return resp
+    except Exception as e:
+        resp = HttpResponse(json.dumps({"result": {"code": "E000000", "message": "System error."}}))
+        for tip in callback_failure_header:
+            resp[tip] = callback_failure_header[tip]
+        return resp
+
+
 @response_wrapper
 @token_required
 def consume_self_recharge_card(request, pay_id):

@@ -28,6 +28,7 @@ class PayType(CustomEnum):
     DOKU_VISA = 22  # point
     MIMO_TELKOMSEL = 23  # point
     BLUEPAY_SMS = 24
+    HUAWEI_EPAY = 25
     SELF_RECHARGE_CARD = 26
     MIMO_INDOSAT = 27
     MIMO_THREE = 28
@@ -267,6 +268,15 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [5, 10, 50, 100, 200, 500],
         'icon': 'http://p.1yuan-gou.com/bluepay_sms.png',
+        'tag': '',
+    },
+    PayType.HUAWEI_EPAY.value: {
+        'name': u'Huaweipay',
+        'pay_type': PayType.HUAWEI_EPAY.value,
+        'comment': u'Huaweiepay',
+        'highlight': 0,
+        'choice': [1, 5, 10, 50, 100, 200, 500],
+        'icon': 'http://p.1yuan-gou.com/huaweipay.png',
         'tag': '',
     },
     PayType.SELF_RECHARGE_CARD.value: {

@@ -696,7 +696,14 @@ class ActivityAnnounceHandler(EventHandler):
                 self.spread(activity, lucky_order)
                 god_campaign.register(lucky_order.buyer, activity)
                 redis_cache.add_user_pending(lucky_order.buyer, 'award')
-                if not is_virtual_user(lucky_order.buyer):
+                virtual_win = is_virtual_user(lucky_order.buyer)
+                user_activity = get_user_activity(lucky_order.buyer, activity.id)
+                nums = user_activity.numbers.split(',')
+                winner_ratio = len(nums) / float(activity.target_amount)
+                buy_all = False
+                if winner_ratio == 1:
+                    buy_all = True
+                if not virtual_win:
                     add_current_amount(activity.target_amount, lucky_order.buyer, False)
                 # track
                 track_info = {'user_id': lucky_order.buyer, 'type': 'win',
@@ -706,11 +713,21 @@ class ActivityAnnounceHandler(EventHandler):
                               'activity_name': activity.name,
                               'term_number': activity.term_number}
                 increment_user.delay(lucky_order.buyer, 'total_win', float(get_goods(activity.goods_id).price))
+
                 track_one.delay(collection='win', properties={
                     'activity_id': lucky_order.activity_id,
                     'activity_target': float(get_goods(activity.goods_id).price),
                     'activity_name': activity.name,
                     'term_number': activity.term_number}, user_id=lucky_order.buyer)
+
+                track_one.delay(collection='announce', properties={
+                    'real_win': 1 if not virtual_win else 0,
+                    'adjust': 0,
+                    'winner_strategy': 0,
+                    'loser_strategy': 0,
+                    'buy_all': 1 if buy_all else 0,
+                    'announce': 1,
+                })
                 winned_activitys = redis_cache.get_winn_list(lucky_order.buyer)
                 if len(winned_activitys) == 1:
                     cached_winner = redis_cache.get_activity_winner(
