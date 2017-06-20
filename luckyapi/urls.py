@@ -95,7 +95,7 @@ urlpatterns = patterns(
     url(r'^third/datacell/fail/?$', 'luckyapi.views.third.datacell_f'),
     url(r'^third/datacell/success/?$', 'luckyapi.views.third.datacell_s'),
     url(r'^third/pulsa/?$', 'luckyapi.views.third.mobilepulsa'),
-    url(r'^third/huawei_info/?$', 'luckyapi.views.third.huawei_epay_info'),
+    url(r'^third/huawei_payment_status/?$', 'luckyapi.views.third.huawei_epay_info'),
     # show
     url(r'^my/shows/?$', 'luckyapi.views.show.get_my_shows'),
     url(r'^my/shows/detail/?$', 'luckyapi.views.show.get_my_show_detail'),
