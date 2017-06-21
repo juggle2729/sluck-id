@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-import os
-import sys
-import json
-import time
-import tablib
+
 import datetime
 import logging
+import os
+import sys
+
+import tablib
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
@@ -14,31 +14,14 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.order.model.order import *
 from luckycommon.level.handler import get_user_level
-from luckycommon.db.activity import get_activity, get_user_activity
+from luckycommon.db.activity import get_activity
 from luckycommon.cache import redis_cache
 from luckycommon.stats import MG as mg
-from luckycommon.utils.tz import utc_to_local
-from luckycommon.utils import id_generator
 from luckycommon.utils import tz
-from luckycommon.utils.mail import MailSender
-from luckycommon.third.sms.helper import send_sms
-
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 _LOGGER = logging.getLogger('worker')
 
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@zhuohan-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
-    'to': [
-           'wangfeng@zhuohan-tech.com',
-           'mengxiaohui@zhuohan-tech.com',
-           'shuxiang@zhuohan-tech.com',
-    ]
-    #'to': ['shuxiang@zhuohan-tech.com']
-})
 EXPORT_PATH = '/home/ubuntu/af-env/data/stats/'
 USER_TYPE = {
     'new_user': 1,
@@ -59,10 +42,10 @@ def redirect_to_file(items, header, filename):
 cmd = sys.argv[1]
 if cmd == 'start':
     days_ago = int(sys.argv[2])
-    now = datetime.datetime.now() 
+    now = datetime.datetime.now()
     start_date = now - datetime.timedelta(days=days_ago)
     start_date = start_date.replace(hour=16, minute=0, second=0, microsecond=0)
-    end_date = now - datetime.timedelta(days=days_ago-1)
+    end_date = now - datetime.timedelta(days=days_ago - 1)
     end_date = end_date.replace(hour=16, minute=0, second=0, microsecond=0)
 
     order_list = []
@@ -94,7 +77,7 @@ if cmd == 'start':
             else:
                 user_type = u'老用户'
         order_list.append((order_id, order_time, user_id, chn, user_type, user_level, activity.short_title,
-            activity.term_number, activity.target_amount, number_count))
+                           activity.term_number, activity.target_amount, number_count))
     excel_header = [u'订单id', u'创建时间', u'uid', u'chn', u'用户属性', u'vip等级', u'商品简称', u'商品期数', u'活动总需人次', u'本次参与人次']
     file_path = redirect_to_file(order_list, excel_header, u'order_daily_data_%s.xlsx' % end_date.strftime('%y-%m-%d'))
-    mail_sender.send(u"[%s]每日订单汇总" % end_date.strftime('%y-%m-%d'), u'详情请见附件', attachments=[file_path])
+    TOOL_MAIL_SENDER.send(u"[%s]每日订单汇总" % end_date.strftime('%y-%m-%d'), u'详情请见附件', attachments=[file_path])

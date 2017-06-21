@@ -18,24 +18,10 @@ from luckycommon.model.activity import ActivityWin
 from luckycommon.model.transaction import Transaction
 from luckycommon.db.activity import get_activity
 from luckycommon.utils.tz import utc_to_local
-from luckycommon.utils.mail import MailSender
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 
 EXPORT_PATH = '/home/ubuntu/af-env/data/stats/'
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@adsquare-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@adsquare-tech.com>',
-    'to': ['wangshanshan@adsquare-tech.com',
-           'wangfeng@adsquare-tech.com',
-           'jiangyan@adsquare-tech.com',
-           'jack@adsquare-tech.com',
-           'shuxiang@adsquare-tech.com']
-    #'to': ['shuxiang@adsquare-tech.com']
-})
-
 
 def redirect_to_file(items, header, filename):
     file_path = os.path.join(EXPORT_PATH, filename)
@@ -102,7 +88,7 @@ if cmd == 'win':
     print 'rank size %s' % len(rank_list)
     excel_header = [u'商品名称', u'中奖者id', u'活动价格', u'中奖时间']
     file_path = redirect_to_file(user_list, excel_header, u'win_data.xlsx')
-    mail_sender.send(u"今日渠道用户中奖排名", u'详情请见附件', attachments=[file_path])
+    TOOL_MAIL_SENDER.send(u"今日渠道用户中奖排名", u'详情请见附件', attachments=[file_path])
 
 if cmd == 'transaction':
     user_id = sys.argv[2]

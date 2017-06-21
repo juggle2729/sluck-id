@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-import os
-import sys
-import random
+
 import logging
+import os
+import random
+import sys
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
@@ -13,28 +14,10 @@ from luckycommon.model.show import SHOW_STATUS, AnnounceShow
 
 from luckycommon.push import handler as push_handler
 
-from luckycommon.db import account as account_db
 from luckycommon.db import show as show_db
 from luckycommon.credit.db import credit as credit_db
-from luckycommon.utils.mail import MailSender
-
 
 _LOGGER = logging.getLogger('lucky')
-
-
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@adsquare-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@adsquare-tech.com>',
-    'to': [
-           'pandongwei@adsquare-tech.com',
-           'wangfeng@adsquare-tech.com',
-           'wangshanshan@adsquare-tech.com',
-           'shuxiang@adsquare-tech.com']
-    #'to': ['shuxiang@adsquare-tech.com']
-})
 
 
 def start():
@@ -52,7 +35,6 @@ def start():
         if need_push_fail:
             push_handler.push_verify_fail(show)
         _LOGGER.info('verify show id: %s, user: %s', show.id, show.user_id)
-
 
 
 if __name__ == "__main__":

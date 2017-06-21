@@ -1,46 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+
 import os
 import sys
-import tablib
-from datetime import timedelta
 from datetime import datetime
+from datetime import timedelta
+
+import tablib
 
 # add up one level dir into sys path
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
-from luckycommon.cache  import redis_cache
+from luckycommon.cache import redis_cache
 from luckycommon.model.activity import ActivityTemplate, Activity, UserActivity, ActivityWin
 from luckycommon.model.stock import Goods
-from luckycommon.account.model.account import Account
 from luckycommon.model.category import Category, CategoryActivity
-from luckycommon.utils.mail import MailSender
-from luckycommon.utils.tz import utc_to_local_str
-
-from django.conf import settings
-
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 EXPORT_PATH = '/home/ubuntu/af-env/data/stats/'
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@zhuohan-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
-    'to': [
-        'zhulei@zhuohan-tech.com',
-        'mahongli@zhuohan-tech.com',
-        # 'liuyu@zhuohan-tech.com',
-        'sstong@zhuohan-tech.com',
-        'taocheng@zhuohan-tech.com',
-        # 'chenweiran@zhuohan-tech.com',
-        'lichang@zhuohan-tech.com',
-        'xialu@zhuohan-tech.com',
-        'caonianci@zhuohan-tech.com',
-        # 'wywu@zhuohan-tech.com',
-    ]
-})
 
 
 def redirect_to_file(items, header, filename):
@@ -49,7 +27,6 @@ def redirect_to_file(items, header, filename):
     with open(file_path, 'wb') as f:
         f.write(data.xlsx)
     return file_path
-
 
 
 virtual_set = redis_cache.get_virtual_account()
@@ -62,8 +39,8 @@ end_str = now_d.strftime('%Y-%m-%d %H:%M:%S')
 a_dict = {}
 win_set = set()
 
-user_activitys = UserActivity.query.filter(UserActivity.created_at > start_str)\
-                                   .filter(UserActivity.created_at < end_str).all()
+user_activitys = UserActivity.query.filter(UserActivity.created_at > start_str) \
+    .filter(UserActivity.created_at < end_str).all()
 template_ids = set()
 for ua in user_activitys:
     user_id = ua.user_id
@@ -114,20 +91,19 @@ for template in template_list:
     a_dict[template.id]['goods_price'] = goods_price
     a_dict[template.id]['activity_price'] = activity_price
 
-
 b_dict = [{
-    'id':k,
-    'name':v['name'],
-    'category':v['category'],
-    'goods_price':v['goods_price'],
-    'activity_price':v['activity_price'],
-    'real_person':len(v['uids']),
-    'virtual_person':len(v['vids']),
-    'real_amount':v['real_amount'],
-    'virtual_amount':v['virtual_amount'],
-    'real_win':v['real_win'],
-    'virtual_win':v['virtual_win'],
-} for k,v in a_dict.items()]
+    'id': k,
+    'name': v['name'],
+    'category': v['category'],
+    'goods_price': v['goods_price'],
+    'activity_price': v['activity_price'],
+    'real_person': len(v['uids']),
+    'virtual_person': len(v['vids']),
+    'real_amount': v['real_amount'],
+    'virtual_amount': v['virtual_amount'],
+    'real_win': v['real_win'],
+    'virtual_win': v['virtual_win'],
+} for k, v in a_dict.items()]
 b_dict.sort(key=lambda x: x['goods_price'], reverse=True)
 html_str = '<html><head></head><body>'
 html_str += u'''<table border="1"><tr><td>商品编号</td>
@@ -144,14 +120,16 @@ html_str += u'''<table border="1"><tr><td>商品编号</td>
 </tr>'''
 v_list = []
 for item in b_dict:
-    html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (item['id'], item['name'], item['category'], item['goods_price'], item['activity_price'], item['real_person'], item['virtual_person'],
-item['real_amount'], item['virtual_amount'], item['real_win'], item['virtual_win'])
-    v_list.append((item['id'], item['name'], item['category'], item['goods_price'], item['activity_price'], item['real_person'], item['virtual_person'], item['real_amount'], item['virtual_amount'], item['real_win'], item['virtual_win']))
+    html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
+        item['id'], item['name'], item['category'], item['goods_price'], item['activity_price'], item['real_person'],
+        item['virtual_person'],
+        item['real_amount'], item['virtual_amount'], item['real_win'], item['virtual_win'])
+    v_list.append((item['id'], item['name'], item['category'], item['goods_price'], item['activity_price'], item['real_person'],
+                   item['virtual_person'], item['real_amount'], item['virtual_amount'], item['real_win'], item['virtual_win']))
 html_str += '</table>'
 html_str += '</body></html>'
-
 
 excel_header = []
 file_path = redirect_to_file(v_list, excel_header, u'top_goods_daily.xlsx')
 
-mail_sender.send(u"昨日商品排名", html_str, attachments=[file_path])
+TOOL_MAIL_SENDER.send(u"昨日商品排名", html_str, attachments=[file_path])

@@ -14,32 +14,7 @@ from luckycommon.account.model.account import Account
 from luckycommon.cache import redis_cache
 from luckycommon.account.db.account import get_account_status
 from decimal import Decimal
-from luckycommon.utils.mail import MailSender
-
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server':
-    'smtp.mxhichina.com:25',
-    'user':
-    'ops@zhuohan-tech.com',
-    'passwd':
-    'madP@ssw0rd',
-    'from':
-    'Adsquare Service Statistics<ops@zhuohan-tech.com>',
-    'to': [
-        'zhulei@zhuohan-tech.com',
-        'xialu@zhuohan-tech.com',
-        'mahongli@zhuohan-tech.com',
-        # 'liuyu@zhuohan-tech.com',
-        'sstong@zhuohan-tech.com',
-        'taocheng@zhuohan-tech.com',
-        # 'chenweiran@zhuohan-tech.com',
-        'lichang@zhuohan-tech.com',
-        'xialu@zhuohan-tech.com',
-        'caonianci@zhuohan-tech.com',
-        # 'wywu@zhuohan-tech.com',
-    ]
-})
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 today = datetime.datetime.utcnow().strftime('%Y-%m-%d')
 html_str = u'<html><head></head><body><h2> VIP用户信息（%s）</h2>' % today
@@ -103,7 +78,7 @@ def _get_vip_user(size, offset, borong_users, borong_limit_num):
     for account in accounts:
         user_id = account.id
         a_all_amount = _get_pay_count(user_id=account.id)
-        if a_all_amount >= 1000.00:
+        if a_all_amount >= 1000:
             if str(user_id) in borong_users:
                 borong_info = redis_cache.get_borong_info(user_id)
                 borong_num = borong_info.get('num', 0)
@@ -136,5 +111,5 @@ if __name__ == '__main__':
         offset = n * SIZE
         _get_vip_user(SIZE, offset, users, 5)
     html_str += u'</table></body></html>'
-    mail_sender.send(u"%s -- VIP用户信息" % today, html_str)
+    TOOL_MAIL_SENDER.send(u"%s -- VIP用户信息" % today, html_str)
     print 'end job.'

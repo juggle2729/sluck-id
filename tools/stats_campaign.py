@@ -22,27 +22,7 @@ from luckycommon.campaign.model.first_double import *
 from luckycommon.stats import MG as mg
 from luckycommon.utils import tz
 from luckycommon.utils.orm import get_count
-from luckycommon.utils.mail import MailSender
-
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@zhuohan-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
-    'to': [
-        'zhulei@zhuohan-tech.com',
-        'mahongli@zhuohan-tech.com',
-        # 'liuyu@zhuohan-tech.com',
-        'sstong@zhuohan-tech.com',
-        'taocheng@zhuohan-tech.com',
-        # 'chenweiran@zhuohan-tech.com',
-        'lichang@zhuohan-tech.com',
-        'xialu@zhuohan-tech.com',
-        'caonianci@zhuohan-tech.com',
-        # 'wywu@zhuohan-tech.com',
-    ]
-})
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 
 def get_account_stats(uid, date_str):
@@ -244,4 +224,4 @@ if cmd == 'stats':
     html = calc_wheel(html)
     html += '</body></html>'
     # print html
-    mail_sender.send("[%s]今日活动数据" % start_date.strftime('%Y-%m-%d'), html)
+    TOOL_MAIL_SENDER.send("[%s]今日活动数据" % start_date.strftime('%Y-%m-%d'), html)

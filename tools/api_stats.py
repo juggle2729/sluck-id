@@ -4,19 +4,7 @@ import re
 import sys
 from datetime import datetime, timedelta
 
-from mail import MailSender
-
-
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@adsquare-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@adsquare-tech.com>',
-    'to': [
-           'shuxiang@adsquare-tech.com']
-})
-
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 #223.104.25.78 - - [07/Jul/2016:17:49:59 +0800]  "GET /api/v2/my/activitys?page=2 HTTP/1.1" 200 7515 "http://www.1yuan-gou.com/user/my_activity_record" "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53" 0.183 0.183 .
 
@@ -152,4 +140,4 @@ html_str += '</table>'
 html_str += '</body></html>'
 #print html_str
 d = datetime.now() - timedelta(1)
-mail_sender.send("[%s]API stats" % d.strftime('%Y-%m-%d'), html_str)
+TOOL_MAIL_SENDER.send("[%s]API stats" % d.strftime('%Y-%m-%d'), html_str)

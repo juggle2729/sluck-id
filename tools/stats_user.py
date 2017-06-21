@@ -20,31 +20,12 @@ from luckycommon.account.model.account import Account, AccountThird
 from luckycommon.account.db import account as account_db
 from luckycommon.db import activity as activity_db
 from luckycommon.utils.tz import utc_to_local_str
-from luckycommon.utils.mail import MailSender
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 from pymongo import MongoClient
 
 from django.conf import settings
 
 db = MongoClient(settings.MONGO_ADDR).lucky
-mail_sender = MailSender.getInstance()
-mail_sender.init_conf({
-    'server': 'smtp.mxhichina.com:25',
-    'user': 'ops@zhuohan-tech.com',
-    'passwd': 'madP@ssw0rd',
-    'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
-    'to': [
-        'zhulei@zhuohan-tech.com',
-        'mahongli@zhuohan-tech.com',
-        # 'liuyu@zhuohan-tech.com',
-        'sstong@zhuohan-tech.com',
-        'taocheng@zhuohan-tech.com',
-        # 'chenweiran@zhuohan-tech.com',
-        'lichang@zhuohan-tech.com',
-        'xialu@zhuohan-tech.com',
-        'caonianci@zhuohan-tech.com',
-        # 'wywu@zhuohan-tech.com',
-    ]
-})
 EXPORT_PATH = '/home/ubuntu/af-env/data/stats/'
 
 
@@ -101,7 +82,7 @@ def get_agent_stats():
         print 'finished agent %s' % uid
     excel_header = [u'uid', u'昵称', u'头像', u'注册时间', u'IP地址', u'IP位置', u'参与次数', u'参与人次', u'中奖次数', u'中奖金额', u'价值大于3000商品中奖次数']
     file_path = redirect_to_file(v_list, excel_header, u'top_agent.xlsx')
-    mail_sender.send(u"自有用户全量数据", u'详情请见附件', attachments=[file_path])
+    TOOL_MAIL_SENDER.send(u"自有用户全量数据", u'详情请见附件', attachments=[file_path])
 
 
 def get_today_top_user(delta_day=1, top_count=30):
@@ -139,7 +120,7 @@ def get_today_top_user(delta_day=1, top_count=30):
     top_list.sort(key=lambda x: x[2], reverse=True)
     excel_header = [u'uid', u'nick_name', u'phone', u'email', u'注册时间', u'充值额度', u'充值册数', u'消费次数', u'消费人次', u'中奖次数', u'中奖金额']
     file_path = redirect_to_file(top_list, excel_header, u'daily_top_data_%s.xlsx' % start_date.strftime('%Y-%m-%d'))
-    mail_sender.send(u"今日渠道用户充值top30", u'详情请见附件', attachments=[file_path])
+    TOOL_MAIL_SENDER.send(u"今日渠道用户充值top30", u'详情请见附件', attachments=[file_path])
 
 
 def get_today_new(delta_day=1):
@@ -240,13 +221,13 @@ def get_today_new(delta_day=1):
         today_info = today_chn_dict.get(chn) or {'user_count': 0, 'pay_one_list': [], 'recharge_list': [], 'recharge_count': 0,
                                                  'recharge_amount': 0}
         html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
-        date_str, chn, new_device_count, active_count,
-        today_info['user_count'], len(today_info['pay_one_list']), len(today_info['recharge_list']),
-        today_info['recharge_count'], today_info['recharge_amount'], len(info['users']), info['count'], info['amount'])
+            date_str, chn, new_device_count, active_count,
+            today_info['user_count'], len(today_info['pay_one_list']), len(today_info['recharge_list']),
+            today_info['recharge_count'], today_info['recharge_amount'], len(info['users']), info['count'], info['amount'])
     html_str += u'<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>' % (
-    date_str, u'总计',
-    '--', '--', total_user_count, len(total_pay_one_list), len(total_recharge_list), total_recharge_count, total_recharge_amount,
-    len(total_users), total_count, total_recharge)
+        date_str, u'总计',
+        '--', '--', total_user_count, len(total_pay_one_list), len(total_recharge_list), total_recharge_count, total_recharge_amount,
+        len(total_users), total_count, total_recharge)
     html_str += '</table>'
     return html_str
 
@@ -295,12 +276,12 @@ if __name__ == "__main__":
         html_str += get_yesterday_active()
         html_str += '</body></html>'
         # print html_str
-        mail_sender.send(u"[%s]今日新增&&前日留存" % settings.REGION, html_str)
+        TOOL_MAIL_SENDER.send(u"[%s]今日新增&&前日留存" % settings.REGION, html_str)
     if cmd == 'top':
         get_today_top_user()
     if cmd == 'history':
         html_str = history_data(last_days=18)
-        mail_sender.send("历史数据", html_str)
+        TOOL_MAIL_SENDER.send("历史数据", html_str)
     if cmd == "pay":
         dd = sys.argv[2]
         now = datetime.datetime.strptime(dd, '%Y-%m-%d')
@@ -352,4 +333,3 @@ if __name__ == "__main__":
         print 'register: total:%s, uxin:%s' % (total_count, uxin_count)
     if cmd == 'agent':
         get_agent_stats()
-

@@ -14,7 +14,6 @@ from multiprocessing import Process
 
 
 class MailSender(object):
-
     """Send mail class
     singleton and thread safe
     """
@@ -162,6 +161,24 @@ def send_email(email_num, title, content):
     })
     mail_sender.send(title, content)
 
+
+TOOL_MAIL_SENDER = MailSender.getInstance()
+TOOL_MAIL_SENDER.init_conf({
+    'server': 'smtp.mxhichina.com:25',
+    'user': 'ops@zhuohan-tech.com',
+    'passwd': 'madP@ssw0rd',
+    'from': 'Adsquare Service Statistics<ops@zhuohan-tech.com>',
+    'to': [
+        'zhulei@zhuohan-tech.com',
+        'xialu@zhuohan-tech.com',
+        'mahongli@zhuohan-tech.com',
+        'sstong@zhuohan-tech.com',
+        'taocheng@zhuohan-tech.com',
+        'lichang@zhuohan-tech.com',
+        'xialu@zhuohan-tech.com',
+        'caonianci@zhuohan-tech.com',
+    ]
+})
 
 if __name__ == "__main__":
     html_str = '''<html><head></head><body><h1>测试 test mail</h1>
