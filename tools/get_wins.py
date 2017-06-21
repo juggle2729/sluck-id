@@ -6,6 +6,8 @@ import os
 import sys
 
 # add up one level dir into sys path
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
+
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
@@ -82,4 +84,4 @@ if __name__ == '__main__':
     html_str += u'<h3>包场用户中奖:</h3>'
     html_str += table_2
     html_str += u'</body></html>'
-
+    TOOL_MAIL_SENDER.send(u"%s -- 每日中奖信息 " % yesterday.strftime('%Y-%m-%d'), html_str)
