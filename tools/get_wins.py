@@ -6,14 +6,13 @@ import os
 import sys
 
 # add up one level dir into sys path
-from luckycommon.utils.mail import TOOL_MAIL_SENDER
-
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
 os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
 
 from luckycommon.model.activity import ActivityWin, UserActivity, Activity
 from luckycommon.cache import redis_cache
 from luckycommon.account.db.account import get_account_status
+from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 
 def get_today_activity_win(start_time, end_time):

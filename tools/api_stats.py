@@ -4,6 +4,9 @@ import re
 import sys
 from datetime import datetime, timedelta
 
+sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
+os.environ['DJANGO_SETTINGS_MODULE'] = 'luckyplatform.settings'
+
 from luckycommon.utils.mail import TOOL_MAIL_SENDER
 
 #223.104.25.78 - - [07/Jul/2016:17:49:59 +0800]  "GET /api/v2/my/activitys?page=2 HTTP/1.1" 200 7515 "http://www.1yuan-gou.com/user/my_activity_record" "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53" 0.183 0.183 .
