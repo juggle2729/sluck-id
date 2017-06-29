@@ -71,8 +71,9 @@ def _put_orders_back(activity_id):
     redis_cache.mapping_nums_with_order(activity_id, num_dict)
 
 
-for activity in Activity.query.filter(Activity.status == 1):
-    _put_numbers_back(activity.id)
-    print 'put numbers back. activity_id: <%s>, name: %s' % (activity.id, activity.name)
-    sleep(1)
-    _put_orders_back(activity.id)
+if __name__ == "__main__":
+    for activity in Activity.query.filter(Activity.status == 1):
+        _put_numbers_back(activity.id)
+        print 'put numbers back. activity_id: <%s>, name: %s' % (activity.id, activity.name)
+        sleep(1)
+        _put_orders_back(activity.id)

@@ -93,44 +93,44 @@ def calc_column_value4(self, uid_list):
 
 
 
+if __name__ == "__main__":
+    column_method_1 = Methodproxy("test_column1")
+    column_method_1.close_iter()
+    column_method_1.inject_calc_value(calc_column_value1)
+
+    column_method_2 = Methodproxy("test_column2")
+    column_method_2.inject_calc_value(calc_column_value2)
+
+    column_method_3 = Methodproxy("test_column3")
+    column_method_3.close_iter()
+    column_method_3.inject_calc_value(calc_column_value3)
+
+    column_method_4 = Methodproxy("test_column4")
+    column_method_4.close_iter()
+    column_method_4.inject_calc_value(calc_column_value4)
 
 
-column_method_1 = Methodproxy("test_column1")
-column_method_1.close_iter()
-column_method_1.inject_calc_value(calc_column_value1)
+    # calculate result and save
+    merge_worker = Merge()
+    merge_worker.add_column_method_pool(column_method_1)
+    merge_worker.add_column_method_pool(column_method_2)
+    merge_worker.add_column_method_pool(column_method_3)
+    merge_worker.add_column_method_pool(column_method_4)
+    merge_worker.inject_id_list(id_list=get_id_list())
+    merge_worker.calculate_value()
+    merge_worker.merge_info(merge_worker.id_list, column_method_1.result_value, column_method_2.result_value)
 
-column_method_2 = Methodproxy("test_column2")
-column_method_2.inject_calc_value(calc_column_value2)
+    mail_list = [
+        'aaa@zhuohan-tech.com',
+        'bbb@zhuohan-tech.com',
+        'ccc@zhuohan-tech.com',
+    ]
 
-column_method_3 = Methodproxy("test_column3")
-column_method_3.close_iter()
-column_method_3.inject_calc_value(calc_column_value3)
+    # mail sender
+    mail_proxy = MailProxy()
+    # mail_proxy.add_mail_to_list(mail_list)
+    mail_proxy.send_format_value_file(table_info = ["uid"]+[x.column_name for x in merge_worker.column_method_pool],
+                                      value = merge_worker.table_value,
+                                      file_name="daily_vip_user_info",
+                                      mail_info="test statis report")
 
-column_method_4 = Methodproxy("test_column4")
-column_method_4.close_iter()
-column_method_4.inject_calc_value(calc_column_value4)
-
-
-# calculate result and save
-merge_worker = Merge()
-merge_worker.add_column_method_pool(column_method_1)
-merge_worker.add_column_method_pool(column_method_2)
-merge_worker.add_column_method_pool(column_method_3)
-merge_worker.add_column_method_pool(column_method_4)
-merge_worker.inject_id_list(id_list=get_id_list())
-merge_worker.calculate_value()
-merge_worker.merge_info(merge_worker.id_list, column_method_1.result_value, column_method_2.result_value)
-
-mail_list = [
-    'aaa@zhuohan-tech.com',
-    'bbb@zhuohan-tech.com',
-    'ccc@zhuohan-tech.com',
-]
-
-# mail sender
-mail_proxy = MailProxy()
-# mail_proxy.add_mail_to_list(mail_list)
-mail_proxy.send_format_value_file(table_info = ["uid"]+[x.column_name for x in merge_worker.column_method_pool],
-                                  value = merge_worker.table_value,
-                                  file_name="daily_vip_user_info",
-                                  mail_info="test statis report")
