@@ -11,7 +11,7 @@ from luckycommon.cache import redis_cache
 from luckycommon.model.activity import UserActivity, Activity
 
 
-def put_numbers_back(activity_id):
+def _put_numbers_back(activity_id):
     activity = Activity.query.filter(Activity.id == activity_id).first()
     lucky_numbers = range(1, activity.target_amount + 1)
     redis_cache.generate_numbers(activity.id, *lucky_numbers)
@@ -28,13 +28,7 @@ def put_numbers_back(activity_id):
     print len(raw_numbers), len(uniques)
 
 
-for activity in Activity.query.filter(Activity.status == 1):
-    put_numbers_back(activity.id)
-    print 'put numbers back. activity_id: <%s>, name: %s' % (activity.id, activity.name)
-    sleep(1)
-
-
-def put_orders_back(activity_id):
+def _put_orders_back(activity_id):
     activity = Activity.query.filter(Activity.id == activity_id).first()
     orders = Order.query.filter(Order.activity_id == activity_id).all()
     if activity.winner:
@@ -76,4 +70,10 @@ def put_orders_back(activity_id):
     print len(num_dict.keys()), sorted(num_dict.keys())[0], sorted(num_dict.keys())[-1]
     redis_cache.mapping_nums_with_order(activity_id, num_dict)
 
-# put_orders_back('1ee7fd57-f5af-306d-9cbd-765c4ae0d2e0')
+
+if __name__ == "__main__":
+    for activity in Activity.query.filter(Activity.status == 1):
+        _put_numbers_back(activity.id)
+        print 'put numbers back. activity_id: <%s>, name: %s' % (activity.id, activity.name)
+        sleep(1)
+        _put_orders_back(activity.id)
