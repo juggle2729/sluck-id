@@ -289,8 +289,14 @@ AVAILABLE_PAY_TYPES = {
         'tag': 'http://p.1yuan-gou.com/ic_50x.png',
         'agents': [
             {
-                'name': 'Bank Transfer',
-                'phone': 'Line: anggiaulima\nLine: mawanara',
+                'name': 'Bank Transfer A',
+                'phone': 'Line: anggiaulima',
+                'img': 'http://p.1yuan-gou.com/BankTransfer_A.png'
+            },
+            {
+                'name': 'Bank Transfer B',
+                'phone': 'Line: mawanara',
+                'img': 'http://p.1yuan-gou.com/BankTransfer_B.png'
             },
         ],
     },
