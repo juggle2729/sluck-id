@@ -133,7 +133,7 @@
                             <% } else { %>
                               <p>通信地址: <%= info.receipt_address.address || '' %></p>
                             <%  }%>
-                            <p>联系方式: <%= info.receipt_address.phone %></p>
+                            <p>联系方式: <br> <%= info.receipt_address.phone %> <br> <%= info.receipt_address.number %></p>
                             <p>备注: <%= info.remark || '' %></p>
                         <%  } %>
                     </div>
