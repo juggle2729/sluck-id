@@ -286,14 +286,12 @@ AVAILABLE_PAY_TYPES = {
         'highlight': 0,
         'choice': [],
         'icon': 'http://p.1yuan-gou.com/ic_tokopay.png',
-        'tag': '',
-        'agents': [{
-            'name': 'JD',
-            'phone': '0723236523',
-        }, {
-            'name': 'Coda',
-            'phone': '06-7342332232339899899'
-        },
+        'tag': 'http://p.1yuan-gou.com/ic_50x.png',
+        'agents': [
+            {
+                'name': 'Bank Transfer',
+                'phone': 'Line: anggiaulima\nLine: mawanara',
+            },
         ],
     },
 }
