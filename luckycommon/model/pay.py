@@ -285,7 +285,7 @@ AVAILABLE_PAY_TYPES = {
         'comment': u'recharge card',
         'highlight': 0,
         'choice': [],
-        'icon': 'http://p.1yuan-gou.com/ic_tokopay.png',
+        'icon': 'http://p.1yuan-gou.com/v1/ic_tokopay.png',
         'tag': 'http://p.1yuan-gou.com/ic_50x.png',
         'agents': [
             {
@@ -296,7 +296,7 @@ AVAILABLE_PAY_TYPES = {
             {
                 'name': 'Bank Transfer B',
                 'phone': 'Line: mawanara',
-                'img': 'http://p.1yuan-gou.com/BankTransfer_B.png'
+                'img': 'http://p.1yuan-gou.com/v1/BankTransfer_B.png'
             },
         ],
     },
