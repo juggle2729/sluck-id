@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from luckycommon.account.model import orm
+from luckycommon.model import orm
 
 
 class SensorSwitch(orm.Model):

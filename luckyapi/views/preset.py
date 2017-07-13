@@ -3,14 +3,11 @@ import logging
 
 from django.views.decorators.http import require_GET
 
+from luckycommon.preset.handler import view_preset, view_banner, view_discovery, view_shortcut
 from luckycommon.sensor.sensor_handler import get_sensor_status
 from luckycommon.tips.handler import CommandTips
-from luckycommon.preset.handler import view_preset, view_banner, view_discovery, view_shortcut
 from luckycommon.utils.api import parse_p
 from luckycommon.utils.decorator import response_wrapper
-
-from django.conf import settings
-
 
 _LOGGER = logging.getLogger('lucky')
 _TRACKER = logging.getLogger('tracker')

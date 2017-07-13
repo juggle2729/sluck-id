@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
-import re
+import decimal
 import json
 import logging
-import decimal
+import re
 from datetime import datetime
 from functools import wraps
 
-from future.utils import raise_with_traceback
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from geoip import geolite2
 import geoip2.database
 from bson.objectid import ObjectId
+from django.conf import settings
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from future.utils import raise_with_traceback
+from geoip import geolite2
 
-from luckycommon.sensor.sensor_handler import get_sensor_status
 from luckycommon.utils import exceptions as err
 from luckycommon.utils.respcode import StatusCode
-
-from django.conf import settings
 
 _LOGGER = logging.getLogger('lucky')
 
@@ -134,31 +132,3 @@ def parse_p(p):
     m = [x.strip('[]') for x in l]
     d = dict((x.split(':')[0], x.split(':')[1]) for x in m)
     return d
-
-
-def filter_apples(request, item_list):
-    tracks = parse_p(request.GET.get('p'))
-    chn = tracks.get('chn', None)
-    cvc = int(tracks.get('cvc', 0))
-    if chn == 'qg_ios':
-        ios_sensor = get_sensor_status('ios', int(cvc))
-        if ios_sensor:
-            # filter apple goods
-            filter_list = []
-            for item in item_list:
-                if item.get('gid') not in settings.APPLE_TIDS:
-                    filter_list.append(item)
-            return filter_list
-    return item_list
-
-
-def filter_gp(request, item_list):
-    p = parse_p(request.GET.get('p'))
-    gp_sensor = get_sensor_status('android', int(p.get('cvc', 0)))
-    if p.get('market') == 'gp' and gp_sensor:
-        filter_list = []
-        for item in item_list:
-            if int(item.get('gid')) in settings.GP_ALLOWED_TIDS:
-                filter_list.append(item)
-        return filter_list
-    return item_list

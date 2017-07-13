@@ -1,27 +1,20 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
+
+from django.conf import settings
+from django.utils.encoding import smart_unicode
+from django.views.decorators.http import require_GET, require_POST
+from future.utils import raise_with_traceback
 
 from luckyapi.logic.show import (view_my_shows, view_show_detail,
                                  view_other_shows,
                                  view_shows_timeline, view_my_show_detail)
 from luckycommon.credit.db.credit import add_show_credit
-
-from luckycommon.model.show import AnnounceShow 
-from luckycommon.db.show import get_show_by_template, update_show, verify_show
-
-from luckycommon.campaign import fortune_wheel
-
-from luckycommon.utils.api import token_required, filter_apples, filter_gp
+from luckycommon.db.show import update_show, verify_show
+from luckycommon.sensor.sensor_handler import filter_apples, filter_gp
+from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.exceptions import ParamError, AuthenticateError
-
-from future.utils import raise_with_traceback
-
-from django.conf import settings
-from django.utils.encoding import smart_unicode
-from django.views.decorators.http import require_GET, require_POST
-
 
 _LOGGER = logging.getLogger('lucky')
 _DEFAULT_PAGE_SIZE = 20
@@ -108,7 +101,7 @@ def get_timeline(request):
         'list': s_list,
         'size': len(s_list)
     }
-    return data 
+    return data
 
 
 @require_POST

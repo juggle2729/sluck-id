@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from luckyapi.logic.crowdfunding import (create_activity_template,
-                                         start_next_activity,
-                                         view_my_activitys_v2,
+from django.conf import settings
+from django.views.decorators.http import require_GET
+from future.utils import raise_with_traceback
+
+from luckyapi.logic.crowdfunding import (view_my_activitys_v2,
                                          view_other_activitys,
                                          view_activity_detail,
                                          view_activity_revealed,
                                          view_latest_activity,
                                          view_revealed_list)
+from luckycommon.sensor.sensor_handler import filter_apples, filter_gp
 from luckycommon.strategy import handler as strategy_handler
-
-from luckycommon.utils.api import token_required, filter_apples, filter_gp
+from luckycommon.utils.api import token_required
 from luckycommon.utils.decorator import response_wrapper
-from luckycommon.utils.exceptions import (ParamError, AuthenticateError,
-                                          ResourceInsufficient)
-
-from future.utils import raise_with_traceback
-
-from django.conf import settings
-from django.views.decorators.http import require_GET, require_POST
-
+from luckycommon.utils.exceptions import (ParamError, AuthenticateError)
 
 _LOGGER = logging.getLogger('lucky')
 

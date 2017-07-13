@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from django.conf import settings
 from future.utils import raise_with_traceback
-from sqlalchemy.exc import SQLAlchemyError
-from redis import RedisError
 from pymongo.errors import PyMongoError
+from redis import RedisError
+from sqlalchemy.exc import SQLAlchemyError
 
-from luckycommon.utils.exceptions import Error, ServerError, DbError, CacheError
-from luckycommon.utils.api import JsonResponse
 from luckycommon.model import orm
+from luckycommon.utils.api import JsonResponse
+from luckycommon.utils.exceptions import Error, ServerError, DbError, CacheError
 from luckycommon.utils.respcode import StatusCodeDict
 
 _LOGGER = logging.getLogger(__name__)

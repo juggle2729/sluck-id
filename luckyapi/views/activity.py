@@ -2,7 +2,11 @@
 import json
 import logging
 
-from luckyapi.model.activity import Template
+from django.conf import settings
+from django.utils.encoding import smart_unicode
+from django.views.decorators.http import require_GET, require_POST
+from future.utils import raise_with_traceback
+
 from luckyapi.logic.crowdfunding import (create_activity_template,
                                          start_next_activity,
                                          view_activitys,
@@ -11,29 +15,21 @@ from luckyapi.logic.crowdfunding import (create_activity_template,
                                          view_revealed_list,
                                          view_calc_record,
                                          view_activitys_by_tids, view_users_in_activity)
+from luckyapi.model.activity import Template
+from luckycommon.account.db import account as account_db
+from luckycommon.cache import redis_cache
+from luckycommon.db import activity as activity_db
+from luckycommon.db import category as category_db
+from luckycommon.db import search as search_db
 from luckycommon.order.handler import (
     view_buy_record_list,
     view_buy_record_list_timeline, view_detail_numbers)
-
-from luckycommon.cache import redis_cache
-
-from luckycommon.account.db import account as account_db
-from luckycommon.db import category as category_db
-from luckycommon.db import search as search_db
-from luckycommon.db import activity as activity_db
-from luckycommon.sensor.sensor_handler import get_sensor_status
-
-from luckycommon.utils.api import token_required, parse_p, filter_apples, filter_gp
+from luckycommon.sensor.sensor_handler import filter_apples, filter_gp
+from luckycommon.utils.api import token_required, parse_p
 from luckycommon.utils.decorator import response_wrapper
 from luckycommon.utils.exceptions import (ParamError, AuthenticateError,
                                           ResourceInsufficient,
                                           ResourceNotFound)
-
-from future.utils import raise_with_traceback
-
-from django.conf import settings
-from django.utils.encoding import smart_unicode
-from django.views.decorators.http import require_GET, require_POST
 
 _LOGGER = logging.getLogger('lucky')
 
