@@ -14,11 +14,8 @@ from luckycommon.db.transaction import add_pay_success_transaction, add_pay_fail
 from luckycommon.pay.handler import pay_after_recharge
 from luckycommon.utils.api import parse_p
 
-
 _LOGGER = logging.getLogger('pay')
 _TRACKER = logging.getLogger('tracker')
-
-
 
 verifyReceiptURL = {
     'production': 'https://buy.itunes.apple.com/verifyReceipt',
@@ -43,30 +40,16 @@ def _check_receipt(receipt, password='', env='production'):
         request_url = verifyReceiptURL['sandbox']
     request_data = '{"receipt-data": "%s", "password": "%s"}' % (receipt, password)
     r = requests.post(request_url, request_data)
-    if r.status_code == 200 :
+    if r.status_code == 200:
         return r.json()
     else:
         return None
-
-
-def check_sandbox_flag(request):
-    tracks = parse_p(request.GET.get('p'))
-    cvc = int(tracks.get('cvc', 0))
-    svn = tracks.get('svn')
-    if svn == 'iOS' and cvc == settings.IAP_VERSION_CODE and settings.IAP_FLAG:
-        return True
-    elif request.user_id in settings.IAP_TEST_ID:
-        return True
-    else:
-        return False
 
 
 def _get_hash_text(receipt):
     h = hashlib.sha1()
     h.update(receipt)
     return h.hexdigest()
-
-
 
 
 def iap_check_notify(user_id, receipt_dic, env_flag):
@@ -76,14 +59,14 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
         transaction_id = receipt_dic.get('transaction_id')
     except:
         raise ParamError('param invalid')
-    #检查票据是否在无效票据表中
+    # 检查票据是否在无效票据表中
     receipt_date_hash = _get_hash_text(receipt_data)
     invalid_receipt_in_db = iap_receipt.get_invalid_receipt_by_hash_text(receipt_date_hash)
-    if invalid_receipt_in_db: #通过hash值找到票据记录
+    if invalid_receipt_in_db:  # 通过hash值找到票据记录
         _LOGGER.error('IAP receipt invalid, user id: %s,receipt data: %s,receipt hash : %s' % (
             user_id, receipt_data, receipt_date_hash))
         return {'status': 1, 'msg': 'IAP receipt invalid'}
-    #校验票据
+    # 校验票据
     receipt_info = _check_receipt(receipt_data)
     if receipt_info == None:
         _LOGGER.error('IAP check receipt from AppStore error, user id: %s, transaction id: %s, '
@@ -96,7 +79,7 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
         # save invalid receipt to db
         iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, receipt_status)
         return {'status': 1, 'msg': 'IAP receipt invalid'}
-    if receipt_status == 21007:  #sandbox环境票据
+    if receipt_status == 21007:  # sandbox环境票据
         if env_flag:
             receipt_info = _check_receipt(receipt_data, env='sandbox')
             _LOGGER.info("IAP receipt check in sandbox environment")
@@ -108,12 +91,12 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
             if receipt_status != 0:
                 _LOGGER.error("IAP receipt check in sandbox environment status error, user id: %s, transaction id: %s, "
                               "receipt data: %s, return status %s" % (
-                    user_id, transaction_id, receipt_data, receipt_status))
+                                  user_id, transaction_id, receipt_data, receipt_status))
                 return {'status': 1, 'msg': 'IAP receipt invalid'}
         else:
             _LOGGER.error('IAP receipt environment is sandbox, user id: %s, receipt data: %s,'
                           ' receipt hash : %s, return status %s' % (
-                user_id,receipt_data, receipt_date_hash, receipt_status))
+                              user_id, receipt_data, receipt_date_hash, receipt_status))
             iap_receipt.save_invalid_receipt(receipt_date_hash, receipt_data, receipt_status)
             return {'status': 1, 'msg': 'IAP receipt invalid'}
     _LOGGER.info("IAP receipt App Store check Success, user id: %s, receipt info: %s" % (user_id, receipt_info))
@@ -154,7 +137,7 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
     receipt_in_db = iap_receipt.get_receipt_by_transaction_id(r_transaction_id)
     if receipt_in_db:
         if receipt_in_db.provide_status == 1:
-            _LOGGER.info("IAP receipt has been delivery, user id: %s,transaction id: %s" % (user_id,r_transaction_id))
+            _LOGGER.info("IAP receipt has been delivery, user id: %s,transaction id: %s" % (user_id, r_transaction_id))
             return {'status': 1, 'msg': 'IAP receipt has been delivery'}
         else:
             # 补发
@@ -165,8 +148,8 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
             if res:
                 _LOGGER.info("IAP receipt reprovide success, user id: %s, transaction id: %s, "
                              "pay id: %s, pay mount: %s" % (
-                    user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
-                ))
+                                 user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
+                             ))
                 iap_receipt.update_receipt_provide_success(receipt_in_db.id)
                 try:
                     pay = get_pay(receipt_in_db.pay_id)
@@ -177,9 +160,9 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
                 return {'status': 0, 'msg': 'ok'}
             else:
                 _LOGGER.error("IAP receipt reprovide fail, user id: %s, transaction id: %s, "
-                             "pay id: %s, pay mount: %s" % (
-                                 user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
-                             ))
+                              "pay id: %s, pay mount: %s" % (
+                                  user_id, receipt_in_db.id, receipt_in_db.pay_id, pay_amount
+                              ))
                 iap_receipt.update_receipt_provide_fail(receipt_in_db.id)
                 return {'status': 2, 'msg': 'Delivery error, please retry.'}
     else:
@@ -187,7 +170,7 @@ def iap_check_notify(user_id, receipt_dic, env_flag):
         pay = create_pay(user_id, PayType.APPLE_IAP)
         pay.status = 1
         pay.save()
-        _LOGGER.info("IAP receipt check success and provide, user id: %s, transaction id: %s, pay id: %s" %(
+        _LOGGER.info("IAP receipt check success and provide, user id: %s, transaction id: %s, pay id: %s" % (
             user_id, r_transaction_id, pay.id
         ))
         update_pay_ext(pay.id, extend['ext'])

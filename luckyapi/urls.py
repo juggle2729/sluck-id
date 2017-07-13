@@ -15,7 +15,6 @@ urlpatterns = patterns(
     url(r'^user/modify/?$', 'luckyapi.account.user.modify_user'),
     url(r'^user/public_profile/?$', 'luckyapi.account.user.get_public_profile'),
     url(r'^reset_password/?$', 'luckyapi.account.auth.reset_password'),
-    url(r'^check_status/?$', 'luckyapi.views.activity.check_status'),
     # qr code
     url(r'^qrcode/?$', 'luckyapi.account.user.get_qr_code'),
     # image code
@@ -69,7 +68,6 @@ urlpatterns = patterns(
     url(r'^pay/identify/doku/?$', 'luckyapi.views.transaction.doku_identify'),
     url(r'^pay/mimo/notify/?$', 'luckyapi.views.transaction.mimo_notify'),
     url(r'^pay/bluepay/notify/?$', 'luckyapi.views.transaction.bluepay_notify'),
-    url(r'^pay/iap/notify/?$', 'luckyapi.views.transaction.iap_notify'),
     url(r'^pay/bubble_mimo/notify/?$', 'luckyapi.views.transaction.bubble_mimo_notify'),
     url(r'^pay/huawei_epay/notify/?$', 'luckyapi.views.transaction.huawei_epay_notify'),
     # notification

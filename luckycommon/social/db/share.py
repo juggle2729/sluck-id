@@ -2,15 +2,10 @@
 import json
 import logging
 
-from luckycommon.model import orm
 from luckycommon.model.coupon import GroupCoupon
-
 from luckycommon.social.model.share import *
-
-from luckycommon.utils.tz import now_ts
 from luckycommon.utils.decorator import sql_wrapper
-from luckycommon.utils import exceptions as err
-
+from luckycommon.utils.tz import now_ts
 
 _LOGGER = logging.getLogger('lucky')
 

@@ -74,13 +74,6 @@ COIN_TIDS = {
 
 MISS_RETURN_TID = 666
 
-ADV_FLAG = False  # GP版开关, 旧版不用放着
-
-# GP_FLAG = False  # GP switch, True is on sensor
-# GP_VERSION_CODE = 130
-# GP_ALLOWED_TIDS = [752, 753, 754, 755, 662, 664, 663, 665]
-
-
 ADMIN_ID = 1
 
 XINGE_IOS_ACCESS_ID = '2200194027'
@@ -102,8 +95,6 @@ SESSION_COOKIE_AGE = 20 * 60
 INSTALLED_APPS = (
     'luckyapi',
     'luckyadmin',
-    # 'corsheaders',
-    # 'luckytest'
 )
 
 # List of callables that know how to import templates from various sources.

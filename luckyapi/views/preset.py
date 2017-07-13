@@ -3,6 +3,7 @@ import logging
 
 from django.views.decorators.http import require_GET
 
+from luckycommon.sensor.sensor_handler import get_sensor_status
 from luckycommon.tips.handler import CommandTips
 from luckycommon.preset.handler import view_preset, view_banner, view_discovery, view_shortcut
 from luckycommon.utils.api import parse_p
@@ -75,10 +76,11 @@ def fetch_preset(req):
                    })
     _LOGGER.debug('p is %s' % p)
     data = view_preset(p.get('cvc'), p.get('chn'), last_modified, user_id)
-    if p.get('market') == 'gp' and str(p.get('cvc')) == str(settings.GP_VERSION_CODE) and settings.GP_FLAG:
+    gp_sensor = get_sensor_status('android', int(p.get('cvc')))
+    if p.get('market') == 'gp' and gp_sensor:
         _LOGGER.debug('gp censor enable')
-        data.update({'gp_flag': not settings.GP_FLAG})
-        data.update({'coin_flag': not settings.GP_FLAG})
+        data.update({'gp_flag': False})
+        data.update({'coin_flag': False})
     else:
         _LOGGER.debug('gp censor disable')
         data.update({'gp_flag': True})

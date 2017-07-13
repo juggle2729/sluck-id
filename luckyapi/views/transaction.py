@@ -389,27 +389,6 @@ def google_notify(request):
         return {'msg': e}
 
 
-@require_POST
-@response_wrapper
-def iap_notify(request):
-    '''
-    校验IAP 票据
-    :param request:
-    :return:
-    '''
-    if not request.user_id:
-        raise AuthenticateError('not login')
-    try:
-        user_id = request.user_id
-        env_flag = iap.check_sandbox_flag(request)
-        receipt_dic = json.loads(request.body)
-        resp = iap.iap_check_notify(user_id, receipt_dic, env_flag)
-        return resp
-    except Exception as e:
-        _LOGGER.exception('IAP Pay notify exception.(%s)' % e)
-        return {'msg': e}
-
-
 @require_GET
 def bluepay_notify(request):
     try:

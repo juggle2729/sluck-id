@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 import re
 import json
@@ -14,10 +13,12 @@ from geoip import geolite2
 import geoip2.database
 from bson.objectid import ObjectId
 
+from luckycommon.sensor.sensor_handler import get_sensor_status
 from luckycommon.utils import exceptions as err
 from luckycommon.utils.respcode import StatusCode
 
 from django.conf import settings
+
 _LOGGER = logging.getLogger('lucky')
 
 DEFAULT_COUNTRY = "OTHER"
@@ -90,7 +91,6 @@ def get_client_ua(request):
 
 
 class EnhencedEncoder(json.JSONEncoder):
-
     def default(self, o):
         if isinstance(o, decimal.Decimal):
             return float(o)
@@ -102,7 +102,6 @@ class EnhencedEncoder(json.JSONEncoder):
 
 
 class JsonResponse(HttpResponse):
-
     """
         JSON response, since django 1.7, it's included in django.
     """
@@ -118,7 +117,6 @@ class JsonResponse(HttpResponse):
 
 
 class Struct:
-
     def __init__(self, **entries):
         self.__dict__.update(entries)
 
@@ -142,10 +140,9 @@ def filter_apples(request, item_list):
     tracks = parse_p(request.GET.get('p'))
     chn = tracks.get('chn', None)
     cvc = int(tracks.get('cvc', 0))
-    debug_conf = settings.IOS_DEBUG_CONF
-    if chn in debug_conf:
-        debug_cvc = debug_conf.get(chn)
-        if int(cvc) == int(debug_cvc):
+    if chn == 'qg_ios':
+        ios_sensor = get_sensor_status('ios', int(cvc))
+        if ios_sensor:
             # filter apple goods
             filter_list = []
             for item in item_list:
@@ -157,13 +154,11 @@ def filter_apples(request, item_list):
 
 def filter_gp(request, item_list):
     p = parse_p(request.GET.get('p'))
-    if p.get('market') == 'gp' and str(p.get('cvc')) == str(settings.GP_VERSION_CODE) and settings.GP_FLAG:
+    gp_sensor = get_sensor_status('android', int(p.get('cvc', 0)))
+    if p.get('market') == 'gp' and gp_sensor:
         filter_list = []
         for item in item_list:
             if int(item.get('gid')) in settings.GP_ALLOWED_TIDS:
                 filter_list.append(item)
         return filter_list
     return item_list
-
-
-

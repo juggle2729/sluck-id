@@ -21,6 +21,7 @@ from luckycommon.account.db import account as account_db
 from luckycommon.db import category as category_db
 from luckycommon.db import search as search_db
 from luckycommon.db import activity as activity_db
+from luckycommon.sensor.sensor_handler import get_sensor_status
 
 from luckycommon.utils.api import token_required, parse_p, filter_apples, filter_gp
 from luckycommon.utils.decorator import response_wrapper
@@ -96,12 +97,6 @@ def start_template(request, template_id):
         'id': activity.id
     }
     return data
-
-
-@require_GET
-@response_wrapper
-def check_status(request):
-    return {'status': settings.GP_FLAG}
 
 
 @require_GET
@@ -345,23 +340,6 @@ def get_my_activitys(request):
     return data
 
 
-def filter_category(request, item_list):
-    tracks = parse_p(request.GET.get('p'))
-    chn = tracks.get('chn', None)
-    cvc = int(tracks.get('cvc', 0))
-    debug_conf = settings.IOS_DEBUG_CONF
-    if chn in debug_conf:
-        debug_cvc = debug_conf.get(chn)
-        if cvc == debug_cvc:
-            # filter apple category
-            filter_list = []
-            for item in item_list:
-                if u'苹果' not in item.get('name'):
-                    filter_list.append(item)
-            return filter_list
-    return item_list
-
-
 @require_GET
 @response_wrapper
 def get_all_categorys(request):
@@ -377,7 +355,6 @@ def get_all_categorys(request):
             'icon': item.icon,
             'tag': item.tag,
         })
-    category_list = filter_category(request, category_list)
     data = {
         'categorys': category_list
     }
