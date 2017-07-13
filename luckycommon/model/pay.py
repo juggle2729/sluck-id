@@ -291,12 +291,12 @@ AVAILABLE_PAY_TYPES = {
             {
                 'name': 'Bank Transfer A',
                 'phone': 'Line: anggiaulima',
-                'img': 'http://p.1yuan-gou.com/AgenA.png'
+                'img': 'http://p.1yuan-gou.com/AgenA_rev1.png'
             },
             {
                 'name': 'Bank Transfer B',
                 'phone': 'Line: mawanara',
-                'img': 'http://p.1yuan-gou.com/AgenB.png'
+                'img': 'http://p.1yuan-gou.com/AgenB_rev1.png'
             },
         ],
     },
