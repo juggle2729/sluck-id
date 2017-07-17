@@ -58,7 +58,7 @@ AVAILABLE_PAY_TYPES = {
         'pay_type': PayType.CODA_PAY.value,
         'comment': u'',
         'highlight': 0,
-        'choice': [10, 50, 100, 200],
+        'choice': [10, 50, 100],
         'icon': 'http://p.1yuan-gou.com/codapay_sms.png',
         'tag': '',
     },
