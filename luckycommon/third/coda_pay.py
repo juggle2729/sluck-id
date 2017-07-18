@@ -45,7 +45,7 @@ _EXCHANGE_RATIO = 1100
 
 
 def coda_create_charge(pay, pay_amount, currency):
-    if pay_amount < 1:
+    if pay_amount < 6:
         raise DataError()
     price = int(pay_amount) * _EXCHANGE_RATIO
     payload = {"initRequest": {"orderId": pay.id,
