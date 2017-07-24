@@ -2,6 +2,7 @@
 import logging
 from datetime import datetime
 from hashlib import sha1
+from random import random, choice, sample
 
 from luckycommon.async.async_job import track_one
 from luckycommon.credit.db.credit import add_special_recharge_award_credit
@@ -34,6 +35,17 @@ def _notify_sign(pay_amount, pay_id, result_msg, verify_status):
     return signature
 
 
+def _gen_random_name():
+    name_choices = 'adamjohndairybluemasterswiftzooyamaha'
+    random_num = int(random() * choice([100, 1000, 10000, 100000]))
+    return "%s_%s" % (''.join(sample(name_choices, 5)), random_num)
+
+
+def _gen_random_email(name):
+    email_choice = ['yahoo.com', 'gmail.com', 'hotmail.com', 'icloud.com']
+    return "%s@%s" % (name, choice(email_choice))
+
+
 def doku_create_charge(pay, pay_amount, doku_channel):
     pay_id = str(pay.id)
     pay_amount = str(int(pay_amount) * _EXCHANGE_RATIO) + '.00'
@@ -44,6 +56,9 @@ def doku_create_charge(pay, pay_amount, doku_channel):
         channel_number = '04'
     else:
         channel_number = ''
+
+    name = _gen_random_name()
+    email = _gen_random_email(name)
     response = """
 <!DOCTYPE html>
 <html lang="en">
@@ -66,8 +81,8 @@ def doku_create_charge(pay, pay_amount, doku_channel):
     <input name="COUNTRY" type="hidden" value="ID">
     <input name="SESSIONID" type="hidden" value="fexCfZs72DFT5Gy0TQiF">
     <input name="REQUESTDATETIME" type="hidden" value="%s">
-    <input name="NAME" type="hidden" value="CustomerName">
-    <input name="EMAIL" type="hidden" value="customer@domain.com">
+    <input name="NAME" type="hidden" value="%s">
+    <input name="EMAIL" type="hidden" value="%s">
     <input name="PAYMENTCHANNEL" type="hidden" value=%s>
 </form>
 
@@ -78,8 +93,9 @@ document.getElementById('pay_form').submit();
 </body>
 </html>
        """ % (
-    ORDER_URL, MALL_ID, pay_amount, pay_amount, pay_amount, pay_amount, pay_id, signature, datetime.now().strftime("%Y%m%d%H%M%S"),
-    channel_number)
+        ORDER_URL, MALL_ID, pay_amount, pay_amount, pay_amount, pay_amount, pay_id, signature, datetime.now().strftime("%Y%m%d%H%M%S"),
+        name, email, channel_number)
+    _LOGGER.info(response)
     return response
 
 
