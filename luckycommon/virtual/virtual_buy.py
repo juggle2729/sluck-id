@@ -137,7 +137,7 @@ def choose_activity(activitys):
 
 def monitor_activity():
     while True:
-        rand_ts = random.randint(3, 15)
+        rand_ts = random.randint(10, 15)
         time.sleep(rand_ts)
         activitys = get_available_activitys()
         if not activitys:
