@@ -69,7 +69,7 @@ def get_my_credit(request):
     credit_activity.append({
         'icon': ICON_BUY,
         'title': u"Pakai Poin",
-        'content': u"Pakai 1 Koin, dapatkan 20 Poin",
+        'content': u"Pakai 1 Koin, dapatkan 1 Poin",
         'tips': u"Ikut",
         'command': '0#',
         'enable': 1

@@ -8,7 +8,7 @@ RECORD_TYPE = Enum({
     "EXCHANGE": (2L, "exchange"),
 })
 
-AWARD_CREDIT_UNIT = 10
+AWARD_CREDIT_UNIT = 1
 
 
 class CreditRecord(orm.Model):

@@ -245,9 +245,6 @@ def stats_announce(activity_id, winner):
     """
     _LOGGER.info('stats announce for:%s, winner:%s', activity_id, winner)
     activity = activity_db.get_activity(activity_id)
-    if settings.ADV_FLAG:
-        # 自动发夺宝币
-        shipping_coin(activity)
     fortune_wheel.callback_task(winner, 5)
     miss_return.announce_callback(activity, winner)
 

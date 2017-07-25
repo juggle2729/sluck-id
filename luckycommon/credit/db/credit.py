@@ -19,9 +19,9 @@ from luckycommon.utils.tz import utc_to_local, utc_to_local_str, local_now
 
 _LOGGER = logging.getLogger('lucky')
 
-_REGISTER_CREDIT_AMOUNT = 250
+_REGISTER_CREDIT_AMOUNT = 100
 _INVITATION_CREDIT_AMOUNT = 3000
-_SHOW_AWARD_RATIO = 10
+_SHOW_AWARD_RATIO = 1
 
 
 @sql_wrapper
