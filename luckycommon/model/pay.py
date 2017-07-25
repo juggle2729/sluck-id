@@ -298,6 +298,11 @@ AVAILABLE_PAY_TYPES = {
                 'phone': 'Line: mawanara',
                 'img': 'http://p.1yuan-gou.com/AgenB_rev1.png'
             },
+            {
+                'name': 'Bank Transfer C',
+                'phone': 'Line: viaBank',
+                'img': 'http://p.1yuan-gou.com/Agen_C.png'
+            },
         ],
     },
 }
