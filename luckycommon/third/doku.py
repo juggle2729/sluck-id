@@ -95,7 +95,6 @@ document.getElementById('pay_form').submit();
        """ % (
         ORDER_URL, MALL_ID, pay_amount, pay_amount, pay_amount, pay_amount, pay_id, signature, datetime.now().strftime("%Y%m%d%H%M%S"),
         name, email, channel_number)
-    _LOGGER.info(response)
     return response
 
 
