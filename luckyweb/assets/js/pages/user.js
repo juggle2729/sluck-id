@@ -19,6 +19,7 @@ var UserConsole = function($) {
                 $.ajax({
                     url: formObj.attr("action"),
                     type: 'POST',
+                    headers: {'Access-Control-Allow-Origin': '*'},
                     data: JSON.stringify({
                         'email': formObj.find("#email").val(),
                         'password': formObj.find("#password").val()

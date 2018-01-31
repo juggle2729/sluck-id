@@ -7,6 +7,23 @@
         </ol>
     </div>
     <div class="topbar-right" id="container">
+        <a href="#" class="accordion-toggle">
+            批量管理订单状态
+            <span class="caret"></span>
+        </a>
+        <ul class="nav sub-nav">
+            <li>订单状态</li>
+            <li><input type="checkbox">已支付，待开奖</li>
+            <li><input type="checkbox">已中奖，待领奖</li>
+            <li><input type="checkbox">已经奖，待发货</li>
+            <li><input type="checkbox">已发货，待收货</li>
+            <li><input type="checkbox">已收货</li>
+            <li><input type="checkbox">已晒单</li>
+            <li><input type="checkbox">已提交，处理中</li>
+            <li><input type="checkbox">已处理，待确认</li>
+            <li><input type="checkbox">已确认</li>
+            <li><button>保存</button></li>
+        </ul>
         <button class="btn btn-default btn-sm" id="importExcel" title="订单编号 快递单号 快递名 供货商 购买价格">导入发货单</button>
         <button class="btn btn-danger btn-sm" id="autoShip" title="请确认本页订单无问题后再使用">一键发货</button>
         <div class="ml15 ib va-m" id="toggle_sidemenu_r">
@@ -21,6 +38,7 @@
         <table class="table table-striped fs13" id="order-list">
             <thead>
                 <tr class="bg-light">
+                    <th><input type="checkbox" class="selectAll"></th>
                     <th class="sortable" data-field="id">ID</th>
                     <th>活动名</th>
                     <th>期数</th>
@@ -36,6 +54,7 @@
                     var attrs = model.attributes;
                 %>
                     <tr data-id="<%= attrs.id %>" >
+                        <td><input type="checkbox" class="itemSelect"></td>
                         <td><a href="#order/<%= attrs.id %>/"><%= attrs.id %></a></td>
                         <td><%= attrs.activity_name %></td>
                         <td><%= attrs.term_number %></td>
@@ -94,6 +113,13 @@
             <label for="searchActivityName" class="field prepend-icon">
                 <input title="活动名" type="text" id="searchActivityName" class="gui-input" placeholder="活动名" data-field="activity_name" value="<%= searched.activity_name %>">
                 <label for="ActivityName" class="field-icon"><i class="fa fa-tag"></i>
+                </label>
+            </label>
+        </div>
+        <div class="section mb15">
+            <label for="searchNumber" class="field prepend-icon">
+                <input title="期数" type="text" id="searchNumber" class="gui-input" placeholder="期数" data-field="number" value="<%= searched.number %>">
+                <label for="Number" class="field-icon"><i class="fa fa-tag"></i>
                 </label>
             </label>
         </div>

@@ -5331,7 +5331,6 @@ var LuckyConsole = function ($, _) {
                 'click #search': 'doSearch',
                 'click #exportData': 'exportData',
             },
-
             initialize: function (options) {
                 this.options = options;
                 this.collection = new statsModelCls.OrderCollection();

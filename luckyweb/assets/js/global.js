@@ -1167,7 +1167,6 @@ window.ADQ = function($, _, Backbone) {
             result = result.slice(0, -2);
             return result;
         }
-
     };
 
     var exportData = function(base, options){
